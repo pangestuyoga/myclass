@@ -2,50 +2,64 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\IsActive;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Saade\FilamentFacehash\Concerns\HasFacehashAvatar;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
-    use HasFacehashAvatar;
-
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFacehashAvatar, HasFactory, Notifiable, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = ['id'];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
+            'is_active' => IsActive::class,
             'password' => 'hashed',
         ];
+    }
+
+    #[Scope]
+    protected function active(Builder $query): void
+    {
+        $query->where('is_active', IsActive::Active);
+    }
+
+    #[Scope]
+    protected function inactive(Builder $query): void
+    {
+        $query->where('is_active', IsActive::Inactive);
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return true;
+    }
+
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->student?->full_name
+        );
+    }
+
+    public function student(): HasOne
+    {
+        return $this->hasOne(Student::class);
     }
 }

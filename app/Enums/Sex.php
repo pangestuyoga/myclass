@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Enums;
+
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasLabel;
+
+enum Sex: string implements HasColor, HasLabel
+{
+    case Male = 'male';
+    case Female = 'female';
+
+    public function getLabel(): ?string
+    {
+        return match ($this) {
+            self::Male => 'Laki-laki',
+            self::Female => 'Perempuan',
+        };
+    }
+
+    public function getColor(): string|array|null
+    {
+        return match ($this) {
+            self::Male => 'info',
+            self::Female => 'danger',
+        };
+    }
+}
