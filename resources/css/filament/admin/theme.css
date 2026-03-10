@@ -8,3 +8,5 @@
 @source '../../../../resources/views/components/**/*';
 @source '../../../../resources/views/livewire/**/*';
 @source '../../../../app/Livewire/**/*';
+
+@source '../../../../vendor/diogogpinto/filament-auth-ui-enhancer/resources/**/*.blade.php';

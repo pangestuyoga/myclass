@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -55,6 +56,12 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->plugins([
+                AuthUIEnhancerPlugin::make()
+                    ->formPanelPosition('left')
+                    ->formPanelWidth('40%')
+                    ->emptyPanelBackgroundImageUrl('https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg'),
             ]);
     }
 }
