@@ -22,6 +22,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Saade\Facehash\Enums\Variant;
 use Saade\FilamentFacehash\FacehashPlugin;
+use Saade\FilamentFacehash\FacehashProvider;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -77,6 +78,8 @@ class AdminPanelProvider extends PanelProvider
                         '#f97316',
                         '#10b981',
                     ]),
-            ]);
+            ])
+            ->maxContentWidth('full')
+            ->defaultAvatarProvider(FacehashProvider::class);
     }
 }
