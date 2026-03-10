@@ -20,6 +20,8 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Saade\Facehash\Enums\Variant;
+use Saade\FilamentFacehash\FacehashPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -32,7 +34,7 @@ class AdminPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->login(Login::class)
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Gray,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
@@ -63,6 +65,18 @@ class AdminPanelProvider extends PanelProvider
                     ->formPanelPosition('left')
                     ->formPanelWidth('40%')
                     ->emptyPanelBackgroundImageUrl('https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg'),
+
+                FacehashPlugin::make()
+                    ->size(40)
+                    ->variant(Variant::Gradient)
+                    ->initial(true)
+                    ->colors([
+                        '#ec4899',
+                        '#f59e0b',
+                        '#3b82f6',
+                        '#f97316',
+                        '#10b981',
+                    ]),
             ]);
     }
 }
