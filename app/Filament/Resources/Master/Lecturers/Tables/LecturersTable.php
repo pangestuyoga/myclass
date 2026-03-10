@@ -77,6 +77,12 @@ class LecturersTable
                     ->label('Alamat')
                     ->limit(50),
 
+                TextColumn::make('courses.name')
+                    ->label('Mata Kuliah')
+                    ->badge()
+                    ->searchable()
+                    ->listWithLineBreaks(),
+
                 ...TimestampColumns::make(),
             ])
             ->filters([
@@ -84,6 +90,12 @@ class LecturersTable
                     ->label('Jenis Kelamin')
                     ->options(Sex::class)
                     ->native(false),
+
+                SelectFilter::make('courses')
+                    ->label('Mata Kuliah')
+                    ->relationship('courses', 'name')
+                    ->multiple()
+                    ->preload(),
 
                 TrashedFilter::make()
                     ->native(false),

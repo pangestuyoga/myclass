@@ -12,6 +12,7 @@ use App\Filament\Resources\Master\Courses\Pages\ManageCourses;
 use App\Models\Course;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -80,6 +81,15 @@ class CourseResource extends Resource
                     ->maxValue(8)
                     ->helperText('Semester ke berapa mata kuliah ini diajarkan (1-8).'),
 
+                Select::make('lecturer_id')
+                    ->label('Dosen Pengampu')
+                    ->placeholder('Pilih Dosen')
+                    ->relationship('lecturer', 'full_name')
+                    ->preload()
+                    ->searchable()
+                    ->helperText('Pilih dosen yang mengampu mata kuliah ini.')
+                    ->required(),
+
             ])
             ->columns(1);
     }
@@ -100,6 +110,10 @@ class CourseResource extends Resource
                 TextColumn::make('credit')
                     ->label('SKS')
                     ->sortable(),
+
+                TextColumn::make('lecturer.full_name')
+                    ->label('Dosen Pengampu')
+                    ->searchable(),
 
                 ...TimestampColumns::make(),
             ])

@@ -3,9 +3,11 @@
 namespace App\Filament\Resources\Master\Lecturers\Schemas;
 
 use App\Enums\Sex;
+use App\Models\Course;
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
@@ -115,6 +117,29 @@ class LecturerForm
                             ->columnSpanFull(),
                     ])
                     ->columns(2),
+
+                Section::make('Mata Kuliah')
+                    ->description('Daftar mata kuliah yang diampu oleh dosen ini.')
+                    ->schema([
+                        Select::make('courses')
+                            ->label('Mata Kuliah')
+                            ->multiple()
+                            ->relationship('courses', 'name')
+                            ->options(function () {
+                                return Course::all()
+                                    ->groupBy('semester')
+                                    ->mapWithKeys(function ($courses, $semester) {
+                                        return [
+                                            "Semester $semester" => $courses->pluck('name', 'id')->toArray(),
+                                        ];
+                                    })
+                                    ->toArray();
+                            })
+                            ->searchable()
+                            ->preload()
+                            ->live()
+                            ->required(),
+                    ]),
             ])
             ->columns(1);
     }
