@@ -82,6 +82,10 @@ class AdminPanelProvider extends PanelProvider
                     ]),
             ])
             ->maxContentWidth('full')
-            ->defaultAvatarProvider(FacehashProvider::class);
+            ->defaultAvatarProvider(FacehashProvider::class)
+            ->breadcrumbs(false)
+            ->navigationGroups([
+                'Master',
+            ]);
     }
 }
