@@ -31,4 +31,9 @@ class Course extends Model
     {
         return $this->hasMany(Material::class);
     }
+
+    public function studyGroups(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(StudyGroup::class, 'study_group_courses');
+    }
 }
