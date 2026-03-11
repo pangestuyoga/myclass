@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Course;
+use App\Models\Lecturer;
 use Illuminate\Database\Seeder;
 
 class CourseSeeder extends Seeder
@@ -82,6 +83,33 @@ class CourseSeeder extends Seeder
             ['code' => 'SIU810', 'name' => 'Skripsi II', 'credit' => 4, 'semester' => 8],
             ['code' => 'FSI839', 'name' => 'Startup Digital', 'credit' => 2, 'semester' => 8],
         ];
+
+        $lecturers = Lecturer::pluck('id')->toArray();
+
+        shuffle($lecturers);
+
+        $lecturerSemesterMap = [];
+
+        foreach ($courses as $i => &$course) {
+
+            $semester = $course['semester'];
+
+            if ($i < count($lecturers)) {
+                $lecturerId = $lecturers[$i];
+            } else {
+
+                do {
+                    $lecturerId = $lecturers[array_rand($lecturers)];
+                } while (
+                    isset($lecturerSemesterMap[$lecturerId]) &&
+                    in_array($semester, $lecturerSemesterMap[$lecturerId])
+                );
+            }
+
+            $course['lecturer_id'] = $lecturerId;
+
+            $lecturerSemesterMap[$lecturerId][] = $semester;
+        }
 
         Course::insert($courses);
     }
