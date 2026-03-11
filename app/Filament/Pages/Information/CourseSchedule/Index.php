@@ -156,16 +156,7 @@ class Index extends Page implements HasActions, HasForms
                     Select::make('course_id')
                         ->label('Mata Kuliah')
                         ->options(function () {
-                            $user = auth()->user();
-                            $lecturer = $user->lecturer;
-
-                            if ($lecturer) {
-                                $courses = Course::getOptionsForLecturer($lecturer);
-                            } else {
-                                $courses = Course::all();
-                            }
-
-                            return $courses
+                            return Course::all()
                                 ->groupBy('semester')
                                 ->mapWithKeys(function ($courses, $semester) {
                                     return [
@@ -177,7 +168,8 @@ class Index extends Page implements HasActions, HasForms
                         ->searchable()
                         ->live()
                         ->required()
-                        ->columnSpanFull(),
+                        ->columnSpanFull()
+                        ->optionsLimit(100),
 
                     Grid::make(3)
                         ->schema([
