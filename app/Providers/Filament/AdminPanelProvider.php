@@ -86,6 +86,8 @@ class AdminPanelProvider extends PanelProvider
             ->breadcrumbs(false)
             ->navigationGroups([
                 'Master',
+                'Pembelajaran',
+                'Informasi',
             ]);
     }
 }
