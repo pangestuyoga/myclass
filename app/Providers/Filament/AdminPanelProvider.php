@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use AchyutN\FilamentLogViewer\FilamentLogViewer;
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Profile;
 use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
@@ -80,6 +81,13 @@ class AdminPanelProvider extends PanelProvider
                         '#f97316',
                         '#10b981',
                     ]),
+
+                FilamentLogViewer::make()
+                    ->navigationGroup('Sistem')
+                    ->navigationIcon('heroicon-o-server-stack')
+                    ->navigationLabel('Log')
+                    ->navigationUrl('/system/logs')
+                    ->pollingTime(null),
             ])
             ->maxContentWidth('full')
             ->defaultAvatarProvider(FacehashProvider::class)
@@ -88,6 +96,7 @@ class AdminPanelProvider extends PanelProvider
                 'Master',
                 'Pembelajaran',
                 'Informasi',
+                'Sistem',
             ]);
     }
 }
