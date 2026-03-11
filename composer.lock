@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe430b74f6d03416758a4b8daeda7417",
+    "content-hash": "a83572109ce443bd242db06e43da23d5",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -71,6 +71,53 @@
                 "source": "https://github.com/AnourValar/eloquent-serialize/tree/1.3.5"
             },
             "time": "2025-12-04T13:38:21+00:00"
+        },
+        {
+            "name": "asmit/filament-upload",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/AsmitNepali/filament-upload.git",
+                "reference": "eb7ad5a394820a999dcb2b53fdf9176776e7843c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/AsmitNepali/filament-upload/zipball/eb7ad5a394820a999dcb2b53fdf9176776e7843c",
+                "reference": "eb7ad5a394820a999dcb2b53fdf9176776e7843c",
+                "shasum": ""
+            },
+            "require": {
+                "filament/support": "^3.0|^4.0|^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Asmit\\FilamentUpload\\FilamentUploadServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Asmit\\FilamentUpload\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "AsmitNepali",
+                    "email": "mail2asmitnepali@gmail.com"
+                }
+            ],
+            "description": "Filament PDF file upload and preview.",
+            "support": {
+                "issues": "https://github.com/AsmitNepali/filament-upload/issues",
+                "source": "https://github.com/AsmitNepali/filament-upload/tree/v2.0.0"
+            },
+            "time": "2026-01-17T06:36:31+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",
@@ -2206,6 +2253,76 @@
                 }
             ],
             "time": "2025-08-22T14:27:06+00:00"
+        },
+        {
+            "name": "joaopaulolndev/filament-pdf-viewer",
+            "version": "v3.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/joaopaulolndev/filament-pdf-viewer.git",
+                "reference": "a4d208db6018184cb19eb9b2f19029fb42ba6bd2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/joaopaulolndev/filament-pdf-viewer/zipball/a4d208db6018184cb19eb9b2f19029fb42ba6bd2",
+                "reference": "a4d208db6018184cb19eb9b2f19029fb42ba6bd2",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^5.3",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.15.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^7.9|^8.6",
+                "orchestra/testbench": "^8.0|^9.0|^10.0",
+                "pestphp/pest": "^2.1|^3.4.7",
+                "pestphp/pest-plugin-arch": "^2.0|^3.0",
+                "pestphp/pest-plugin-laravel": "^2.0|^3.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Joaopaulolndev\\FilamentPdfViewer\\FilamentPdfViewerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Joaopaulolndev\\FilamentPdfViewer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "João Paulo Leite Nascimento",
+                    "email": "joaopauloln7@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Filament package to show pdf document viewer",
+            "homepage": "https://github.com/joaopaulolndev/filament-pdf-viewer",
+            "keywords": [
+                "filament-pdf-viewer",
+                "joaopaulolndev",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/joaopaulolndev/filament-pdf-viewer/issues",
+                "source": "https://github.com/joaopaulolndev/filament-pdf-viewer"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/joaopaulolndev",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-03-04T02:40:18+00:00"
         },
         {
             "name": "kirschbaum-development/eloquent-power-joins",
