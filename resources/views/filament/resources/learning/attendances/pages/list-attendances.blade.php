@@ -14,16 +14,6 @@
                                 $card->is_attended,
                         ])>
 
-                            @if ($card->is_attended)
-                                <div class="absolute -top-3 -right-3 z-10">
-                                    <span
-                                        class="inline-flex items-center gap-1 rounded-full bg-primary-600 px-3 py-1 text-[10px] font-bold text-white dark:text-gray-900 shadow-lg ring-2 ring-white dark:ring-gray-900 uppercase tracking-widest">
-                                        <x-heroicon-m-check-badge class="w-3.5 h-3.5" />
-                                        Hadir
-                                    </span>
-                                </div>
-                            @endif
-
                             <div class="p-6 space-y-4 flex-1">
                                 <div class="space-y-1">
                                     <h3 @class([
@@ -51,7 +41,7 @@
                                 </div>
 
                                 <div class="space-y-4">
-                                    <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 py-4">
+                                    <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 pt-4">
                                         <div @class([
                                             'w-8 h-8 rounded-full flex items-center justify-center mr-3 shrink-0 border',
                                             'bg-primary-100 dark:bg-primary-900/40 border-primary-200 dark:border-primary-800' => !$card->is_attended,
@@ -79,7 +69,7 @@
                                     </div>
 
                                     <div @class([
-                                        'border-t',
+                                        'pt-4 border-t',
                                         'border-gray-100 dark:border-gray-800' => !$card->is_attended,
                                         'border-primary-200 dark:border-primary-800' => $card->is_attended,
                                     ])>

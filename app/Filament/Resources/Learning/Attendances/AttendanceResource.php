@@ -19,7 +19,7 @@ class AttendanceResource extends Resource
 
     protected static ?string $navigationLabel = 'Presensi';
 
-    protected static ?int $navigationSort = 20;
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $modelLabel = 'Presensi';
 

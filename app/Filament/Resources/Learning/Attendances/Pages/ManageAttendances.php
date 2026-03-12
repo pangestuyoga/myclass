@@ -33,12 +33,8 @@ class ManageAttendances extends Page
 
         return CourseSchedule::query()
             ->where('day_of_week', $today)
-            ->whereHas('course', function ($q) use ($semester, $student) {
-                $q->where('semester', $semester)
-                    ->whereHas('studyGroups', function ($sq) use ($student) {
-                        $sq->where('leader_id', $student->id)
-                            ->orWhereHas('students', fn ($asq) => $asq->where('students.id', $student->id));
-                    });
+            ->whereHas('course', function ($q) use ($semester) {
+                $q->where('semester', $semester);
             })
             ->with(['course.lecturer', 'attendances' => function ($q) use ($student) {
                 $q->where('student_id', $student->id)
