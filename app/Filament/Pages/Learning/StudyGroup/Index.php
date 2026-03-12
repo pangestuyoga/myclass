@@ -84,18 +84,21 @@ class Index extends Page implements HasActions, HasForms
     protected function getHeaderActions(): array
     {
         return [
-            CreateStudyGroupAction::make(),
+            CreateStudyGroupAction::make()
+                ->visible(fn () => auth()->user()->can('Create:StudyGroup')),
         ];
     }
 
     protected function editStudyGroupAction(): Action
     {
-        return EditStudyGroupAction::make();
+        return EditStudyGroupAction::make()
+            ->visible(fn () => auth()->user()->can('Update:StudyGroup'));
     }
 
     protected function deleteStudyGroupAction(): Action
     {
-        return DeleteStudyGroupAction::make();
+        return DeleteStudyGroupAction::make()
+            ->visible(fn () => auth()->user()->can('Delete:StudyGroup'));
     }
 
     public function getStudyGroups(): Collection
