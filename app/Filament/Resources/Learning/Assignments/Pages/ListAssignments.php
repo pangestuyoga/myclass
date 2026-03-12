@@ -4,35 +4,52 @@ namespace App\Filament\Resources\Learning\Assignments\Pages;
 
 use App\Enums\AssignmentType;
 use App\Filament\Actions\Cheerful\CreateAction;
-use App\Filament\Actions\Cheerful\DeleteAction;
-use App\Filament\Actions\Cheerful\EditAction;
+use App\Filament\Resources\Learning\Assignments\Actions\DeleteAssignmentAction;
+use App\Filament\Resources\Learning\Assignments\Actions\EditAssignmentAction;
+use App\Filament\Resources\Learning\Assignments\Actions\PinAction;
 use App\Filament\Resources\Learning\Assignments\AssignmentResource;
-use App\Filament\Resources\Learning\Assignments\Schemas\AssignmentForm;
-use App\Filament\Support\SystemNotification;
 use App\Models\Assignment;
 use App\Models\AssignmentPin;
-use App\Models\AssignmentTarget;
-use App\Models\StudyGroup;
 use App\Settings\GeneralSettings;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\Page;
-use Filament\Schemas\Schema;
-use Filament\Support\Enums\Width;
-use Filament\Tables\Concerns\InteractsWithTable;
-use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 
-class ListAssignments extends Page implements HasTable
+class ListAssignments extends Page
 {
-    use InteractsWithTable;
-
     protected static string $resource = AssignmentResource::class;
 
     protected string $view = 'filament.resources.learning.assignments.pages.list-assignments';
 
     protected static ?string $title = 'Tugas';
+
+    protected static ?string $recordTitleAttribute = 'title';
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            CreateAction::make()
+                ->label('Tambah'),
+        ];
+    }
+
+    public function pinAction(): Action
+    {
+        return PinAction::make();
+    }
+
+    public function editAssignmentAction(): Action
+    {
+        return EditAssignmentAction::make()
+            ->visible(fn () => auth()->user()->can('Update:Assignment'));
+    }
+
+    public function deleteAssignmentAction(): Action
+    {
+        return DeleteAssignmentAction::make()
+            ->visible(fn () => auth()->user()->can('Delete:Assignment'));
+    }
 
     #[Computed]
     public function assignments(): Collection
@@ -69,7 +86,7 @@ class ListAssignments extends Page implements HasTable
         return $this->assignments()->map(function ($assignment) use ($studentProfile, $pinnedIds) {
             $submission = $assignment->assignmentSubmissions->first();
             $isSubmitted = $submission !== null;
-            $isGroup = $assignment->type === \App\Enums\AssignmentType::Group;
+            $isGroup = $assignment->type === AssignmentType::Group;
 
             $isLeader = false;
             if ($isGroup) {
@@ -136,128 +153,5 @@ class ListAssignments extends Page implements HasTable
         return AssignmentPin::where('student_id', $studentProfile->id)
             ->pluck('assignment_id')
             ->toArray();
-    }
-
-    public function togglePin(int $assignmentId): void
-    {
-        $studentProfile = auth()->user()->student;
-
-        $existing = AssignmentPin::where('student_id', $studentProfile->id)
-            ->where('assignment_id', $assignmentId)
-            ->first();
-
-        if ($existing) {
-            $existing->delete();
-            SystemNotification::success('Pin Tugas Dilepas 📌', 'Pin pada tugas ini telah berhasil dilepas dari daftar prioritas Anda.')->send();
-        } else {
-            AssignmentPin::create([
-                'student_id' => $studentProfile->id,
-                'assignment_id' => $assignmentId,
-            ]);
-            SystemNotification::success('Tugas Berhasil Di-pin 📍', 'Tugas ini sekarang berada di posisi teratas daftar prioritas Anda.')->send();
-        }
-
-        unset($this->assignments, $this->pinnedIds);
-    }
-
-    public function editAssignmentAction(): Action
-    {
-        return EditAction::make('editAssignment')
-            ->record(fn (array $arguments) => Assignment::find($arguments['record']))
-            ->modalHeading(fn (Assignment $record) => "Ubah {$record->title}")
-            ->modalWidth(Width::FourExtraLarge)
-            ->schema(fn (Schema $schema) => AssignmentForm::configure($schema)->getComponents())
-            ->fillForm(function (Assignment $record): array {
-                $data = $record->toArray();
-
-                $data['student_ids'] = $record->assignmentTargets()
-                    ->whereNotNull('student_id')
-                    ->pluck('student_id')
-                    ->toArray();
-
-                $data['study_group_ids'] = $record->assignmentTargets()
-                    ->whereNotNull('study_group_id')
-                    ->pluck('study_group_id')
-                    ->toArray();
-
-                $media = $record->getMedia('assignments')->last();
-                $relativePath = $media ? $media->getPathRelativeToRoot() : null;
-                $data['pdf'] = $relativePath ? [$relativePath] : [];
-
-                return $data;
-            })
-            ->using(function (Assignment $record, array $data): Assignment {
-                return DB::transaction(function () use ($record, $data) {
-                    $currentMedia = $record->getMedia('assignments')->last();
-                    $currentPath = $currentMedia ? $currentMedia->getPathRelativeToRoot() : null;
-
-                    $studentIds = $data['student_ids'] ?? [];
-                    $pdf = $data['pdf'] ?? null;
-
-                    unset($data['student_ids'], $data['study_group_ids'], $data['pdf']);
-
-                    $record->update($data);
-
-                    $record->assignmentTargets()->delete();
-
-                    if ($record->type === AssignmentType::Individual) {
-                        foreach ($studentIds as $studentId) {
-                            AssignmentTarget::create([
-                                'assignment_id' => $record->id,
-                                'student_id' => $studentId,
-                            ]);
-                        }
-                    } else {
-                        $studyGroupIds = StudyGroup::whereHas('courses', function ($q) use ($record) {
-                            $q->where('courses.id', $record->course_id);
-                        })->pluck('id');
-
-                        foreach ($studyGroupIds as $groupId) {
-                            AssignmentTarget::create([
-                                'assignment_id' => $record->id,
-                                'study_group_id' => $groupId,
-                            ]);
-                        }
-                    }
-
-                    $filePath = is_array($pdf) ? reset($pdf) : $pdf;
-
-                    if ($filePath !== $currentPath) {
-                        $record->clearMediaCollection('assignments');
-                        if (! empty($filePath)) {
-                            $record->addMediaFromDisk($filePath, config('filesystems.default'))
-                                ->preservingOriginal()
-                                ->withCustomProperties([
-                                    'feature' => 'assignments',
-                                    'date' => now()->toDateString(),
-                                    'doc_type' => 'tasks',
-                                ])
-                                ->toMediaCollection('assignments');
-                        }
-                    }
-
-                    return $record;
-                });
-            })
-            ->after(function () {
-                unset($this->assignments);
-            });
-    }
-
-    public function deleteAssignmentAction(): Action
-    {
-        return DeleteAction::make('deleteAssignment')
-            ->record(fn (array $arguments) => Assignment::find($arguments['record']))
-            ->after(function () {
-                unset($this->assignments);
-            });
-    }
-
-    protected function getHeaderActions(): array
-    {
-        return [
-            CreateAction::make()
-                ->label('Tambah'),
-        ];
     }
 }

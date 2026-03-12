@@ -119,16 +119,13 @@
 
                         <div
                             class="flex flex-col items-center justify-center border-l border-gray-100 dark:border-gray-700 p-1 gap-3 p-3">
-                            <x-filament::icon-button wire:click="togglePin({{ $card->id }})" :icon="$card->is_pinned ? 'heroicon-s-bookmark' : 'heroicon-o-bookmark'"
-                                :color="$card->is_pinned ? 'primary' : 'gray'" :tooltip="$card->is_pinned ? 'Lepas pin' : 'Pin tugas ini'" size="sm" />
+                            {{ ($this->pinAction)(['record' => $card->id]) }}
 
-                            <x-filament::icon-button
-                                wire:click="mountAction('editAssignment', { record: {{ $card->id }} })"
-                                icon="heroicon-m-pencil-square" color="warning" tooltip="Ubah" size="sm" />
+                            @canAny(['Update:Assignment', 'Delete:Assignment'])
+                                {{ ($this->editAssignmentAction)(['record' => $card->id]) }}
 
-                            <x-filament::icon-button
-                                wire:click="mountAction('deleteAssignment', { record: {{ $card->id }} })"
-                                icon="heroicon-m-trash" color="danger" tooltip="Hapus" size="sm" />
+                                {{ ($this->deleteAssignmentAction)(['record' => $card->id]) }}
+                            @endcanAny
                         </div>
 
                         @if ($card->is_group && !$card->is_submitted)
