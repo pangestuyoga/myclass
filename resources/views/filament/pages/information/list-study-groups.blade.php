@@ -7,7 +7,7 @@
         </div>
 
         @if ($groups->isNotEmpty())
-            <div class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6 pb-8">
+            <div class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
                 @foreach ($groups as $record)
                     @php $isMyGroup = $this->isMyGroup($record); @endphp
                     <div class="break-inside-avoid mb-6">
@@ -18,7 +18,7 @@
                         ])>
 
                             @if ($isMyGroup)
-                                <div class="absolute -top-3 -right-3 z-10">
+                                <div class="absolute top-0 right-0 -translate-x-1 -translate-y-1/2 z-10">
                                     <span
                                         class="inline-flex items-center gap-1 rounded-full bg-primary-600 px-3 py-1 text-[10px] font-bold text-white dark:text-gray-900 shadow-lg ring-2 ring-white dark:ring-gray-900 uppercase tracking-widest">
                                         <x-heroicon-m-check-badge class="w-3.5 h-3.5" />

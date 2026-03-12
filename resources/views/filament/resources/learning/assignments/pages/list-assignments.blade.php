@@ -8,7 +8,7 @@
                 description="Setelah Anda membuat data pertama, maka akan muncul disini." iconColor="gray">
             </x-filament::empty-state>
         @else
-            <div class="space-y-3">
+            <div class="space-y-6">
                 @foreach ($this->assignmentCards as $card)
                     <div @class([
                         'group flex w-full rounded-xl border transition-all overflow-hidden relative',

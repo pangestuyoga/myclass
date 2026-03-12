@@ -4,7 +4,7 @@
         <x-slot name="description">Silakan melakukan presensi sesuai dengan waktu kelas.</x-slot>
 
         @if ($scheduleCards->isNotEmpty())
-            <div class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6 pb-8">
+            <div class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
                 @foreach ($scheduleCards as $card)
                     <div class="break-inside-avoid mb-6">
                         <div @class([
