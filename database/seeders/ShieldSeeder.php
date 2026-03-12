@@ -192,7 +192,7 @@ class ShieldSeeder extends Seeder
                     "View:Material",
 
                     "ViewAny:StudyGroup",
-                    "View:StudyGroup",,
+                    "View:StudyGroup",
                     "Create:StudyGroup",
                     "Update:StudyGroup",
                     "Delete:StudyGroup"
