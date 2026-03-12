@@ -148,6 +148,7 @@ class Index extends Page implements HasActions, HasForms
                         ->multiple()
                         ->searchable()
                         ->required()
+                        ->live()
                         ->columnSpanFull(),
 
                     TextInput::make('name')

@@ -65,6 +65,6 @@ class StudyGroup extends Model
             ->pluck('leader_id')
             ->toArray();
 
-        return array_unique(array_merge($busyMemberIds, $busyLeaderIds));
+        return array_unique(array_filter(array_merge($busyMemberIds, $busyLeaderIds)));
     }
 }
