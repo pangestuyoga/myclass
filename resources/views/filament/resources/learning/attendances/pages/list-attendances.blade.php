@@ -138,4 +138,11 @@
             </x-filament::empty-state>
         @endif
     </x-filament::section>
+
+    <x-filament::section>
+        <x-slot name="heading">Riwayat Presensi</x-slot>
+        <x-slot name="description">Berikut adalah riwayat kehadiran Anda pada sesi perkuliahan.</x-slot>
+
+        {{ $this->table }}
+    </x-filament::section>
 </x-filament-panels::page>
