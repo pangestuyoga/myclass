@@ -131,22 +131,16 @@
                                 </div>
                             </div>
 
-                            <div @class([
-                                'flex items-center justify-end gap-2 p-4 pt-0 rounded-b-xl',
-                                'bg-primary-100/30 dark:bg-primary-900/10 pt-4' => $isMyGroup,
-                            ])>
-                                <x-filament::button size="xs" color="warning" tooltip="Ubah" variant="primary"
-                                    class="rounded-lg shadow-sm"
-                                    wire:click="mountAction('editStudyGroup', { record: {{ $record->id }} })">
-                                    <x-heroicon-m-pencil-square class="w-4 h-4" />
-                                </x-filament::button>
+                            @canAny(['Update:StudyGroup', 'Delete:StudyGroup'])
+                                <div @class([
+                                    'flex items-center justify-end gap-2 p-4 pt-0 rounded-b-xl',
+                                    'bg-primary-100/30 dark:bg-primary-900/10 pt-4' => $isMyGroup,
+                                ])>
+                                    {{ ($this->editStudyGroupAction)(['studyGroup' => $record->id]) }}
 
-                                <x-filament::button size="xs" color="danger" tooltip="Hapus"
-                                    class="rounded-lg shadow-sm"
-                                    wire:click="mountAction('deleteStudyGroup', { record: {{ $record->id }} })">
-                                    <x-heroicon-m-trash class="w-4 h-4" />
-                                </x-filament::button>
-                            </div>
+                                    {{ ($this->deleteStudyGroupAction)(['studyGroup' => $record->id]) }}
+                                </div>
+                            @endcanAny
                         </div>
                     </div>
                 @endforeach

@@ -89,13 +89,13 @@ class Index extends Page implements HasActions, HasForms
         ];
     }
 
-    protected function editStudyGroupAction(): Action
+    public function editStudyGroupAction(): Action
     {
         return EditStudyGroupAction::make()
             ->visible(fn () => auth()->user()->can('Update:StudyGroup'));
     }
 
-    protected function deleteStudyGroupAction(): Action
+    public function deleteStudyGroupAction(): Action
     {
         return DeleteStudyGroupAction::make()
             ->visible(fn () => auth()->user()->can('Delete:StudyGroup'));

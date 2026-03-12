@@ -5,6 +5,7 @@ namespace App\Filament\Pages\Learning\StudyGroup\Actions;
 use App\Filament\Actions\Cheerful\EditAction;
 use App\Models\StudyGroup;
 use Filament\Support\Enums\Width;
+use Filament\Support\Icons\Heroicon;
 
 class EditStudyGroupAction extends EditAction
 {
@@ -17,7 +18,13 @@ class EditStudyGroupAction extends EditAction
     {
         parent::setUp();
 
-        $this->record(fn (array $arguments): StudyGroup => StudyGroup::findOrFail($arguments['record']))
+        $this
+            ->label('Ubah')
+            ->icon(Heroicon::OutlinedPencilSquare)
+            ->color('warning')
+            ->iconButton()
+            ->tooltip('Ubah')
+            ->record(fn (array $arguments): StudyGroup => StudyGroup::findOrFail($arguments['studyGroup']))
             ->modalHeading(fn (StudyGroup $record) => "Ubah {$record->name}")
             ->modalSubmitActionLabel('Simpan')
             ->modalCancelActionLabel('Batal')
