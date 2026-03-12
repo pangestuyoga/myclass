@@ -106,19 +106,14 @@
                                                     </span>
                                                 </div>
 
-                                                <div
-                                                    class="flex items-center justify-end gap-1 pt-3 border-t border-gray-100 dark:border-gray-800">
-                                                    <x-filament::button size="xs" color="warning" tooltip="Ubah"
-                                                        variant="primary"
-                                                        wire:click="mountAction('editSchedule', { schedule: {{ $schedule->id }} })">
-                                                        <x-heroicon-m-pencil-square class="w-4 h-4" />
-                                                    </x-filament::button>
+                                                @canAny(['Update:CourseSchedule', 'Delete:CourseSchedule'])
+                                                    <div
+                                                        class="flex items-center justify-end gap-1 pt-3 border-t border-gray-100 dark:border-gray-800">
+                                                        {{ ($this->editScheduleAction)(['schedule' => $schedule->id]) }}
 
-                                                    <x-filament::button size="xs" color="danger" tooltip="Hapus"
-                                                        wire:click="mountAction('deleteSchedule', { schedule: {{ $schedule->id }} })">
-                                                        <x-heroicon-m-trash class="w-4 h-4" />
-                                                    </x-filament::button>
-                                                </div>
+                                                        {{ ($this->deleteScheduleAction)(['schedule' => $schedule->id]) }}
+                                                    </div>
+                                                @endcanAny
                                             </div>
                                         </div>
                                     @endforeach

@@ -81,13 +81,13 @@ class Index extends Page implements HasActions, HasForms
         ];
     }
 
-    protected function editScheduleAction(): Action
+    public function editScheduleAction(): Action
     {
         return EditScheduleAction::make()
             ->visible(fn () => auth()->user()->can('Update:CourseSchedule'));
     }
 
-    protected function deleteScheduleAction(): Action
+    public function deleteScheduleAction(): Action
     {
         return DeleteScheduleAction::make()
             ->visible(fn () => auth()->user()->can('Delete:CourseSchedule'));
