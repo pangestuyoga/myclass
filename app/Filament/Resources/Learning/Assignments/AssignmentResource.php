@@ -9,10 +9,12 @@ use App\Filament\Resources\Learning\Assignments\Pages\SubmissionDetailPage;
 use App\Filament\Resources\Learning\Assignments\Pages\SubmitAssignmentPage;
 use App\Filament\Resources\Learning\Assignments\Schemas\AssignmentForm;
 use App\Models\Assignment;
+use App\Settings\GeneralSettings;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class AssignmentResource extends Resource
@@ -34,6 +36,14 @@ class AssignmentResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return AssignmentForm::configure($schema);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->whereHas('course', function (Builder $query) {
+                $query->where('semester', app(GeneralSettings::class)->current_semester);
+            });
     }
 
     public static function getPages(): array

@@ -13,6 +13,7 @@ use App\Models\Assignment;
 use App\Models\AssignmentPin;
 use App\Models\AssignmentTarget;
 use App\Models\StudyGroup;
+use App\Settings\GeneralSettings;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\Page;
 use Filament\Schemas\Schema;
@@ -44,6 +45,9 @@ class ListAssignments extends Page implements HasTable
             $q->where('student_id', $studentProfile->id)
                 ->orWhereHas('studyGroup', fn ($sq) => $sq->whereHas('students', fn ($ssq) => $ssq->whereKey($studentProfile->id)));
         }, 'studyGroups.students'])
+            ->whereHas('course', function ($q) {
+                $q->where('semester', app(GeneralSettings::class)->current_semester);
+            })
             ->where(function ($query) use ($studentProfile) {
                 $query->whereHas('students', fn ($q) => $q->whereKey($studentProfile->id))
                     ->orWhereHas('studyGroups', fn ($q) => $q->whereHas('students', fn ($sq) => $sq->whereKey($studentProfile->id)));

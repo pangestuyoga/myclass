@@ -258,6 +258,14 @@ class MaterialResource extends Resource
         ];
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->whereHas('course', function (Builder $query) {
+                $query->where('semester', app(GeneralSettings::class)->current_semester);
+            });
+    }
+
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
         return parent::getRecordRouteBindingEloquentQuery()
