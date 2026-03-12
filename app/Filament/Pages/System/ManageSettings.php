@@ -5,6 +5,7 @@ namespace App\Filament\Pages\System;
 use App\Filament\Support\SystemNotification;
 use App\Settings\GeneralSettings;
 use BackedEnum;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Pages\SettingsPage;
@@ -15,6 +16,8 @@ use UnitEnum;
 
 class ManageSettings extends SettingsPage
 {
+    use HasPageShield;
+
     protected static string|UnitEnum|null $navigationGroup = 'Sistem';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
@@ -24,6 +27,11 @@ class ManageSettings extends SettingsPage
     protected static ?string $navigationLabel = 'Pengaturan';
 
     protected static ?string $slug = 'system/settings';
+
+    public static function getPagePermission(): string
+    {
+        return 'View:ManageSettings';
+    }
 
     protected static ?int $navigationSort = 10;
 

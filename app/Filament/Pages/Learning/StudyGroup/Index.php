@@ -10,6 +10,7 @@ use App\Models\Student;
 use App\Models\StudyGroup;
 use App\Settings\GeneralSettings;
 use BackedEnum;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
@@ -28,7 +29,7 @@ use UnitEnum;
 
 class Index extends Page implements HasActions, HasForms
 {
-    use InteractsWithActions, InteractsWithForms;
+    use HasPageShield, InteractsWithActions, InteractsWithForms;
 
     protected static ?string $model = StudyGroup::class;
 
@@ -41,6 +42,11 @@ class Index extends Page implements HasActions, HasForms
     protected static ?int $navigationSort = 10;
 
     protected static ?string $slug = 'learning/study-groups';
+
+    public static function getPagePermission(): string
+    {
+        return 'View:StudyGroup';
+    }
 
     protected string $view = 'filament.pages.information.list-study-groups';
 
