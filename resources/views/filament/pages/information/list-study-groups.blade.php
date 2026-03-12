@@ -133,12 +133,18 @@
 
                             @canAny(['Update:StudyGroup', 'Delete:StudyGroup'])
                                 <div @class([
-                                    'flex items-center justify-end gap-2 p-4 pt-0 rounded-b-xl',
-                                    'bg-primary-100/30 dark:bg-primary-900/10 pt-4' => $isMyGroup,
+                                    'rounded-b-xl',
+                                    'bg-primary-100/30 dark:bg-primary-900/10' => $isMyGroup,
                                 ])>
-                                    {{ ($this->editStudyGroupAction)(['studyGroup' => $record->id]) }}
+                                    <div @class([
+                                        'mx-6 border-t flex items-center justify-end gap-2 py-4',
+                                        'border-gray-100 dark:border-gray-800' => !$isMyGroup,
+                                        'border-primary-200 dark:border-primary-800' => $isMyGroup,
+                                    ])>
+                                        {{ ($this->editStudyGroupAction)(['studyGroup' => $record->id]) }}
 
-                                    {{ ($this->deleteStudyGroupAction)(['studyGroup' => $record->id]) }}
+                                        {{ ($this->deleteStudyGroupAction)(['studyGroup' => $record->id]) }}
+                                    </div>
                                 </div>
                             @endcanAny
                         </div>
