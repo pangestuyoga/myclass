@@ -14,8 +14,11 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Icons\Heroicon;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
+use Hammadzafar05\MobileBottomNav\MobileBottomNav;
+use Hammadzafar05\MobileBottomNav\MobileBottomNavItem;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -88,6 +91,34 @@ class AdminPanelProvider extends PanelProvider
                     ->navigationLabel('Log')
                     ->navigationUrl('/system/logs')
                     ->pollingTime(null),
+
+                MobileBottomNav::make()
+                    ->items([
+                        MobileBottomNavItem::make('Dasbor')
+                            ->icon(Heroicon::OutlinedHome)
+                            ->activeIcon(Heroicon::Home)
+                            ->url('/admin')
+                            ->isActive(fn () => request()->is('admin')),
+
+                        MobileBottomNavItem::make('Presensi')
+                            ->icon(Heroicon::OutlinedCheckCircle)
+                            ->activeIcon(Heroicon::CheckCircle)
+                            ->url('/admin/learning/attendances')
+                            ->isActive(fn () => request()->is('admin/learning/attendances')),
+
+                        MobileBottomNavItem::make('Materi')
+                            ->icon(Heroicon::OutlinedBookOpen)
+                            ->activeIcon(Heroicon::BookOpen)
+                            ->url('/admin/learning/materials')
+                            ->isActive(fn () => request()->is('admin/learning/materials')),
+
+                        MobileBottomNavItem::make('Tugas')
+                            ->icon(Heroicon::OutlinedClipboardDocumentList)
+                            ->activeIcon(Heroicon::ClipboardDocumentList)
+                            ->url('/admin/learning/assignments')
+                            ->isActive(fn () => request()->is('admin/learning/assignments')),
+                    ])
+                    ->moreButton(false),
             ])
             ->maxContentWidth('full')
             ->defaultAvatarProvider(FacehashProvider::class)
