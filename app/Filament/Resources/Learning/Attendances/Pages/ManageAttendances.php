@@ -40,7 +40,7 @@ class ManageAttendances extends Page
                             ->orWhereHas('students', fn ($asq) => $asq->where('students.id', $student->id));
                     });
             })
-            ->with(['course.lecturer.user', 'attendances' => function ($q) use ($student) {
+            ->with(['course.lecturer', 'attendances' => function ($q) use ($student) {
                 $q->where('student_id', $student->id)
                     ->whereDate('date', now()->toDateString());
             }])

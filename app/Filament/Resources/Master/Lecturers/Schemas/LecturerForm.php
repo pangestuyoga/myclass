@@ -13,7 +13,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Illuminate\Support\HtmlString;
 
 class LecturerForm
 {
@@ -21,30 +20,6 @@ class LecturerForm
     {
         return $schema
             ->components([
-                Section::make('Akun')
-                    ->description(new HtmlString('Alamat Surel dan Nama Pengguna akan digunakan untuk masuk ke dalam sistem. Kata sandi bawaan adalah <code class="text-sm bg-gray-100 text-red-400 px-1.5 py-0.5 rounded font-mono">Minimal8@</code>'))
-                    ->schema([
-                        TextInput::make('email')
-                            ->label('Alamat Surel')
-                            ->placeholder('johndoe@example.com')
-                            ->autocomplete(false)
-                            ->required()
-                            ->maxLength(254)
-                            ->email()
-                            ->unique('users', 'email', ignoreRecord: true),
-
-                        TextInput::make('username')
-                            ->label('Nama Pengguna')
-                            ->placeholder('johndoe')
-                            ->autocomplete(false)
-                            ->required()
-                            ->minLength(5)
-                            ->maxLength(20)
-                            ->regex('/^[a-zA-Z0-9_.-]+$/')
-                            ->unique('users', 'username', ignoreRecord: true),
-                    ])
-                    ->columns(2)
-                    ->hiddenOn('edit'),
 
                 Section::make('Informasi Dosen')
                     ->schema([

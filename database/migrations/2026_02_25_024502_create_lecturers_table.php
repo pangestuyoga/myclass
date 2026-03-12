@@ -14,7 +14,6 @@ return new class extends Migration
     {
         Schema::create('lecturers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->unique()->constrained()->cascadeOnDelete();
             $table->string('lecturer_identification_number', 10)->unique();
             $table->string('full_name', 100);
             $table->string('phone_number', 20);

@@ -6,7 +6,6 @@ use App\Enums\Sex;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
 class LecturerSeeder extends Seeder
 {
@@ -49,15 +48,7 @@ class LecturerSeeder extends Seeder
         ];
 
         for ($i = 0; $i < 15; $i++) {
-
-            $userId = DB::table('users')->insertGetId([
-                'email' => 'dosen'.($i + 1).'@kampus.ac.id',
-                'username' => 'dosen'.($i + 1),
-                'password' => Hash::make('Minimal8@'),
-            ]);
-
             DB::table('lecturers')->insert([
-                'user_id' => $userId,
                 'lecturer_identification_number' => str_pad($i + 1, 10, '0', STR_PAD_LEFT),
                 'full_name' => $names[$i],
                 'phone_number' => '08123456'.rand(1000, 9999),

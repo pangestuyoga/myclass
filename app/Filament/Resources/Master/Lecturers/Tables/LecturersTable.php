@@ -26,17 +26,6 @@ class LecturersTable
     {
         return $table
             ->columns([
-                TextColumn::make('user.email')
-                    ->label('Akun')
-                    ->formatStateUsing(fn ($state, Lecturer $record) => "
-                        <div class='flex flex-col gap-1'>
-                            <div><span class='font-bold text-gray-500 text-xs uppercase'>Alamat Surel:</span> <span class='font-medium'>{$state}</span></div>
-                            <div><span class='font-bold text-gray-500 text-xs uppercase'>Nama Pengguna:</span> <span class='font-medium'>{$record->user?->username}</span></div>
-                        </div>
-                    ")
-                    ->html()
-                    ->searchable(['email', 'username'])
-                    ->sortable(),
 
                 TextColumn::make('full_name')
                     ->label('Nama Lengkap')
