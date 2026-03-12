@@ -162,7 +162,7 @@ class Index extends Page implements HasActions, HasForms
                         ->options(function (Get $get, ?StudyGroup $record) {
                             $query = Student::query();
 
-                            $courseIds = array_values(array_filter((array) ($get('courses') ?? [])));
+                            $courseIds = array_values(array_filter((array) ($get('course_id') ?? [])));
                             if (! empty($courseIds)) {
                                 $allBusyIds = StudyGroup::getBusyStudentIdsForCourses(
                                     courseIds: $courseIds,
@@ -186,7 +186,7 @@ class Index extends Page implements HasActions, HasForms
                             titleAttribute: 'full_name',
                             modifyQueryUsing: function (Builder $query, Get $get, ?StudyGroup $record) {
 
-                                $courseIds = array_values(array_filter((array) ($get('courses') ?? [])));
+                                $courseIds = array_values(array_filter((array) ($get('course_id') ?? [])));
                                 if (! empty($courseIds)) {
                                     $allBusyIds = StudyGroup::getBusyStudentIdsForCourses(
                                         courseIds: $courseIds,

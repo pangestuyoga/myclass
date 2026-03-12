@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -32,7 +33,7 @@ class Course extends Model
         return $this->hasMany(Material::class);
     }
 
-    public function studyGroups(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function studyGroups(): BelongsToMany
     {
         return $this->belongsToMany(StudyGroup::class, 'study_group_courses');
     }
