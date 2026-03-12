@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\RoleEnum;
 use App\Enums\Sex;
 use App\Models\Student;
 use App\Models\User;
@@ -31,5 +32,8 @@ class UserSeeder extends Seeder
             'date_of_birth' => '2003-03-13',
             'place_of_birth' => 'Subang',
         ]);
+
+        $user->assignRole(RoleEnum::Developer);
+        $user->assignRole(RoleEnum::Student);
     }
 }
