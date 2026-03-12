@@ -37,7 +37,7 @@ class Index extends Page implements HasActions, HasForms
 
     protected static ?string $title = 'Jadwal Kuliah';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 5;
 
     protected static ?string $recordTitleAttribute = 'day_of_week';
 

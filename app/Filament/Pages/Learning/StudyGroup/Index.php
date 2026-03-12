@@ -39,7 +39,7 @@ class Index extends Page implements HasActions, HasForms
 
     protected static ?string $title = 'Kelompok Belajar';
 
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 20;
 
     protected static ?string $slug = 'learning/study-groups';
 

@@ -69,7 +69,9 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
-                FilamentShieldPlugin::make(),
+                FilamentShieldPlugin::make()
+                    ->navigationSort(5),
+
                 AuthUIEnhancerPlugin::make()
                     ->formPanelPosition('left')
                     ->formPanelWidth('40%')
@@ -93,7 +95,8 @@ class AdminPanelProvider extends PanelProvider
                     ->navigationLabel('Log')
                     ->navigationUrl('/system/logs')
                     ->pollingTime(null)
-                    ->authorize(fn () => auth()->user()->can('View:LogTable')),
+                    ->authorize(fn () => auth()->user()->can('View:LogTable'))
+                    ->navigationSort(10),
 
                 MobileBottomNav::make()
                     ->items([
@@ -131,6 +134,7 @@ class AdminPanelProvider extends PanelProvider
                 'Pembelajaran',
                 'Informasi',
                 'Sistem',
+                'Pelindung',
             ]);
     }
 }

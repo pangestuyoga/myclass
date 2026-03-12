@@ -47,7 +47,7 @@ class MaterialResource extends Resource
 
     protected static ?string $navigationLabel = 'Materi';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 10;
 
     protected static ?string $recordTitleAttribute = 'title';
 

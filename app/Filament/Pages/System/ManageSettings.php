@@ -36,7 +36,7 @@ class ManageSettings extends SettingsPage
         return 'View:ManageSettings';
     }
 
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 5;
 
     protected static string $settings = GeneralSettings::class;
 
