@@ -167,32 +167,10 @@ class ShieldSeeder extends Seeder
                 "name": "Kosma",
                 "guard_name": "web",
                 "permissions" : [
-                    "ViewAny:Student",
-                    "View:Student",
-
-                    "ViewAny:Lecturer",
-                    "View:Lecturer",
-
-                    "ViewAny:Course",
-                    "View:Course",
-
-                    "ViewAny:CourseSchedule",
-                    "View:CourseSchedule",
-
-                    "ViewAny:Assignment",
-                    "View:Assignment",
-
-                    "ViewAny:Attendance",
-                    "View:Attendance",
                     "Create:Attendance",
                     "Update:Attendance",
                     "Delete:Attendance",
 
-                    "ViewAny:Material",
-                    "View:Material",
-
-                    "ViewAny:StudyGroup",
-                    "View:StudyGroup",
                     "Create:StudyGroup",
                     "Update:StudyGroup",
                     "Delete:StudyGroup"

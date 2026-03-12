@@ -2,7 +2,10 @@
 
 namespace App\Filament\Pages\System;
 
+use App\Enums\RoleEnum;
 use App\Filament\Support\SystemNotification;
+use App\Models\Student;
+use App\Models\User;
 use App\Settings\GeneralSettings;
 use BackedEnum;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
@@ -59,6 +62,15 @@ class ManageSettings extends SettingsPage
                             ->native(false)
                             ->required()
                             ->helperText('Tentukan semester yang sedang aktif saat ini. Semester ini akan digunakan untuk menyaring data yang relevan.'),
+
+                        Select::make('kosma_id')
+                            ->label('Kosma')
+                            ->placeholder('Pilih Mahasiswa sebagai Kosma')
+                            ->options(Student::query()->pluck('full_name', 'id'))
+                            ->searchable()
+                            ->preload()
+                            ->native(false)
+                            ->helperText('Pilih mahasiswa yang bertanggung jawab sebagai Kosma (Ketua Kelas).'),
                     ])
                     ->columns(2)
                     ->columnSpanFull(),
@@ -68,5 +80,21 @@ class ManageSettings extends SettingsPage
     public function getSavedNotification(): ?Notification
     {
         return SystemNotification::update();
+    }
+
+    protected function afterSave(): void
+    {
+        $settings = app(GeneralSettings::class);
+        $kosmaId = $settings->kosma_id;
+
+        User::role('Kosma')->get()->each(fn (User $user) => $user->removeRole('Kosma'));
+
+        if ($kosmaId) {
+            $student = Student::find($kosmaId);
+
+            if ($student?->user) {
+                $student->user->assignRole(RoleEnum::Kosma);
+            }
+        }
     }
 }
