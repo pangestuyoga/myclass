@@ -36,7 +36,8 @@ class StudentsTable
                     ")
                     ->html()
                     ->searchable(['email', 'username'])
-                    ->sortable(),
+                    ->sortable()
+                    ->visible(fn () => auth()->user()->hasRole(RoleEnum::Developer)),
 
                 TextColumn::make('full_name')
                     ->label('Nama Lengkap')
