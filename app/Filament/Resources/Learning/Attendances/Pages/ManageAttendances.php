@@ -89,7 +89,7 @@ class ManageAttendances extends Page implements HasForms, HasTable
                     'id' => $schedule->id,
                     'course_name' => $schedule->course->name,
                     'lecturer_name' => $schedule->course->lecturer?->full_name ?? 'Belum Ditentukan',
-                    'time_range' => $schedule->start_time->format('H:i') . ' - ' . $schedule->end_time->format('H:i'),
+                    'time_range' => $schedule->start_time->format('H:i').' - '.$schedule->end_time->format('H:i'),
                     'is_attended' => $isAttended,
                     'can_attend' => $canAttend && ! $isAttended,
                     'status_label' => $statusLabel,
@@ -167,19 +167,19 @@ class ManageAttendances extends Page implements HasForms, HasTable
 
         return $table
             ->query(AttendanceResource::getEloquentQuery())
-            ->modifyQueryUsing(fn(Builder $query) => $query->where('student_id', $user->student?->id))
+            ->modifyQueryUsing(fn (Builder $query) => $query->where('student_id', $user->student?->id))
             ->columns([
                 TextColumn::make('student.full_name')
                     ->label('Mahasiswa')
                     ->sortable()
                     ->searchable()
-                    ->visible(fn() => $user->hasRole([RoleEnum::Developer, RoleEnum::Kosma])),
+                    ->visible(fn () => $user->hasRole([RoleEnum::Developer, RoleEnum::Kosma])),
 
                 TextColumn::make('date')
                     ->label('Tanggal')
                     ->date('l, d F Y')
                     ->sortable()
-                    ->description(fn(Attendance $record): string => $record->attended_at->format('H:i') . ' WIB')
+                    ->description(fn (Attendance $record): string => $record->attended_at->format('H:i').' WIB')
                     ->color('gray'),
 
                 TextColumn::make('courseSchedule.course.name')
@@ -187,7 +187,7 @@ class ManageAttendances extends Page implements HasForms, HasTable
                     ->searchable()
                     ->sortable()
                     ->wrap()
-                    ->description(fn(Attendance $record): string => $record->courseSchedule->course->lecturer->full_name),
+                    ->description(fn (Attendance $record): string => $record->courseSchedule->course->lecturer->full_name),
             ])
             ->defaultSort('date', 'desc')
             ->filters([
@@ -202,7 +202,7 @@ class ManageAttendances extends Page implements HasForms, HasTable
                     ->query(function (Builder $query, array $data) {
                         return $query->when(
                             $data['value'],
-                            fn(Builder $query) => $query->whereHas('courseSchedule', fn($q) => $q->where('course_id', $data['value']))
+                            fn (Builder $query) => $query->whereHas('courseSchedule', fn ($q) => $q->where('course_id', $data['value']))
                         );
                     })
                     ->searchable(),
