@@ -14,11 +14,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Saade\FilamentFacehash\Concerns\HasFacehashAvatar;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFacehashAvatar, HasFactory, Notifiable, SoftDeletes;
+    use HasFacehashAvatar, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     protected $guarded = ['id'];
 

@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use AchyutN\FilamentLogViewer\FilamentLogViewer;
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Profile;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -68,6 +69,7 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
+                FilamentShieldPlugin::make(),
                 AuthUIEnhancerPlugin::make()
                     ->formPanelPosition('left')
                     ->formPanelWidth('40%')
@@ -90,7 +92,8 @@ class AdminPanelProvider extends PanelProvider
                     ->navigationIcon('heroicon-o-server-stack')
                     ->navigationLabel('Log')
                     ->navigationUrl('/system/logs')
-                    ->pollingTime(null),
+                    ->pollingTime(null)
+                    ->authorize(fn () => auth()->user()->can('View:LogTable')),
 
                 MobileBottomNav::make()
                     ->items([
