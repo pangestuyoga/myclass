@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Master\Lecturers\Tables;
 
+use App\Enums\RoleEnum;
 use App\Enums\Sex;
 use App\Filament\Actions\Cheerful\DeleteAction;
 use App\Filament\Actions\Cheerful\EditAction;
@@ -98,7 +99,8 @@ class LecturersTable
                     ->preload(),
 
                 TrashedFilter::make()
-                    ->native(false),
+                    ->native(false)
+                    ->visible(fn () => auth()->user()->hasRole(RoleEnum::Developer)),
             ])
             ->recordActions([
                 EditAction::make()

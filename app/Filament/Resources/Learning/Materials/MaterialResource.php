@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Learning\Materials;
 
+use App\Enums\RoleEnum;
 use App\Filament\Actions\Cheerful\DeleteAction;
 use App\Filament\Actions\Cheerful\EditAction;
 use App\Filament\Actions\Cheerful\ForceDeleteAction;
@@ -165,7 +166,8 @@ class MaterialResource extends Resource
                     }),
 
                 TrashedFilter::make()
-                    ->native(false),
+                    ->native(false)
+                    ->visible(fn () => auth()->user()->hasRole(RoleEnum::Developer)),
             ])
             ->recordActions([
                 ViewAction::make()

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Master\Students\Tables;
 
+use App\Enums\RoleEnum;
 use App\Enums\Sex;
 use App\Filament\Actions\Cheerful\DeleteAction;
 use App\Filament\Actions\Cheerful\EditAction;
@@ -86,7 +87,8 @@ class StudentsTable
                     ->native(false),
 
                 TrashedFilter::make()
-                    ->native(false),
+                    ->native(false)
+                    ->visible(fn () => auth()->user()->hasRole(RoleEnum::Developer)),
             ])
             ->recordActions([
                 EditAction::make()

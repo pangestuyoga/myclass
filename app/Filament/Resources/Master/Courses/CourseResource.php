@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Master\Courses;
 
+use App\Enums\RoleEnum;
 use App\Filament\Actions\Cheerful\DeleteAction;
 use App\Filament\Actions\Cheerful\EditAction;
 use App\Filament\Actions\Cheerful\ForceDeleteAction;
@@ -119,7 +120,8 @@ class CourseResource extends Resource
             ])
             ->filters([
                 TrashedFilter::make()
-                    ->native(false),
+                    ->native(false)
+                    ->visible(fn () => auth()->user()->hasRole(RoleEnum::Developer)),
             ])
             ->recordActions([
                 EditAction::make()
