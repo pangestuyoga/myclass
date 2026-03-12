@@ -28,6 +28,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Saade\Facehash\Enums\Variant;
 use Saade\FilamentFacehash\FacehashPlugin;
 use Saade\FilamentFacehash\FacehashProvider;
+use SalmanAlmajali\JokesWidget\JokesWidget;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -51,6 +52,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
                 AccountWidget::class,
+                JokesWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
