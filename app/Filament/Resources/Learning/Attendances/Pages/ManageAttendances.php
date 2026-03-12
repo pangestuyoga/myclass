@@ -7,9 +7,10 @@ use App\Filament\Support\SystemNotification;
 use App\Models\Attendance;
 use App\Models\CourseSchedule;
 use App\Models\User;
+use App\Settings\GeneralSettings;
 use Filament\Resources\Pages\Page;
 
-class AttendancePage extends Page
+class ManageAttendances extends Page
 {
     protected static string $resource = AttendanceResource::class;
 
@@ -23,11 +24,23 @@ class AttendancePage extends Page
     {
         $student = auth()->user()->student;
 
-        $today = now()->dayOfWeek;
+        if (! $student) {
+            return collect();
+        }
+
+        $today = now()->dayOfWeekIso;
+        $semester = app(GeneralSettings::class)->current_semester;
 
         return CourseSchedule::query()
             ->where('day_of_week', $today)
-            ->with(['course', 'attendances' => function ($q) use ($student) {
+            ->whereHas('course', function ($q) use ($semester, $student) {
+                $q->where('semester', $semester)
+                    ->whereHas('studyGroups', function ($sq) use ($student) {
+                        $sq->where('leader_id', $student->id)
+                            ->orWhereHas('students', fn ($asq) => $asq->where('students.id', $student->id));
+                    });
+            })
+            ->with(['course.lecturer.user', 'attendances' => function ($q) use ($student) {
                 $q->where('student_id', $student->id)
                     ->whereDate('date', now()->toDateString());
             }])
@@ -64,6 +77,7 @@ class AttendancePage extends Page
                 return (object) [
                     'id' => $schedule->id,
                     'course_name' => $schedule->course->name,
+                    'lecturer_name' => $schedule->course->lecturer?->full_name ?? 'Belum Ditentukan',
                     'time_range' => $schedule->start_time->format('H:i').' - '.$schedule->end_time->format('H:i'),
                     'is_attended' => $isAttended,
                     'can_attend' => $canAttend && ! $isAttended,

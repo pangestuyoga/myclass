@@ -12,7 +12,7 @@
         </div>
 
         <div class="flex items-center justify-between gap-4 mb-6">
-            <div class="w-full">
+            <div class="w-full max-w-xl">
                 {{ $this->form }}
             </div>
         </div>

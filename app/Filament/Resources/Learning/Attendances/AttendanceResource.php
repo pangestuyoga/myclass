@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Learning\Attendances;
 
-use App\Filament\Resources\Learning\Attendances\Pages\AttendancePage;
+use App\Filament\Resources\Learning\Attendances\Pages\ManageAttendances;
 use App\Models\Attendance;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -28,7 +28,7 @@ class AttendanceResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => AttendancePage::route('/'),
+            'index' => ManageAttendances::route('/'),
         ];
     }
 }

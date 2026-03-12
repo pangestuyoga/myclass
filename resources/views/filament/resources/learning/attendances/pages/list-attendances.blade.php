@@ -25,34 +25,33 @@
                             @endif
 
                             <div class="p-6 space-y-4 flex-1">
-                                <div class="flex flex-wrap items-center gap-1.5">
-                                    <span @class([
-                                        'inline-flex items-center rounded-md px-2.5 py-1 text-[10px] font-bold ring-1 ring-inset uppercase tracking-tight',
-                                        'bg-primary-50 dark:bg-primary-500/10 text-primary-700 dark:text-primary-300 ring-primary-600/20' => !$card->is_attended,
-                                        'bg-white dark:bg-primary-800/40 text-primary-700 dark:text-primary-200 ring-primary-500/30' =>
-                                            $card->is_attended,
-                                    ])>
-                                        {{ $card->course_name }}
-                                    </span>
-                                </div>
-
                                 <div class="space-y-1">
                                     <h3 @class([
                                         'text-lg font-bold leading-tight flex items-center gap-2 transition-colors',
                                         'text-gray-950 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400' => !$card->is_attended,
                                         'text-primary-900 dark:text-primary-100' => $card->is_attended,
                                     ])>
-                                        <x-heroicon-o-finger-print @class([
+                                        <x-heroicon-o-book-open @class([
                                             'w-5 h-5 shrink-0',
                                             'opacity-40' => !$card->is_attended,
                                             'text-primary-500' => $card->is_attended,
                                         ]) />
-                                        Presensi Kuliah
+                                        {{ $card->course_name }}
                                     </h3>
+                                    <div @class([
+                                        'flex items-center gap-1.5',
+                                        'text-gray-500 dark:text-gray-400' => !$card->is_attended,
+                                        'text-primary-600 dark:text-primary-400' => $card->is_attended,
+                                    ])>
+                                        <x-heroicon-m-user @class(['w-3.5 h-3.5 shrink-0', 'opacity-50' => !$card->is_attended]) />
+                                        <span class="text-[11px] font-medium leading-none">
+                                            {{ $card->lecturer_name }}
+                                        </span>
+                                    </div>
                                 </div>
 
                                 <div class="space-y-4">
-                                    <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                                    <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 py-4">
                                         <div @class([
                                             'w-8 h-8 rounded-full flex items-center justify-center mr-3 shrink-0 border',
                                             'bg-primary-100 dark:bg-primary-900/40 border-primary-200 dark:border-primary-800' => !$card->is_attended,
@@ -80,7 +79,7 @@
                                     </div>
 
                                     <div @class([
-                                        'pt-4 border-t',
+                                        'border-t',
                                         'border-gray-100 dark:border-gray-800' => !$card->is_attended,
                                         'border-primary-200 dark:border-primary-800' => $card->is_attended,
                                     ])>

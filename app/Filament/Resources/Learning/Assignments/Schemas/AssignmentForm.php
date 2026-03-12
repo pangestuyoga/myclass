@@ -6,6 +6,7 @@ use App\Enums\AssignmentType;
 use App\Filament\Resources\Learning\Assignments\Actions\SelectAllStudentsAction;
 use App\Models\Course;
 use App\Models\Student;
+use App\Settings\GeneralSettings;
 use Asmit\FilamentUpload\Enums\PdfViewFit;
 use Asmit\FilamentUpload\Forms\Components\AdvancedFileUpload;
 use Filament\Forms\Components\DateTimePicker;
@@ -43,19 +44,14 @@ class AssignmentForm
                                 Select::make('course_id')
                                     ->label('Mata Kuliah')
                                     ->options(function () {
-                                        return Course::all()
-                                            ->groupBy('semester')
-                                            ->mapWithKeys(function ($courses, $semester) {
-                                                return [
-                                                    "Semester $semester" => $courses->pluck('name', 'id')->toArray(),
-                                                ];
-                                            })
+                                        return Course::query()
+                                            ->where('semester', app(GeneralSettings::class)->current_semester)
+                                            ->pluck('name', 'id')
                                             ->toArray();
                                     })
                                     ->searchable()
                                     ->live()
-                                    ->required()
-                                    ->optionsLimit(100),
+                                    ->required(),
 
                                 DateTimePicker::make('due_date')
                                     ->label('Batas Waktu')

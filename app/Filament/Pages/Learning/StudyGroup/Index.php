@@ -8,6 +8,7 @@ use App\Filament\Pages\Learning\StudyGroup\Actions\EditStudyGroupAction;
 use App\Models\Course;
 use App\Models\Student;
 use App\Models\StudyGroup;
+use App\Settings\GeneralSettings;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
@@ -58,22 +59,20 @@ class Index extends Page implements HasActions, HasForms
             ->schema([
                 Select::make('course_id')
                     ->label('Mata Kuliah')
+                    ->placeholder('Semua Mata Kuliah')
                     ->options(function () {
-                        return Course::all()
-                            ->groupBy('semester')
-                            ->mapWithKeys(function ($courses, $semester) {
-                                return [
-                                    "Semester $semester" => $courses->pluck('name', 'id')->toArray(),
-                                ];
-                            })
+                        return Course::query()
+                            ->where('semester', app(GeneralSettings::class)->current_semester)
+                            ->pluck('name', 'id')
                             ->toArray();
                     })
                     ->searchable()
-                    ->required()
-                    ->optionsLimit(100),
+                    ->live(),
 
             ])
-            ->columns(1);
+            ->columns([
+                'sm' => 1,
+            ]);
     }
 
     protected function getHeaderActions(): array
@@ -95,7 +94,8 @@ class Index extends Page implements HasActions, HasForms
 
     public function getStudyGroups(): Collection
     {
-        $query = StudyGroup::with(['leader', 'students', 'courses']);
+        $query = StudyGroup::with(['leader', 'students', 'courses'])
+            ->whereHas('courses', fn ($q) => $q->where('courses.semester', app(GeneralSettings::class)->current_semester));
 
         if ($this->course_id) {
             $query->whereHas('courses', fn ($q) => $q->where('courses.id', $this->course_id));
@@ -114,7 +114,7 @@ class Index extends Page implements HasActions, HasForms
 
     public function isMyGroup(StudyGroup $record): bool
     {
-        $studentId = $this->studentId;
+        $studentId = auth()->user()?->student?->id;
 
         if (! $studentId) {
             return false;
@@ -131,19 +131,14 @@ class Index extends Page implements HasActions, HasForms
                     Select::make('course_id')
                         ->label('Mata Kuliah')
                         ->options(function () {
-                            return Course::all()
-                                ->groupBy('semester')
-                                ->mapWithKeys(function ($courses, $semester) {
-                                    return [
-                                        "Semester $semester" => $courses->pluck('name', 'id')->toArray(),
-                                    ];
-                                })
+                            return Course::query()
+                                ->where('semester', app(GeneralSettings::class)->current_semester)
+                                ->pluck('name', 'id')
                                 ->toArray();
                         })
                         ->multiple()
                         ->searchable()
                         ->required()
-                        ->optionsLimit(100)
                         ->columnSpanFull(),
 
                     TextInput::make('name')

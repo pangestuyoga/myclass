@@ -7,6 +7,7 @@ use App\Filament\Pages\Information\CourseSchedule\Actions\DeleteScheduleAction;
 use App\Filament\Pages\Information\CourseSchedule\Actions\EditScheduleAction;
 use App\Models\Course;
 use App\Models\CourseSchedule;
+use App\Settings\GeneralSettings;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
@@ -43,8 +44,6 @@ class Index extends Page implements HasActions, HasForms
 
     protected string $view = 'filament.pages.information.list-course-schedules';
 
-    public ?int $course_semester = null;
-
     public ?string $search = '';
 
     public static function getPagePermission(): string
@@ -54,24 +53,13 @@ class Index extends Page implements HasActions, HasForms
 
     public function mount(): void
     {
-        $this->course_semester = null;
-
-        $this->form->fill([
-            'course_semester' => $this->course_semester,
-        ]);
+        $this->form->fill();
     }
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->schema([
-                Select::make('course_semester')
-                    ->label('Semester')
-                    ->options(array_combine(range(1, 8), array_map(fn ($i) => "Semester $i", range(1, 8))))
-                    ->native(false)
-                    ->live()
-                    ->afterStateUpdated(fn ($state) => $this->course_semester = $state),
-
                 TextInput::make('search')
                     ->label('Cari')
                     ->placeholder('Cari Mata Kuliah atau Dosen...')
@@ -81,7 +69,6 @@ class Index extends Page implements HasActions, HasForms
             ])
             ->columns([
                 'sm' => 1,
-                'md' => 3,
             ]);
     }
 
@@ -113,9 +100,7 @@ class Index extends Page implements HasActions, HasForms
             $query->whereHas('course', fn ($q) => $q->where('lecturer_id', $lecturer->id));
         }
 
-        if ($this->course_semester) {
-            $query->whereHas('course', fn ($q) => $q->where('semester', $this->course_semester));
-        }
+        $query->whereHas('course', fn ($q) => $q->where('semester', app(GeneralSettings::class)->current_semester));
 
         if ($this->search) {
             $query->where(function ($q) {
@@ -156,20 +141,15 @@ class Index extends Page implements HasActions, HasForms
                     Select::make('course_id')
                         ->label('Mata Kuliah')
                         ->options(function () {
-                            return Course::all()
-                                ->groupBy('semester')
-                                ->mapWithKeys(function ($courses, $semester) {
-                                    return [
-                                        "Semester $semester" => $courses->pluck('name', 'id')->toArray(),
-                                    ];
-                                })
+                            return Course::query()
+                                ->where('semester', app(GeneralSettings::class)->current_semester)
+                                ->pluck('name', 'id')
                                 ->toArray();
                         })
                         ->searchable()
                         ->live()
                         ->required()
-                        ->columnSpanFull()
-                        ->optionsLimit(100),
+                        ->columnSpanFull(),
 
                     Grid::make(3)
                         ->schema([

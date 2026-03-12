@@ -11,6 +11,7 @@ use App\Filament\Columns\TimestampColumns;
 use App\Filament\Resources\Learning\Materials\Pages\ManageMaterials;
 use App\Models\Course;
 use App\Models\Material;
+use App\Settings\GeneralSettings;
 use Asmit\FilamentUpload\Enums\PdfViewFit;
 use Asmit\FilamentUpload\Forms\Components\AdvancedFileUpload;
 use BackedEnum;
@@ -60,19 +61,14 @@ class MaterialResource extends Resource
                         Select::make('course_id')
                             ->label('Mata Kuliah')
                             ->options(function () {
-                                return Course::all()
-                                    ->groupBy('semester')
-                                    ->mapWithKeys(function ($courses, $semester) {
-                                        return [
-                                            "Semester $semester" => $courses->pluck('name', 'id')->toArray(),
-                                        ];
-                                    })
+                                return Course::query()
+                                    ->where('semester', app(GeneralSettings::class)->current_semester)
+                                    ->pluck('name', 'id')
                                     ->toArray();
                             })
                             ->searchable()
                             ->live()
-                            ->required()
-                            ->optionsLimit(100),
+                            ->required(),
 
                         DatePicker::make('published_at')
                             ->label('Tanggal Publikasi')
@@ -147,17 +143,12 @@ class MaterialResource extends Resource
                 SelectFilter::make('course_id')
                     ->label('Mata Kuliah')
                     ->options(function () {
-                        return Course::all()
-                            ->groupBy('semester')
-                            ->mapWithKeys(function ($courses, $semester) {
-                                return [
-                                    "Semester $semester" => $courses->pluck('name', 'id')->toArray(),
-                                ];
-                            })
+                        return Course::query()
+                            ->where('semester', app(GeneralSettings::class)->current_semester)
+                            ->pluck('name', 'id')
                             ->toArray();
                     })
-                    ->searchable()
-                    ->optionsLimit(100),
+                    ->searchable(),
 
                 Filter::make('published_at')
                     ->schema([
