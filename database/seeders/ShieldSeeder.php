@@ -131,7 +131,19 @@ class ShieldSeeder extends Seeder
                     "Reorder:Role",
 
                     "View:LogTable",
-                    "View:ManageSettings"
+                    "View:ManageSettings",
+
+                    "ViewAny:AttendanceMonitoring",
+                    "View:AttendanceMonitoring",
+                    "Create:AttendanceMonitoring",
+                    "Update:AttendanceMonitoring",
+                    "Delete:AttendanceMonitoring",
+                    "Restore:AttendanceMonitoring",
+                    "ForceDelete:AttendanceMonitoring",
+                    "ForceDeleteAny:AttendanceMonitoring",
+                    "RestoreAny:AttendanceMonitoring",
+                    "Replicate:AttendanceMonitoring",
+                    "Reorder:AttendanceMonitoring"
                 ]
             },
             {
@@ -195,7 +207,19 @@ class ShieldSeeder extends Seeder
                     "Update:StudyGroup",
                     "Delete:StudyGroup",
 
-                    "View:ManageSettings"
+                    "View:ManageSettings",
+
+                    "ViewAny:AttendanceMonitoring",
+                    "View:AttendanceMonitoring",
+                    "Create:AttendanceMonitoring",
+                    "Update:AttendanceMonitoring",
+                    "Delete:AttendanceMonitoring",
+                    "Restore:AttendanceMonitoring",
+                    "ForceDelete:AttendanceMonitoring",
+                    "ForceDeleteAny:AttendanceMonitoring",
+                    "RestoreAny:AttendanceMonitoring",
+                    "Replicate:AttendanceMonitoring",
+                    "Reorder:AttendanceMonitoring"
                 ]
             }
 

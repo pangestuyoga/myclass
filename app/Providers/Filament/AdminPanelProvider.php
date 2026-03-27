@@ -131,6 +131,7 @@ class AdminPanelProvider extends PanelProvider
             ->breadcrumbs(false)
             ->navigationGroups([
                 'Master',
+                'Kelola',
                 'Pembelajaran',
                 'Informasi',
                 'Sistem',

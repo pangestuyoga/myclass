@@ -16,6 +16,13 @@ class Course extends Model
 
     protected $guarded = ['id'];
 
+    protected static function booted()
+    {
+        static::creating(function ($course) {
+            $course->sharing_token = \Illuminate\Support\Str::random(32);
+        });
+    }
+
     public function lecturer(): BelongsTo
     {
         return $this->belongsTo(Lecturer::class);
@@ -36,5 +43,10 @@ class Course extends Model
     public function studyGroups(): BelongsToMany
     {
         return $this->belongsToMany(StudyGroup::class, 'study_group_courses');
+    }
+
+    public function courseSchedules(): HasMany
+    {
+        return $this->hasMany(CourseSchedule::class);
     }
 }
