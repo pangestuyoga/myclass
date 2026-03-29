@@ -19,7 +19,7 @@
                             <td class="px-4 py-3 text-gray-950 dark:text-white font-medium">
                                 <div class="flex flex-col">
                                     <span>{{ $attendance->student->full_name }}</span>
-                                    <span class="text-[10px] text-gray-500 dark:text-gray-400 font-normal uppercase tabular-nums">NIM: {{ $attendance->student->nim }}</span>
+                                    <span class="text-[10px] text-gray-500 dark:text-gray-400 font-normal uppercase tabular-nums">NIM: {{ $attendance->student->student_number }}</span>
                                 </div>
                             </td>
                             <td class="px-4 py-3 text-right">
