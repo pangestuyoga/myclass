@@ -1,7 +1,15 @@
 <x-filament-panels::page>
     <x-filament::section>
-        <x-slot name="heading">List Jadwal Kuliah</x-slot>
-        <x-slot name="description">Geser ke samping untuk melihat hari lainnya.</x-slot>
+        <div
+            class="fi-section-content rounded-xl border border-info-200 bg-info-50 dark:bg-info-500/10 dark:border-info-500/30 p-4 mb-6">
+            <div class="flex items-start gap-3">
+                <x-heroicon-o-information-circle class="w-5 h-5 text-info-600 dark:text-info-400 mt-0.5" />
+
+                <div class="text-sm text-info-800 dark:text-info-200">
+                    Geser ke samping untuk melihat hari lainnya.
+                </div>
+            </div>
+        </div>
 
         <div class="flex items-center justify-between gap-4 mb-6">
             <div class="w-full max-w-xl">
