@@ -15,21 +15,31 @@
                 Sesi Hari Ini
             </x-slot>
             <x-slot name="description">
-                Sesi yang dijadwalkan pada {{ now()->format('l, d F Y') }}
+                Sesi yang dijadwalkan pada {{ now()->translatedFormat('l, d F Y') }}
             </x-slot>
 
             <div class="space-y-4">
                 @foreach ($this->getTodaySessions() as $session)
-                    <div @class([
-                        'group flex w-full rounded-xl border overflow-hidden relative transition-all hover:shadow-md',
-                        'border-primary-300 dark:border-primary-700 bg-primary-50/30 dark:bg-primary-900/10 shadow-sm' => !$session->is_pending,
-                        'border-gray-300 dark:border-gray-700 bg-gray-50/30 dark:bg-gray-800/10 border-dashed' => $session->is_pending,
-                    ])>
+                    @php
+                        $cardClass = \Illuminate\Support\Arr::toCssClasses([
+                            'group flex w-full rounded-xl border overflow-hidden relative transition-all hover:shadow-md',
+                            'border-primary-300 dark:border-primary-700 bg-primary-50/30 dark:bg-primary-900/10 shadow-sm' => !$session->is_pending,
+                            'border-gray-300 dark:border-gray-700 bg-gray-50/30 dark:bg-gray-800/10 border-dashed' => $session->is_pending,
+                        ]);
+                    @endphp
+
+                    @if ($session->is_pending)
+                        <div class="{{ $cardClass }}">
+                    @else
+                        <a href="{{ \App\Filament\Resources\Learning\ClassSessions\ClassSessionResource::getUrl('course', ['courseId' => $session->course->id]) }}"
+                            class="{{ $cardClass }}">
+                    @endif
                         <div class="flex flex-1 items-start gap-4 p-5">
                             <div @class([
                                 'flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg font-bold border',
                                 'bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-700' => !$session->is_pending,
-                                'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700' => $session->is_pending,
+                                'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700' =>
+                                    $session->is_pending,
                             ])>
                                 <span class="text-[9px] uppercase leading-none opacity-60 mb-0.5 font-bold">Sesi</span>
                                 <span class="text-xl leading-none italic">#{{ $session->session_number }}</span>
@@ -55,12 +65,14 @@
                                         'bg-gray-500 text-white opacity-60' => $session->is_pending,
                                     ])>
                                         <x-heroicon-s-clock class="w-3.5 h-3.5" />
-                                        {{ $session->start_time->format('H:i') }} - {{ $session->end_time->format('H:i') }}
+                                        {{ $session->start_time->format('H:i') }} -
+                                        {{ $session->end_time->format('H:i') }}
                                     </div>
                                     @if ($session->is_pending)
-                                        <div class="mt-2 flex items-center gap-1.5 text-[10px] text-gray-400 dark:text-gray-500 font-medium italic">
-                                            <x-heroicon-m-sparkles class="w-3.5 h-3.5" />
-                                            Sesi belum digenerate hari ini
+                                        <div
+                                            class="mt-2 flex items-center gap-1.5 text-[10px] text-gray-400 dark:text-gray-500 font-medium italic">
+                                            <x-heroicon-m-calendar-days class="w-3.5 h-3.5" />
+                                            Sesuai Jadwal Hari Ini
                                         </div>
                                     @endif
                                 </div>
@@ -72,13 +84,27 @@
                                 'border-gray-200 dark:border-gray-800' => $session->is_pending,
                             ])>
                                 @if ($session->is_pending)
-                                    {{ ($this->generateTodaySessionAction)(['course' => $session->course->id]) }}
+                                    <div class="flex items-center gap-2 text-gray-400 dark:text-gray-500 p-2 opacity-50">
+                                        <x-heroicon-m-clock class="w-5 h-5" />
+                                    </div>
                                 @else
-                                    {{ ($this->editSessionAction)(['session' => $session->id]) }}
+                                    <div class="flex flex-col items-center justify-center min-w-[60px] p-2">
+                                        <span class="text-lg font-bold text-primary-600 dark:text-primary-400 leading-none">
+                                            {{ $session->attendances_count }}
+                                        </span>
+                                        <span class="text-[9px] uppercase font-bold text-gray-500 mt-1 leading-none tracking-wider">
+                                            Hadir
+                                        </span>
+                                    </div>
                                 @endif
                             </div>
                         </div>
-                    </div>
+
+                    @if ($session->is_pending)
+                        </div>
+                    @else
+                        </a>
+                    @endif
                 @endforeach
             </div>
         </x-filament::section>
@@ -122,8 +148,7 @@
                                 </h3>
                                 <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
                                     <x-heroicon-m-user class="w-4 h-4 mr-1.5 opacity-70" />
-                                    <span
-                                        class="truncate">{{ $course->lecturer ?? 'Dosen Belum Ditentukan' }}</span>
+                                    <span class="truncate">{{ $course->lecturer ?? 'Dosen Belum Ditentukan' }}</span>
                                 </div>
                             </div>
                         </div>

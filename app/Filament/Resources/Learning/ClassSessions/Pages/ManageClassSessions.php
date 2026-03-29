@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Learning\ClassSessions\Pages;
 
 use App\Filament\Actions\Cheerful\DeleteAction;
-use App\Filament\Actions\Cheerful\EditAction;
 use App\Filament\Resources\Learning\ClassSessions\ClassSessionResource;
 use App\Models\ClassSession;
 use App\Models\Course;
@@ -17,7 +16,6 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Pages\Page;
 use Filament\Schemas\Schema;
-use Filament\Support\Enums\Width;
 use Illuminate\Support\Collection;
 
 class ManageClassSessions extends Page implements HasActions, HasForms
@@ -58,57 +56,10 @@ class ManageClassSessions extends Page implements HasActions, HasForms
         return [];
     }
 
-    public function editSessionAction(): Action
-    {
-        return EditAction::make('editSession')
-            ->record(fn (array $arguments) => ClassSession::find($arguments['session']))
-            ->modalWidth(Width::TwoExtraLarge);
-    }
-
     public function deleteSessionAction(): Action
     {
         return DeleteAction::make('deleteSession')
             ->record(fn (array $arguments) => ClassSession::find($arguments['session']));
-    }
-
-    public function generateTodaySessionAction(): Action
-    {
-        return Action::make('generateTodaySession')
-            ->label('Generate Sesi')
-            ->icon('heroicon-o-sparkles')
-            ->color('primary')
-            ->requiresConfirmation()
-            ->modalHeading('Generate Sesi Hari Ini?')
-            ->modalDescription('Sistem akan membuat sesi baru secara otomatis berdasarkan jadwal aktif.')
-            ->modalSubmitActionLabel('Generate Sekarang')
-            ->action(function (array $arguments) {
-                $courseId = $arguments['course'];
-                $schedule = CourseSchedule::where('course_id', $courseId)->first();
-
-                if (! $schedule) {
-                    \Filament\Notifications\Notification::make()
-                        ->title('Jadwal Tidak Ditemukan')
-                        ->danger()
-                        ->send();
-
-                    return;
-                }
-
-                $lastSession = ClassSession::where('course_id', $courseId)->max('session_number');
-
-                ClassSession::create([
-                    'course_id' => $courseId,
-                    'session_number' => ($lastSession ?? 0) + 1,
-                    'date' => now()->toDateString(),
-                    'start_time' => $schedule->start_time,
-                    'end_time' => $schedule->end_time,
-                ]);
-
-                \Filament\Notifications\Notification::make()
-                    ->title('Sesi Berhasil Digenerate')
-                    ->success()
-                    ->send();
-            });
     }
 
     public function getTodaySessions(): Collection
@@ -120,7 +71,10 @@ class ManageClassSessions extends Page implements HasActions, HasForms
             ->whereHas('course', function ($query) {
                 $query->where('semester', app(GeneralSettings::class)->current_semester);
             })
-            ->with(['course', 'course.classSessions' => fn ($q) => $q->whereDate('date', now())])
+            ->with([
+                'course',
+                'course.classSessions' => fn ($q) => $q->whereDate('date', now())->withCount('attendances'),
+            ])
             ->orderBy('start_time', 'asc')
             ->get();
 
@@ -135,6 +89,7 @@ class ManageClassSessions extends Page implements HasActions, HasForms
                 'end_time' => $schedule->end_time,
                 'title' => $session?->title,
                 'is_pending' => ! $session,
+                'attendances_count' => $session?->attendances_count ?? 0,
             ];
         });
     }
