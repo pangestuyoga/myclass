@@ -21,7 +21,6 @@ class EditScheduleAction extends EditAction
         $this
             ->label('Ubah')
             ->icon(Heroicon::OutlinedPencilSquare)
-            ->color('warning')
             ->iconButton()
             ->tooltip('Ubah')
             ->record(function (array $arguments): CourseSchedule {
