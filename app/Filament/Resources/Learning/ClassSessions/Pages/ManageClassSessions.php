@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\Learning\ClassSessions\Pages;
 
+use App\Filament\Resources\Learning\ClassSessions\Actions\ViewAssignmentDetailAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\ViewAssignmentsAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\ViewAttendanceAction;
+use App\Filament\Resources\Learning\ClassSessions\Actions\ViewMaterialDetailAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\ViewMaterialsAction;
 use App\Filament\Resources\Learning\ClassSessions\ClassSessionResource;
 use App\Models\ClassSession;
@@ -134,6 +136,17 @@ class ManageClassSessions extends Page implements HasActions, HasForms
             });
     }
 
+    protected function getActions(): array
+    {
+        return [
+            $this->viewAttendanceAction(),
+            $this->viewMaterialsAction(),
+            $this->viewAssignmentsAction(),
+            $this->viewMaterialDetailAction(),
+            $this->viewAssignmentDetailAction(),
+        ];
+    }
+
     public function viewAttendanceAction(): Action
     {
         return ViewAttendanceAction::make();
@@ -147,5 +160,15 @@ class ManageClassSessions extends Page implements HasActions, HasForms
     public function viewAssignmentsAction(): Action
     {
         return ViewAssignmentsAction::make();
+    }
+
+    public function viewMaterialDetailAction(): Action
+    {
+        return ViewMaterialDetailAction::make();
+    }
+
+    public function viewAssignmentDetailAction(): Action
+    {
+        return ViewAssignmentDetailAction::make();
     }
 }

@@ -7,8 +7,10 @@ use App\Filament\Actions\Cheerful\CreateAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\DeleteSessionAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\EditSessionAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\GenerateSessionsAction;
+use App\Filament\Resources\Learning\ClassSessions\Actions\ViewAssignmentDetailAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\ViewAssignmentsAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\ViewAttendanceAction;
+use App\Filament\Resources\Learning\ClassSessions\Actions\ViewMaterialDetailAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\ViewMaterialsAction;
 use App\Filament\Resources\Learning\ClassSessions\ClassSessionResource;
 use App\Models\Course;
@@ -151,6 +153,19 @@ class ListCourseSessions extends Page implements HasActions, HasForms
         ];
     }
 
+    protected function getActions(): array
+    {
+        return [
+            $this->viewAttendanceAction(),
+            $this->viewMaterialsAction(),
+            $this->viewAssignmentsAction(),
+            $this->editSessionAction(),
+            $this->deleteSessionAction(),
+            $this->viewMaterialDetailAction(),
+            $this->viewAssignmentDetailAction(),
+        ];
+    }
+
     public function viewAttendanceAction(): Action
     {
         return ViewAttendanceAction::make();
@@ -174,5 +189,15 @@ class ListCourseSessions extends Page implements HasActions, HasForms
     public function deleteSessionAction(): Action
     {
         return DeleteSessionAction::make();
+    }
+
+    public function viewMaterialDetailAction(): Action
+    {
+        return ViewMaterialDetailAction::make();
+    }
+
+    public function viewAssignmentDetailAction(): Action
+    {
+        return ViewAssignmentDetailAction::make();
     }
 }

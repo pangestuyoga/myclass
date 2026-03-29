@@ -21,12 +21,19 @@ class ViewMaterialsAction extends Action
             ->color('warning')
             ->icon('heroicon-o-book-open')
             ->link()
-            ->modalHeading(fn (array $arguments) => 'Materi Kuliah - Sesi Ke-'.ClassSession::find($arguments['session'], ['*'])->session_number)
+            ->modalHeading(fn (array $arguments) => 'Materi Kuliah - Sesi Ke-'.(ClassSession::find($arguments['session'] ?? null, ['*'])?->session_number ?? ''))
             ->modalSubmitAction(false)
             ->modalCancelActionLabel('Tutup')
             ->modalWidth(Width::Large)
             ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.materials-modal', [
-                'materials' => ClassSession::find($arguments['session'], ['*'])->materials()->latest()->get(),
+                'materials' => ClassSession::find($arguments['session'] ?? null, ['*'])?->materials()
+                    ->latest()
+                    ->get()
+                    ->map(fn ($m) => (object) [
+                        'id' => $m->id,
+                        'title' => $m->title,
+                        'created_at_formatted' => $m->created_at?->translatedFormat('d F Y') ?? '-',
+                    ]) ?? collect(),
             ]));
     }
 }

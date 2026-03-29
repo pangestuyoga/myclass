@@ -133,7 +133,8 @@ class MaterialResource extends Resource
                 TextColumn::make('course.name')
                     ->label('Mata Kuliah')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->description(fn (Material $record) => $record->classSession?->session_number ? "Sesi Ke-{$record->classSession->session_number}" : ''),
 
                 TextColumn::make('title')
                     ->label('Judul')
@@ -144,13 +145,6 @@ class MaterialResource extends Resource
                     ->label('Tanggal Dibuat')
                     ->date('l, d F Y')
                     ->sortable(),
-
-                TextColumn::make('classSession.session_number')
-                    ->label('Pertemuan')
-                    ->formatStateUsing(fn ($state) => $state ? "Sesi Ke-$state" : '-')
-                    ->sortable()
-                    ->badge()
-                    ->color('gray'),
 
                 ...TimestampColumns::make(),
             ])

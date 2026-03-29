@@ -8,16 +8,17 @@
                 <div class="flex flex-col">
                     <span class="font-bold text-gray-900 dark:text-white leading-tight">{{ $material->title }}</span>
                     <span class="text-[10px] text-gray-500 dark:text-gray-400 font-medium uppercase mt-0.5">
-                        Dibuat: {{ $material->created_at?->translatedFormat('d F Y') ?? '-' }}
+                        Dibuat: {{ $material->created_at_formatted }}
                     </span>
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <a href="{{ \App\Filament\Resources\Learning\Materials\MaterialResource::getUrl('index') . '?tableFilters[course_id][value]=' . $material->course_id . '&tableSearch=' . urlencode($material->title) }}" 
+                <button type="button" 
+                   wire:click="mountAction('viewMaterialDetail', { record: {{ $material->id }} })"
                    class="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 text-gray-500 transition-colors"
                    title="Lihat Detail">
                     <x-heroicon-o-chevron-right class="w-5 h-5" />
-                </a>
+                </button>
             </div>
         </div>
     @empty

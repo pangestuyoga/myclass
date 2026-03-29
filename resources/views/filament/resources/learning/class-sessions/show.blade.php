@@ -50,7 +50,7 @@
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-1">
+                        <div class="flex items-center gap-3">
                             {{ ($this->viewAttendanceAction)(['session' => $session->id]) }}
                             {{ ($this->viewMaterialsAction)(['session' => $session->id]) }}
                             {{ ($this->viewAssignmentsAction)(['session' => $session->id]) }}

@@ -21,12 +21,20 @@ class ViewAssignmentsAction extends Action
             ->color('info')
             ->icon('heroicon-o-clipboard-document-list')
             ->link()
-            ->modalHeading(fn (array $arguments) => 'Tugas Kuliah - Sesi Ke-'.ClassSession::find($arguments['session'], ['*'])->session_number)
+            ->modalHeading(fn (array $arguments) => 'Tugas Kuliah - Sesi Ke-'.(ClassSession::find($arguments['session'] ?? null, ['*'])?->session_number ?? ''))
             ->modalSubmitAction(false)
             ->modalCancelActionLabel('Tutup')
             ->modalWidth(Width::Large)
             ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.assignments-modal', [
-                'assignments' => ClassSession::find($arguments['session'], ['*'])->assignments()->latest()->get(),
+                'assignments' => ClassSession::find($arguments['session'] ?? null, ['*'])?->assignments()
+                    ->latest()
+                    ->get()
+                    ->map(fn ($a) => (object) [
+                        'id' => $a->id,
+                        'title' => $a->title,
+                        'type_label' => $a->type?->getLabel() ?? 'Tugas',
+                        'due_date_formatted' => $a->due_date?->translatedFormat('d F Y, H:i') ?? '-',
+                    ]) ?? collect(),
             ]));
     }
 }
