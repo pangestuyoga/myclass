@@ -19,8 +19,9 @@ class SubmitAction extends Action
         parent::setUp();
 
         $this->label('Kumpulkan')
-            ->icon('heroicon-o-arrow-up-tray')
-            ->color('primary')
+            ->color('success')
+            ->icon('heroicon-o-paper-airplane')
+            ->link()
             ->url(fn (Assignment $record) => AssignmentResource::getUrl('submit', ['record' => $record->id]))
             ->visible(function (Assignment $record) {
                 if (now()->isAfter($record->due_date)) {

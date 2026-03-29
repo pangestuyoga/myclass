@@ -4,11 +4,13 @@ namespace App\Filament\Resources\Learning\ClassSessions\Pages;
 
 use App\Filament\Actions\BackAction;
 use App\Filament\Actions\Cheerful\CreateAction;
-use App\Filament\Actions\Cheerful\DeleteAction;
-use App\Filament\Actions\Cheerful\EditAction;
+use App\Filament\Resources\Learning\ClassSessions\Actions\DeleteSessionAction;
+use App\Filament\Resources\Learning\ClassSessions\Actions\EditSessionAction;
+use App\Filament\Resources\Learning\ClassSessions\Actions\GenerateSessionsAction;
+use App\Filament\Resources\Learning\ClassSessions\Actions\ViewAssignmentsAction;
+use App\Filament\Resources\Learning\ClassSessions\Actions\ViewAttendanceAction;
+use App\Filament\Resources\Learning\ClassSessions\Actions\ViewMaterialsAction;
 use App\Filament\Resources\Learning\ClassSessions\ClassSessionResource;
-use App\Filament\Support\SystemNotification;
-use App\Models\ClassSession;
 use App\Models\Course;
 use App\Models\Student;
 use Filament\Actions\Action;
@@ -70,34 +72,43 @@ class ListCourseSessions extends Page implements HasActions, HasForms
             ]);
     }
 
-    public function formSchema(): array
+    public function schema(): array
     {
         return [
-            Grid::make(['default' => 3])
+            Grid::make(['default' => 2])
                 ->schema([
                     TextInput::make('session_number')
                         ->label('Pertemuan Ke-')
+                        ->placeholder('1')
                         ->numeric()
-                        ->default(fn () => ($this->course->classSessions()->max('session_number') ?? 0) + 1)
-                        ->required(),
+                        ->required()
+                        ->minValue(1)
+                        ->maxValue(16)
+                        ->autocomplete(false),
+
                     DatePicker::make('date')
                         ->label('Tanggal')
-                        ->default(now())
+                        ->placeholder('Pilih Tanggal')
+                        ->required()
                         ->native(false)
+                        ->displayFormat('l, d F Y')
+                        ->default(now()->toDateString()),
+
+                    TimePicker::make('start_time')
+                        ->label('Waktu Mulai')
+                        ->placeholder('08:00')
+                        ->native(false)
+                        ->displayFormat('H:i')
+                        ->seconds(false)
                         ->required(),
-                    Grid::make(['default' => 2])
-                        ->schema([
-                            TimePicker::make('start_time')
-                                ->label('Mulai')
-                                ->native(false)
-                                ->seconds(false)
-                                ->required(),
-                            TimePicker::make('end_time')
-                                ->label('Selesai')
-                                ->native(false)
-                                ->seconds(false)
-                                ->required(),
-                        ])->columnSpan(1),
+
+                    TimePicker::make('end_time')
+                        ->label('Waktu Selesai')
+                        ->placeholder('10:00')
+                        ->native(false)
+                        ->displayFormat('H:i')
+                        ->seconds(false)
+                        ->required(),
                 ]),
         ];
     }
@@ -119,14 +130,15 @@ class ListCourseSessions extends Page implements HasActions, HasForms
             BackAction::make()
                 ->url(ManageClassSessions::getUrl()),
 
-            $this->generateSessionsAction(),
+            GenerateSessionsAction::make(),
+
             CreateAction::make()
-                ->label('Tambah Sesi')
+                ->label('Tambah')
                 ->modalHeading('Tambah Sesi')
                 ->modalSubmitActionLabel('Simpan')
                 ->modalCancelActionLabel('Batal')
-                ->form($this->formSchema())
-                ->mutateFormDataUsing(function (array $data): array {
+                ->schema($this->schema())
+                ->mutateDataUsing(function (array $data): array {
                     $data['course_id'] = $this->courseId;
 
                     return $data;
@@ -139,102 +151,28 @@ class ListCourseSessions extends Page implements HasActions, HasForms
         ];
     }
 
-    public function generateSessionsAction(): Action
+    public function viewAttendanceAction(): Action
     {
-        return Action::make('generateSessions')
-            ->label('Generate Sesi')
-            ->icon('heroicon-o-sparkles')
-            ->color('warning')
-            ->requiresConfirmation()
-            ->modalHeading('Generate Sesi Pembelajaran')
-            ->modalDescription('Sistem akan men-generate atau memperbarui sesi 1 sampai 16 secara otomatis berdasarkan jadwal mata kuliah ini.')
-            ->form([
-                DatePicker::make('start_date')
-                    ->label('Tanggal Pertemuan Ke-1')
-                    ->default(now())
-                    ->required()
-                    ->native(false),
-            ])
-            ->action(function (array $data) {
-                $course = $this->course;
-                $schedule = $course->courseSchedules()->first();
-
-                if (! $schedule) {
-                    SystemNotification::danger('Batal!', 'Jadwal belum ditentukan untuk mata kuliah ini.')->send();
-
-                    return;
-                }
-
-                $startDate = \Carbon\Carbon::parse($data['start_date']);
-
-                for ($i = 1; $i <= 16; $i++) {
-                    ClassSession::updateOrCreate(
-                        [
-                            'course_id' => $course->id,
-                            'session_number' => $i,
-                        ],
-                        [
-                            'date' => $startDate->copy()->addWeeks($i - 1)->toDateString(),
-                            'start_time' => $schedule->start_time,
-                            'end_time' => $schedule->end_time,
-                        ]
-                    );
-                }
-
-                SystemNotification::success('Selesai!', '16 Sesi berhasil digenerate/diperbarui.')->send();
-            });
+        return ViewAttendanceAction::make();
     }
 
-    protected function viewAttendanceAction(): Action
+    public function viewMaterialsAction(): Action
     {
-        return Action::make('viewAttendance')
-            ->label('Lihat Presensi')
-            ->modalHeading(fn (array $arguments) => 'Daftar Presensi - Sesi Ke-'.ClassSession::find($arguments['session'])->session_number)
-            ->modalSubmitAction(false)
-            ->modalCancelActionLabel('Tutup')
-            ->modalWidth(Width::ExtraLarge)
-            ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.attendance-modal', [
-                'attendances' => ClassSession::find($arguments['session'])->attendances()->with('student')->latest('attended_at')->get(),
-            ]));
+        return ViewMaterialsAction::make();
     }
 
-    protected function viewMaterialsAction(): Action
+    public function viewAssignmentsAction(): Action
     {
-        return Action::make('viewMaterials')
-            ->label('Daftar Materi')
-            ->modalHeading(fn (array $arguments) => 'Materi Kuliah - Sesi Ke-'.ClassSession::find($arguments['session'])->session_number)
-            ->modalSubmitAction(false)
-            ->modalCancelActionLabel('Tutup')
-            ->modalWidth(Width::Large)
-            ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.materials-modal', [
-                'materials' => ClassSession::find($arguments['session'])->materials()->latest()->get(),
-            ]));
-    }
-
-    protected function viewAssignmentsAction(): Action
-    {
-        return Action::make('viewAssignments')
-            ->label('Daftar Tugas')
-            ->modalHeading(fn (array $arguments) => 'Tugas Kuliah - Sesi Ke-'.ClassSession::find($arguments['session'])->session_number)
-            ->modalSubmitAction(false)
-            ->modalCancelActionLabel('Tutup')
-            ->modalWidth(Width::Large)
-            ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.assignments-modal', [
-                'assignments' => ClassSession::find($arguments['session'])->assignments()->latest()->get(),
-            ]));
+        return ViewAssignmentsAction::make();
     }
 
     public function editSessionAction(): Action
     {
-        return EditAction::make('editSession')
-            ->record(fn (array $arguments) => ClassSession::find($arguments['session']))
-            ->form($this->formSchema())
-            ->modalWidth(Width::TwoExtraLarge);
+        return EditSessionAction::make();
     }
 
     public function deleteSessionAction(): Action
     {
-        return DeleteAction::make('deleteSession')
-            ->record(fn (array $arguments) => ClassSession::find($arguments['session']));
+        return DeleteSessionAction::make();
     }
 }

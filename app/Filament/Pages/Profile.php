@@ -15,7 +15,7 @@ use Illuminate\Validation\Rules\Password;
 
 class Profile extends EditProfile
 {
-    public function form(Schema $schema): Schema
+    public function schema(Schema $schema): Schema
     {
         return $schema
             ->components([

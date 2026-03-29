@@ -23,15 +23,15 @@ class EditAssignmentAction extends EditAction
     {
         parent::setUp();
 
-        $this->icon('heroicon-m-pencil-square')
+        $this->label('Ubah')
             ->color('warning')
+            ->icon('heroicon-o-pencil-square')
+            ->link()
             ->tooltip('Ubah')
-            ->size('sm')
-            ->iconButton()
             ->record(fn (array $arguments) => Assignment::find($arguments['record']))
             ->modalHeading(fn (Assignment $record) => "Ubah {$record->title}")
             ->modalWidth(Width::FourExtraLarge)
-            ->schema(fn (Schema $schema) => AssignmentForm::configure($schema)->getComponents())
+            ->form(AssignmentForm::configure(new Schema)->getComponents())
             ->fillForm(function (Assignment $record): array {
                 $data = $record->toArray();
 

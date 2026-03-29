@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\Course;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 return new class extends Migration
 {
@@ -16,8 +18,8 @@ return new class extends Migration
         });
 
         // Populate existing courses with a random token
-        \App\Models\Course::all()->each(function ($course) {
-            $course->update(['sharing_token' => \Illuminate\Support\Str::random(32)]);
+        Course::all()->each(function ($course) {
+            $course->update(['sharing_token' => Str::random(32)]);
         });
     }
 

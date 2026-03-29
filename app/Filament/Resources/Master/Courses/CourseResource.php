@@ -34,11 +34,9 @@ class CourseResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $title = 'Mata Kuliah';
-
     protected static ?string $navigationLabel = 'Mata Kuliah';
 
-    protected static ?int $navigationSort = 15;
+    protected static ?int $navigationSort = 10;
 
     protected static ?string $recordTitleAttribute = 'name';
 

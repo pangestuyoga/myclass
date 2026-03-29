@@ -5,7 +5,6 @@ namespace App\Filament\Pages\Information\CourseSchedule\Actions;
 use App\Filament\Actions\Cheerful\EditAction;
 use App\Models\CourseSchedule;
 use Filament\Support\Enums\Width;
-use Filament\Support\Icons\Heroicon;
 
 class EditScheduleAction extends EditAction
 {
@@ -20,8 +19,9 @@ class EditScheduleAction extends EditAction
 
         $this
             ->label('Ubah')
-            ->icon(Heroicon::OutlinedPencilSquare)
-            ->iconButton()
+            ->color('warning')
+            ->icon('heroicon-o-pencil-square')
+            ->link()
             ->tooltip('Ubah')
             ->record(function (array $arguments): CourseSchedule {
                 return CourseSchedule::findOrFail($arguments['schedule']);

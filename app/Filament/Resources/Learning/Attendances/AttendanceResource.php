@@ -19,11 +19,11 @@ class AttendanceResource extends Resource
 
     protected static ?string $navigationLabel = 'Presensi';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 20;
 
-    protected static ?string $modelLabel = 'Presensi';
+    protected static ?string $recordTitleAttribute = 'date';
 
-    protected static ?string $pluralModelLabel = 'Presensi';
+    protected static ?string $slug = 'learning/attendances';
 
     public static function getPages(): array
     {

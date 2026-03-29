@@ -7,7 +7,6 @@ use App\Models\Student;
 use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
 use Filament\Support\Enums\Width;
-use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Hash;
 
 class ChangePasswordAction extends Action
@@ -17,7 +16,6 @@ class ChangePasswordAction extends Action
         parent::setUp();
 
         $this->label('Ganti Kata Sandi')
-            ->icon(Heroicon::OutlinedKey)
             ->color('warning')
             ->modalWidth(Width::Medium)
             ->schema([

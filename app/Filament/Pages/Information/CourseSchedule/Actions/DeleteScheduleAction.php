@@ -4,7 +4,6 @@ namespace App\Filament\Pages\Information\CourseSchedule\Actions;
 
 use App\Filament\Actions\Cheerful\DeleteAction;
 use App\Models\CourseSchedule;
-use Filament\Support\Icons\Heroicon;
 
 class DeleteScheduleAction extends DeleteAction
 {
@@ -21,9 +20,9 @@ class DeleteScheduleAction extends DeleteAction
             return CourseSchedule::findOrFail($arguments['schedule']);
         })
             ->label('Hapus')
-            ->icon(Heroicon::OutlinedTrash)
+            ->icon('heroicon-o-trash')
             ->color('danger')
-            ->iconButton()
+            ->link()
             ->tooltip('Hapus')
             ->modalHeading('Hapus Jadwal Kuliah')
             ->modalDescription('Apakah Anda yakin ingin menghapus jadwal ini? Tindakan ini tidak dapat dibatalkan.')

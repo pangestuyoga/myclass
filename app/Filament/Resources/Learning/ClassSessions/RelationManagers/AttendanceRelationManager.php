@@ -21,7 +21,7 @@ class AttendanceRelationManager extends RelationManager
 
     protected static ?string $title = 'Presensi Mahasiswa';
 
-    public function form(Schema $schema): Schema
+    public function schema(Schema $schema): Schema
     {
         return $schema
             ->components([

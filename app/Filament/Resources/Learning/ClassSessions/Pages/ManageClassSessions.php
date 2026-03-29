@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\Learning\ClassSessions\Pages;
 
+use App\Filament\Resources\Learning\ClassSessions\Actions\ViewAssignmentsAction;
+use App\Filament\Resources\Learning\ClassSessions\Actions\ViewAttendanceAction;
+use App\Filament\Resources\Learning\ClassSessions\Actions\ViewMaterialsAction;
 use App\Filament\Resources\Learning\ClassSessions\ClassSessionResource;
 use App\Models\ClassSession;
 use App\Models\Course;
@@ -15,7 +18,6 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Pages\Page;
 use Filament\Schemas\Schema;
-use Filament\Support\Enums\Width;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
 
@@ -132,42 +134,18 @@ class ManageClassSessions extends Page implements HasActions, HasForms
             });
     }
 
-    protected function viewAttendanceAction(): Action
+    public function viewAttendanceAction(): Action
     {
-        return Action::make('viewAttendance')
-            ->label('Lihat Presensi')
-            ->modalHeading(fn (array $arguments) => 'Daftar Presensi - Sesi Ke-'.ClassSession::find($arguments['session'])->session_number)
-            ->modalSubmitAction(false)
-            ->modalCancelActionLabel('Tutup')
-            ->modalWidth(Width::ExtraLarge)
-            ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.attendance-modal', [
-                'attendances' => ClassSession::find($arguments['session'])->attendances()->with('student')->latest('attended_at')->get(),
-            ]));
+        return ViewAttendanceAction::make();
     }
 
-    protected function viewMaterialsAction(): Action
+    public function viewMaterialsAction(): Action
     {
-        return Action::make('viewMaterials')
-            ->label('Daftar Materi')
-            ->modalHeading(fn (array $arguments) => 'Materi Kuliah - Sesi Ke-'.ClassSession::find($arguments['session'])->session_number)
-            ->modalSubmitAction(false)
-            ->modalCancelActionLabel('Tutup')
-            ->modalWidth(Width::Large)
-            ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.materials-modal', [
-                'materials' => ClassSession::find($arguments['session'])->materials()->latest()->get(),
-            ]));
+        return ViewMaterialsAction::make();
     }
 
-    protected function viewAssignmentsAction(): Action
+    public function viewAssignmentsAction(): Action
     {
-        return Action::make('viewAssignments')
-            ->label('Daftar Tugas')
-            ->modalHeading(fn (array $arguments) => 'Tugas Kuliah - Sesi Ke-'.ClassSession::find($arguments['session'])->session_number)
-            ->modalSubmitAction(false)
-            ->modalCancelActionLabel('Tutup')
-            ->modalWidth(Width::Large)
-            ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.assignments-modal', [
-                'assignments' => ClassSession::find($arguments['session'])->assignments()->latest()->get(),
-            ]));
+        return ViewAssignmentsAction::make();
     }
 }

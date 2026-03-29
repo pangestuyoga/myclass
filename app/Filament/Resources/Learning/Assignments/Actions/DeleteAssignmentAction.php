@@ -18,15 +18,14 @@ class DeleteAssignmentAction extends DeleteAction
 
         $this
             ->label('Hapus')
+            ->icon('heroicon-o-trash')
+            ->link()
             ->modalHeading(fn (Assignment $record) => "Hapus {$record->title}")
             ->record(fn (array $arguments) => Assignment::find($arguments['record']))
             ->after(function ($livewire) {
                 unset($livewire->assignments);
             })
-            ->icon('heroicon-m-trash')
             ->color('danger')
-            ->tooltip('Hapus')
-            ->size('sm')
-            ->iconButton();
+            ->tooltip('Hapus');
     }
 }

@@ -91,7 +91,7 @@
                         </a>
 
                         <div
-                            class="flex flex-col items-center justify-center border-l border-gray-100 dark:border-gray-700 p-1 gap-3 p-3">
+                            class="flex flex-col items-start justify-center border-l border-gray-100 dark:border-gray-700 p-1 gap-3 p-3">
                             {{ ($this->pinAction)(['record' => $card->id]) }}
 
                             @canAny(['Update:Assignment', 'Delete:Assignment'])

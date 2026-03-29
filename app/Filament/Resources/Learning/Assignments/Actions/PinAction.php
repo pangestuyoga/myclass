@@ -17,14 +17,18 @@ class PinAction extends Action
     {
         parent::setUp();
 
-        $this->icon(fn (array $arguments, $livewire) => in_array($arguments['record'], $livewire->pinnedIds) ? 'heroicon-s-bookmark' : 'heroicon-o-bookmark')
+        $this->label(fn (array $arguments, $livewire) => in_array($arguments['record'], $livewire->pinnedIds) ? 'Lepas Pin' : 'Pin Tugas')
             ->color(fn (array $arguments, $livewire) => in_array($arguments['record'], $livewire->pinnedIds) ? 'primary' : 'gray')
+            ->icon(fn (array $arguments, $livewire) => in_array($arguments['record'], $livewire->pinnedIds) ? 'heroicon-s-bookmark' : 'heroicon-o-bookmark')
+            ->link()
             ->tooltip(fn (array $arguments, $livewire) => in_array($arguments['record'], $livewire->pinnedIds) ? 'Lepas pin' : 'Pin tugas ini')
-            ->size('sm')
-            ->iconButton()
             ->action(function (array $arguments, $livewire) {
                 $assignmentId = $arguments['record'];
-                $studentProfile = auth()->user()->student;
+                $studentProfile = auth()->user()?->student;
+
+                if (! $studentProfile) {
+                    return;
+                }
 
                 $existing = AssignmentPin::where('student_id', $studentProfile->id)
                     ->where('assignment_id', $assignmentId)

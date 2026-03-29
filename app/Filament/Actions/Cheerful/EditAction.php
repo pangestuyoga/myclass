@@ -13,6 +13,7 @@ class EditAction extends ActionsEditAction
 
         $this->successNotification(
             SystemNotification::update()
-        );
+        )
+            ->color('warning');
     }
 }
