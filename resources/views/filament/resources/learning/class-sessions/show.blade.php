@@ -22,10 +22,19 @@
                                         <x-heroicon-o-clock class="w-4 h-4 text-primary-500" />
                                         {{ $session->time_range }}
                                     </div>
-                                    <div
-                                        class="flex items-center gap-1.5 font-bold text-success-600 dark:text-success-400">
-                                        <x-heroicon-o-user-group class="w-4 h-4" />
-                                        {{ $session->attendances_count }} Presensi
+                                    <div class="flex flex-col gap-1">
+                                        <div
+                                            class="flex items-center gap-1.5 font-bold text-success-600 dark:text-success-400 hover:bg-success-50 dark:hover:bg-success-900/10 px-2 py-0.5 rounded-lg transition-colors cursor-pointer"
+                                            wire:click="mountAction('viewAttendance', { session: {{ $session->id }} })">
+                                            <x-heroicon-o-user-group class="w-4 h-4" />
+                                            {{ $session->attendances_count }}<span class="text-[10px] opacity-60 ml-0.5">/{{ $session->total_students }}</span> Presensi
+                                        </div>
+                                        <div class="flex items-center gap-2 px-2">
+                                            <div class="flex-1 h-1 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                                                <div class="h-full bg-success-500 rounded-full transition-all duration-500" style="width: {{ $session->attendance_percentage }}%"></div>
+                                            </div>
+                                            <span class="text-[10px] font-bold text-gray-500">{{ $session->attendance_percentage }}%</span>
+                                        </div>
                                     </div>
                                     <div class="flex items-center gap-1.5 font-bold text-amber-600 dark:text-amber-400">
                                         <x-heroicon-o-document-text class="w-4 h-4" />

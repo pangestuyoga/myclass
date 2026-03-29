@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Learning\ClassSessions\Pages;
 use App\Filament\Resources\Learning\ClassSessions\ClassSessionResource;
 use App\Models\ClassSession;
 use App\Models\Course;
+use App\Models\Student;
 use App\Settings\GeneralSettings;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
@@ -60,12 +61,18 @@ class ManageClassSessions extends Page implements HasActions, HasForms
     #[Computed]
     public function todaySessions(): Collection
     {
+        $totalActiveStudents = Student::query()
+            ->whereHas('user', fn ($q) => $q->where('is_active', true))
+            ->count();
+
         return ClassSession::query()
             ->whereDate('date', now())
             ->with(['course'])
-            ->withCount('attendances')
+            ->withCount(['attendances', 'materials', 'assignments'])
             ->get()
-            ->map(function ($session) {
+            ->map(function ($session) use ($totalActiveStudents) {
+                $percentage = $totalActiveStudents > 0 ? round(($session->attendances_count / $totalActiveStudents) * 100) : 0;
+
                 return (object) [
                     'id' => $session->id,
                     'is_pending' => false,
@@ -75,6 +82,10 @@ class ManageClassSessions extends Page implements HasActions, HasForms
                     'lecturer' => $session->course->lecturer ?? '-',
                     'time_range' => $session->start_time->format('H:i').' - '.$session->end_time->format('H:i'),
                     'attendances_count' => $session->attendances_count,
+                    'total_students' => $totalActiveStudents,
+                    'attendance_percentage' => $percentage,
+                    'materials_count' => $session->materials_count,
+                    'assignments_count' => $session->assignments_count,
                     'url' => ClassSessionResource::getUrl('course', ['courseId' => $session->course_id]),
 
                     // Pre-calculated classes
@@ -92,7 +103,7 @@ class ManageClassSessions extends Page implements HasActions, HasForms
     {
         $query = Course::query()
             ->where('semester', app(GeneralSettings::class)->current_semester)
-            ->with(['classSessions' => fn ($q) => $q->orderBy('session_number', 'asc')]);
+            ->with(['classSessions', 'studyGroups.students.user']);
 
         if ($this->search) {
             $query->where(function ($q) {
@@ -102,16 +113,23 @@ class ManageClassSessions extends Page implements HasActions, HasForms
             });
         }
 
+        $totalActiveStudents = Student::query()
+            ->whereHas('user', fn ($q) => $q->where('is_active', true))
+            ->count();
+
         return $query->get()
             ->sortBy('name')
-            ->map(fn ($course) => (object) [
-                'id' => $course->id,
-                'name' => $course->name,
-                'code' => $course->code,
-                'lecturer' => $course->lecturer ?? 'Dosen Belum Ditentukan',
-                'sessions_count' => $course->classSessions->count(),
-                'url' => ClassSessionResource::getUrl('course', ['courseId' => $course->id]),
-            ]);
+            ->map(function ($course) use ($totalActiveStudents) {
+                return (object) [
+                    'id' => $course->id,
+                    'name' => $course->name,
+                    'code' => $course->code,
+                    'lecturer' => $course->lecturer ?? 'Dosen Belum Ditentukan',
+                    'sessions_count' => $course->classSessions->count(),
+                    'total_students' => $totalActiveStudents,
+                    'url' => ClassSessionResource::getUrl('course', ['courseId' => $course->id]),
+                ];
+            });
     }
 
     public function viewAttendanceAction(): Action

@@ -41,6 +41,16 @@
                                         <x-heroicon-s-clock class="w-3.5 h-3.5" />
                                         {{ $session->time_range }}
                                     </div>
+                                    <div class="flex items-center gap-2 mt-2">
+                                        <div class="flex items-center gap-1 text-[10px] font-bold text-amber-600 dark:text-amber-400">
+                                            <x-heroicon-o-document-text class="w-3 h-3" />
+                                            {{ $session->materials_count }} Materi
+                                        </div>
+                                        <div class="flex items-center gap-1 text-[10px] font-bold text-info-600 dark:text-info-400">
+                                            <x-heroicon-o-clipboard-document-list class="w-3 h-3" />
+                                            {{ $session->assignments_count }} Tugas
+                                        </div>
+                                    </div>
                                     @if ($session->is_pending)
                                         <div
                                             class="mt-2 flex items-center gap-1.5 text-[10px] text-gray-400 dark:text-gray-500 font-medium italic">
@@ -57,15 +67,20 @@
                                         <x-heroicon-m-clock class="w-5 h-5" />
                                     </div>
                                 @else
-                                    <div class="flex flex-col items-center justify-center min-w-[60px] p-2 hover:bg-white/50 dark:hover:bg-white/5 rounded-lg transition-colors cursor-pointer" 
-                                     onclick="event.preventDefault(); event.stopPropagation();"
-                                     wire:click="mountAction('viewAttendance', { session: {{ $session->id }} })">
-                                    <span class="text-lg font-bold text-primary-600 dark:text-primary-400 leading-none">
-                                        {{ $session->attendances_count }}
-                                    </span>
-                                    <span class="text-[9px] uppercase font-bold text-gray-500 mt-1 leading-none tracking-wider">
-                                        Hadir
-                                    </span>
+                                    <div class="flex flex-col items-center justify-center min-w-[80px] p-2 hover:bg-white/50 dark:hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
+                                    onclick="event.preventDefault(); event.stopPropagation();"
+                                    wire:click="mountAction('viewAttendance', { session: {{ $session->id }} })">
+                                    <div class="flex flex-col items-center">
+                                        <span class="text-lg font-bold text-primary-600 dark:text-primary-400 leading-none">
+                                            {{ $session->attendances_count }}<span class="text-[10px] text-gray-400 font-normal ml-0.5">/{{ $session->total_students }}</span>
+                                        </span>
+                                        <div class="mt-1.5 w-12 h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                            <div class="h-full bg-primary-500 rounded-full transition-all duration-500" style="width: {{ $session->attendance_percentage }}%"></div>
+                                        </div>
+                                        <span class="text-[9px] uppercase font-bold text-gray-500 mt-1 leading-none tracking-wider">
+                                            {{ $session->attendance_percentage }}% Hadir
+                                        </span>
+                                    </div>
                                 </div>
                                 @endif
                             </div>

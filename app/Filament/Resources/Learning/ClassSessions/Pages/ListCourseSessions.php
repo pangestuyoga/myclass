@@ -10,6 +10,7 @@ use App\Filament\Resources\Learning\ClassSessions\ClassSessionResource;
 use App\Filament\Support\SystemNotification;
 use App\Models\ClassSession;
 use App\Models\Course;
+use App\Models\Student;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
@@ -48,6 +49,10 @@ class ListCourseSessions extends Page implements HasActions, HasForms
     #[Computed]
     public function sessions(): Collection
     {
+        $totalActiveStudents = Student::query()
+            ->whereHas('user', fn ($q) => $q->where('is_active', true))
+            ->count();
+
         return $this->course->classSessions()
             ->withCount(['attendances', 'materials', 'assignments'])
             ->orderBy('session_number', 'asc')
@@ -58,6 +63,8 @@ class ListCourseSessions extends Page implements HasActions, HasForms
                 'date_formatted' => $session->date->translatedFormat('l, d F Y'),
                 'time_range' => $session->start_time->format('H:i').' - '.$session->end_time->format('H:i'),
                 'attendances_count' => $session->attendances_count,
+                'total_students' => $totalActiveStudents,
+                'attendance_percentage' => $totalActiveStudents > 0 ? round(($session->attendances_count / $totalActiveStudents) * 100) : 0,
                 'materials_count' => $session->materials_count,
                 'assignments_count' => $session->assignments_count,
             ]);
