@@ -13,7 +13,6 @@ use App\Filament\Resources\Master\Courses\Pages\ManageCourses;
 use App\Models\Course;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -34,6 +33,8 @@ class CourseResource extends Resource
     protected static string|UnitEnum|null $navigationGroup = 'Master';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+
+    protected static ?string $title = 'Mata Kuliah';
 
     protected static ?string $navigationLabel = 'Mata Kuliah';
 
@@ -82,13 +83,11 @@ class CourseResource extends Resource
                     ->maxValue(8)
                     ->helperText('Semester ke berapa mata kuliah ini diajarkan (1-8).'),
 
-                Select::make('lecturer_id')
+                TextInput::make('lecturer')
                     ->label('Dosen Pengampu')
-                    ->placeholder('Pilih Dosen')
-                    ->relationship('lecturer', 'full_name')
-                    ->preload()
-                    ->searchable()
-                    ->helperText('Pilih dosen yang mengampu mata kuliah ini.')
+                    ->placeholder('Ujang')
+                    ->maxLength(100)
+                    ->helperText('Masukkan nama dosen yang mengampu mata kuliah ini.')
                     ->required(),
 
             ])
@@ -112,8 +111,9 @@ class CourseResource extends Resource
                     ->label('SKS')
                     ->sortable(),
 
-                TextColumn::make('lecturer.full_name')
+                TextColumn::make('lecturer')
                     ->label('Dosen Pengampu')
+                    ->placeholder('Belum ditentukan')
                     ->searchable(),
 
                 ...TimestampColumns::make(),

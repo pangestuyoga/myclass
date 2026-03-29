@@ -108,7 +108,7 @@
                         <h1 class="text-3xl font-bold tracking-tighter">{{ $course->name }}</h1>
                         <p class="text-zinc-500 flex items-center gap-2 tracking-tight text-sm font-medium">
                             <x-heroicon-o-user class="w-4 h-4 opacity-50" />
-                            {{ $course->lecturer->full_name }}
+                            {{ $course->lecturer }}
                         </p>
                     </div>
 

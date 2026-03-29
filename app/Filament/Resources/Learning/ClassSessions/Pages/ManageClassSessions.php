@@ -120,7 +120,7 @@ class ManageClassSessions extends Page implements HasActions, HasForms
             ->whereHas('course', function ($query) {
                 $query->where('semester', app(GeneralSettings::class)->current_semester);
             })
-            ->with(['course.lecturer', 'course.classSessions' => fn ($q) => $q->whereDate('date', now())])
+            ->with(['course', 'course.classSessions' => fn ($q) => $q->whereDate('date', now())])
             ->orderBy('start_time', 'asc')
             ->get();
 
@@ -143,13 +143,13 @@ class ManageClassSessions extends Page implements HasActions, HasForms
     {
         $query = Course::query()
             ->where('semester', app(GeneralSettings::class)->current_semester)
-            ->with(['classSessions' => fn ($q) => $q->orderBy('session_number', 'asc'), 'lecturer']);
+            ->with(['classSessions' => fn ($q) => $q->orderBy('session_number', 'asc')]);
 
         if ($this->search) {
             $query->where(function ($q) {
                 $q->where('name', 'like', "%{$this->search}%")
                     ->orWhere('code', 'like', "%{$this->search}%")
-                    ->orWhereHas('lecturer', fn ($sq) => $sq->where('full_name', 'like', "%{$this->search}%"));
+                    ->orWhere('lecturer', 'like', "%{$this->search}%");
             });
         }
 

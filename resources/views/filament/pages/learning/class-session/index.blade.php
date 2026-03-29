@@ -46,7 +46,7 @@
                                             {{ $session->course->name }}
                                         </h3>
                                         <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5 font-medium">
-                                            {{ $session->course->code }} • {{ $session->course->lecturer->full_name ?? '-' }}
+                                            {{ $session->course->code }} • {{ $session->course->lecturer ?? '-' }}
                                         </p>
                                     </div>
                                     <div @class([
@@ -123,7 +123,7 @@
                                 <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
                                     <x-heroicon-m-user class="w-4 h-4 mr-1.5 opacity-70" />
                                     <span
-                                        class="truncate">{{ $course->lecturer->full_name ?? 'Dosen Belum Ditentukan' }}</span>
+                                        class="truncate">{{ $course->lecturer ?? 'Dosen Belum Ditentukan' }}</span>
                                 </div>
                             </div>
                         </div>

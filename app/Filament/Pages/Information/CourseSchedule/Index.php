@@ -95,21 +95,14 @@ class Index extends Page implements HasActions, HasForms
 
     public function getSchedules(): Collection
     {
-        $user = auth()->user();
-        $lecturer = $user->lecturer;
-
-        $query = CourseSchedule::with(['course.lecturer']);
-
-        if ($lecturer) {
-            $query->whereHas('course', fn ($q) => $q->where('lecturer_id', $lecturer->id));
-        }
+        $query = CourseSchedule::with(['course']);
 
         $query->whereHas('course', fn ($q) => $q->where('semester', app(GeneralSettings::class)->current_semester));
 
         if ($this->search) {
             $query->where(function ($q) {
-                $q->whereHas('course', fn ($sq) => $sq->where('name', 'like', "%{$this->search}%"))
-                    ->orWhereHas('course.lecturer', fn ($sq) => $sq->where('full_name', 'like', "%{$this->search}%"));
+                $q->whereHas('course', fn ($sq) => $sq->where('name', 'like', "%{$this->search}%")
+                    ->orWhere('lecturer', 'like', "%{$this->search}%"));
             });
         }
 

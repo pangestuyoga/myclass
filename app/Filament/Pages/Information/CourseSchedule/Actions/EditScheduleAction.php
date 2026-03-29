@@ -30,7 +30,7 @@ class EditScheduleAction extends EditAction
             ->modalHeading('Ubah Jadwal Kuliah')
             ->modalSubmitActionLabel('Simpan')
             ->modalCancelActionLabel('Batal')
-            ->modalWidth(Width::Large)
+            ->modalWidth(Width::ThreeExtraLarge)
             ->schema(fn ($livewire) => $livewire->scheduleFormSchema());
     }
 }

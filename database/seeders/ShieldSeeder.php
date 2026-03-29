@@ -34,17 +34,6 @@ class ShieldSeeder extends Seeder
                     "Replicate:Student",
                     "Reorder:Student",
                     
-                    "ViewAny:Lecturer",
-                    "View:Lecturer",
-                    "Create:Lecturer",
-                    "Update:Lecturer",
-                    "Delete:Lecturer",
-                    "Restore:Lecturer",
-                    "ForceDelete:Lecturer",
-                    "ForceDeleteAny:Lecturer",
-                    "RestoreAny:Lecturer",
-                    "Replicate:Lecturer",
-                    "Reorder:Lecturer",
 
                     "ViewAny:Course",
                     "View:Course",
@@ -153,8 +142,6 @@ class ShieldSeeder extends Seeder
                     "ViewAny:Student",
                     "View:Student",
 
-                    "ViewAny:Lecturer",
-                    "View:Lecturer",
 
                     "ViewAny:Course",
                     "View:Course",
@@ -183,9 +170,6 @@ class ShieldSeeder extends Seeder
                     "Update:Student",
                     "Delete:Student",
                 
-                    "Create:Lecturer",
-                    "Update:Lecturer",
-                    "Delete:Lecturer",
 
                     "Create:Course",
                     "Update:Course",

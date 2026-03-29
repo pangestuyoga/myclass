@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Course;
-use App\Models\Lecturer;
 use Illuminate\Database\Seeder;
 
 class CourseSeeder extends Seeder
@@ -13,6 +12,17 @@ class CourseSeeder extends Seeder
      */
     public function run(): void
     {
+        $lecturers = [
+            'Dr. Ahmad Hidayat',
+            'Siti Aminah, M.Kom.',
+            'Budi Santoso, S.T., M.T.',
+            'Dr. Ir. Heru Prasetyo',
+            'Lusi Fitriani, M.Sc.',
+            'Andi Wijaya, M.T.',
+            'Rina Wahyuni, Ph.D.',
+            'Dian Pratama, M.Kom.',
+        ];
+
         $courses = [
             // Semester 1
             ['code' => 'SIU101', 'name' => 'Ilmu Amaliah, Sosial, dan Budaya Dasar', 'credit' => 2, 'semester' => 1],
@@ -84,31 +94,8 @@ class CourseSeeder extends Seeder
             ['code' => 'FSI839', 'name' => 'Startup Digital', 'credit' => 2, 'semester' => 8],
         ];
 
-        $lecturers = Lecturer::pluck('id')->toArray();
-
-        shuffle($lecturers);
-
-        $lecturerSemesterMap = [];
-
-        foreach ($courses as $i => &$course) {
-
-            $semester = $course['semester'];
-
-            if ($i < count($lecturers)) {
-                $lecturerId = $lecturers[$i];
-            } else {
-
-                do {
-                    $lecturerId = $lecturers[array_rand($lecturers)];
-                } while (
-                    isset($lecturerSemesterMap[$lecturerId]) &&
-                    in_array($semester, $lecturerSemesterMap[$lecturerId])
-                );
-            }
-
-            $course['lecturer_id'] = $lecturerId;
-
-            $lecturerSemesterMap[$lecturerId][] = $semester;
+        foreach ($courses as &$course) {
+            $course['lecturer'] = $lecturers[array_rand($lecturers)];
         }
 
         Course::insert($courses);

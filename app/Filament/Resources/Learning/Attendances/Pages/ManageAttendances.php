@@ -51,7 +51,7 @@ class ManageAttendances extends Page implements HasForms, HasTable
             ->whereHas('course', function ($q) use ($semester) {
                 $q->where('semester', $semester);
             })
-            ->with(['course.lecturer', 'attendances' => function ($q) use ($student) {
+            ->with(['course', 'attendances' => function ($q) use ($student) {
                 $q->where('student_id', $student->id)
                     ->whereDate('date', now()->toDateString());
             }])
@@ -88,7 +88,7 @@ class ManageAttendances extends Page implements HasForms, HasTable
                 return (object) [
                     'id' => $schedule->id,
                     'course_name' => $schedule->course->name,
-                    'lecturer_name' => $schedule->course->lecturer?->full_name ?? 'Belum Ditentukan',
+                    'lecturer_name' => $schedule->course->lecturer ?? 'Belum Ditentukan',
                     'time_range' => $schedule->start_time->format('H:i').' - '.$schedule->end_time->format('H:i'),
                     'is_attended' => $isAttended,
                     'can_attend' => $canAttend && ! $isAttended,
@@ -187,7 +187,7 @@ class ManageAttendances extends Page implements HasForms, HasTable
                     ->searchable()
                     ->sortable()
                     ->wrap()
-                    ->description(fn (Attendance $record): string => $record->courseSchedule->course->lecturer->full_name),
+                    ->description(fn (Attendance $record): string => $record->courseSchedule->course->lecturer ?? 'Belum Ditentukan'),
             ])
             ->defaultSort('date', 'desc')
             ->filters([

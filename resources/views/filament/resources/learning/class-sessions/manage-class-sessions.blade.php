@@ -40,7 +40,7 @@
                                 </h3>
                                 <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
                                      <x-heroicon-m-user class="w-4 h-4 mr-1.5 opacity-70" />
-                                     <span class="truncate">{{ $course->lecturer->full_name ?? 'Dosen Belum Ditentukan' }}</span>
+                                     <span class="truncate">{{ $course->lecturer ?? 'Dosen Belum Ditentukan' }}</span>
                                 </div>
                             </div>
                         </div>

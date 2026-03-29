@@ -26,7 +26,7 @@ class CreateScheduleAction extends CreateAction
                 $action->makeModalSubmitAction('createAnother', arguments: ['another' => true])
                     ->label('Simpan dan Tambah Lagi'),
             ])
-            ->modalWidth(Width::Large)
+            ->modalWidth(Width::ThreeExtraLarge)
             ->schema(fn ($livewire) => $livewire->scheduleFormSchema());
     }
 }
