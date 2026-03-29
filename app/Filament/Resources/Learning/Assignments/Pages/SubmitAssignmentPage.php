@@ -11,6 +11,7 @@ use App\Models\AssignmentSubmission;
 use App\Models\Student;
 use App\Models\StudyGroup;
 use Filament\Resources\Pages\Page;
+use Illuminate\Support\Arr;
 use Livewire\Attributes\Computed;
 use Livewire\WithFileUploads;
 
@@ -20,7 +21,7 @@ class SubmitAssignmentPage extends Page
 
     protected static string $resource = AssignmentResource::class;
 
-    protected string $view = 'filament.resources.learning.assignments.pages.submit-assignment';
+    protected string $view = 'filament.resources.learning.assignments.submit-assignment';
 
     protected static ?string $title = 'Kumpulkan Tugas';
 
@@ -38,6 +39,11 @@ class SubmitAssignmentPage extends Page
                 'icon' => 'heroicon-o-clock',
                 'is_danger' => $this->isOverdue,
                 'badge' => $this->isOverdue ? '(Terlewat)' : null,
+                'icon_classes' => Arr::toCssClasses([
+                    'flex h-9 w-9 shrink-0 items-center justify-center rounded-lg',
+                    'bg-danger-50 dark:bg-danger-900/20 text-danger-600' => $this->isOverdue,
+                    'bg-warning-50 dark:bg-warning-900/20 text-warning-600' => ! $this->isOverdue,
+                ]),
             ],
             [
                 'label' => 'Status Pengumpulan',
@@ -45,6 +51,11 @@ class SubmitAssignmentPage extends Page
                 'icon' => $this->isOverdue ? 'heroicon-o-lock-closed' : 'heroicon-o-check-circle',
                 'is_danger' => $this->isOverdue,
                 'is_success' => ! $this->isOverdue,
+                'icon_classes' => Arr::toCssClasses([
+                    'flex h-9 w-9 shrink-0 items-center justify-center rounded-lg',
+                    'bg-danger-50 dark:bg-danger-900/20 text-danger-600' => $this->isOverdue,
+                    'bg-success-50 dark:bg-success-900/20 text-success-600' => ! $this->isOverdue,
+                ]),
             ],
         ];
     }

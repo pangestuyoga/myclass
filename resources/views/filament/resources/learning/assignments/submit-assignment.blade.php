@@ -8,15 +8,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                 @foreach ($this->statusCards as $card)
                     <div class="flex items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-700 p-3">
-                        <div @class([
-                            'flex h-9 w-9 shrink-0 items-center justify-center rounded-lg',
-                            'bg-danger-50 dark:bg-danger-900/20 text-danger-600' =>
-                                $card['is_danger'] ?? false,
-                            'bg-success-50 dark:bg-success-900/20 text-success-600' =>
-                                $card['is_success'] ?? false,
-                            'bg-warning-50 dark:bg-warning-900/20 text-warning-600' =>
-                                !($card['is_danger'] ?? false) && !($card['is_success'] ?? false),
-                        ])>
+                        <div class="{{ $card['icon_classes'] }}">
                             <x-filament::icon :icon="$card['icon']" class="h-5 w-5" />
                         </div>
                         <div>
@@ -64,9 +56,8 @@
                         <x-filament::icon icon="heroicon-o-lock-closed" class="h-5 w-5" />
                     </div>
                     <div class="flex flex-wrap items-center gap-2">
-                        @php $status = $this->submissionStatus; @endphp
-                        <x-filament::badge :color="$status->badge_color" size="lg">
-                            {{ $status->badge_label }}
+                        <x-filament::badge :color="$this->submissionStatus->badge_color" size="lg">
+                            {{ $this->submissionStatus->badge_label }}
                         </x-filament::badge>
                     </div>
                 </div>

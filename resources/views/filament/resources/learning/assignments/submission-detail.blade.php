@@ -5,7 +5,7 @@
 
                 <div class="flex items-center gap-2 mb-1">
 
-                    <div class="flex h-7 w-7 items-center justify-center rounded-lg {{ $stat['color'] }}">
+                    <div class="flex h-7 w-7 items-center justify-center rounded-lg {{ $stat['color_classes'] }}">
                         <x-filament::icon :icon="$stat['icon']" class="h-4 w-4 text-current" />
                     </div>
 
@@ -22,23 +22,19 @@
     </div>
 
     <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2">
-        <div class="h-2 rounded-full transition-all {{ $this->percentage === 100 ? 'bg-success-500' : ($this->percentage > 0 ? 'bg-warning-500' : 'bg-gray-300') }}"
+        <div class="h-2 rounded-full transition-all {{ $this->progress_color_class }}"
             style="width: {{ $this->percentage }}%"></div>
     </div>
 
-    @php
-        $info = $this->getAssignmentInfo();
-    @endphp
-
     <x-filament::section>
-        <x-slot name="heading">{{ $info['title'] }}</x-slot>
+        <x-slot name="heading">{{ $this->assignmentSummary['title'] }}</x-slot>
         <x-slot name="description">
-            {{ $info['course'] }}
+            {{ $this->assignmentSummary['course'] }}
             &nbsp;·&nbsp;
-            Batas: {{ $info['due_date'] }}
+            Batas: {{ $this->assignmentSummary['due_date'] }}
             &nbsp;·&nbsp;
-            Tipe: {{ $info['type'] }}
-            @if ($info['is_overdue'])
+            Tipe: {{ $this->assignmentSummary['type'] }}
+            @if ($this->assignmentSummary['is_overdue'])
                 <x-filament::badge color="danger" class="ml-2">Terlewat</x-filament::badge>
             @endif
         </x-slot>
@@ -84,17 +80,9 @@
                                 </td>
 
                                 <td class="px-4 py-3">
-                                    @if ($item->submitted)
-                                        <span
-                                            class="inline-flex items-center gap-1 rounded-full bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-400 px-2.5 py-0.5 text-xs font-medium">
-                                            ✓ Terkumpul
-                                        </span>
-                                    @else
-                                        <span
-                                            class="inline-flex items-center rounded-full bg-danger-100 text-danger-700 dark:bg-danger-900/30 dark:text-danger-400 px-2.5 py-0.5 text-xs font-medium">
-                                            Belum
-                                        </span>
-                                    @endif
+                                    <span class="{{ $item->status_classes }}">
+                                        {{ $item->status_label }}
+                                    </span>
                                 </td>
 
                                 <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs">
@@ -104,7 +92,7 @@
                                 <td class="px-4 py-3">
                                     @if ($item->has_file)
                                         <button type="button"
-                                            wire:click="mountAction('previewSubmission', { submissionId: {{ $item->submission->id }} })"
+                                            wire:click="mountAction('previewSubmission', { submissionId: {{ $item->submission_id }} })"
                                             class="inline-flex items-center gap-1 text-xs text-primary-600 dark:text-primary-400 hover:underline">
                                             <x-filament::icon icon="heroicon-o-eye" class="h-3.5 w-3.5" />
                                             Lihat Tugas
@@ -113,8 +101,6 @@
                                         <span class="text-xs text-gray-400">-</span>
                                     @endif
                                 </td>
-
-
                             </tr>
                         @endforeach
                     </tbody>

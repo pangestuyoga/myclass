@@ -14,13 +14,14 @@ use App\Settings\GeneralSettings;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\Page;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Arr;
 use Livewire\Attributes\Computed;
 
 class ListAssignments extends Page
 {
     protected static string $resource = AssignmentResource::class;
 
-    protected string $view = 'filament.resources.learning.assignments.pages.list-assignments';
+    protected string $view = 'filament.resources.learning.assignments.index';
 
     protected static ?string $title = 'Tugas';
 
@@ -139,8 +140,33 @@ class ListAssignments extends Page
                 'is_new' => $isNew,
                 'is_pinned' => $isPinned,
                 'status_label' => $statusLabel,
-                'status_color' => $statusColor,
                 'status_icon' => $statusIcon,
+                // Pre-calculated classes
+                'card_classes' => Arr::toCssClasses([
+                    'group flex w-full rounded-xl border transition-all overflow-hidden relative',
+                    'border-primary-300 dark:border-primary-700 bg-primary-50/30 dark:bg-primary-900/10 shadow-sm' => $isPinned,
+                    'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800' => ! $isPinned && $canSubmitActual,
+                    'border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/40 opacity-80' => ! $canSubmitActual,
+                ]),
+                'icon_wrapper_classes' => Arr::toCssClasses([
+                    'flex h-11 w-11 shrink-0 items-center justify-center rounded-lg',
+                    'bg-success-50 dark:bg-success-900/20 text-success-600 dark:text-success-400' => $isSubmitted,
+                    'bg-danger-50 dark:bg-danger-900/20 text-danger-600 dark:text-danger-400' => ! $isSubmitted && $isOverdue,
+                    'bg-warning-50 dark:bg-warning-900/20 text-warning-600 dark:text-warning-400' => ! $isSubmitted && ! $isOverdue,
+                ]),
+                'status_badge_classes' => Arr::toCssClasses([
+                    'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium',
+                    'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' => $statusColor === 'amber',
+                    'bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-400' => $statusColor === 'success',
+                    'bg-danger-100 text-danger-700 dark:bg-danger-900/30 dark:text-danger-400' => $statusColor === 'danger',
+                    'bg-warning-100 text-warning-700 dark:bg-warning-900/30 dark:text-warning-400' => $statusColor === 'warning',
+                    'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400' => $statusColor === 'gray',
+                ]),
+                'indicator_icon_classes' => Arr::toCssClasses([
+                    'h-5 w-5 opacity-20',
+                    'text-primary-500' => $isLeader,
+                    'text-gray-400' => ! $isLeader,
+                ]),
             ];
         });
     }

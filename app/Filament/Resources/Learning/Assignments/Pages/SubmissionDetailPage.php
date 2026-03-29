@@ -10,6 +10,7 @@ use App\Models\AssignmentSubmission;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\Page;
 use Filament\Support\Enums\Width;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Joaopaulolndev\FilamentPdfViewer\Infolists\Components\PdfViewerEntry;
 use Livewire\Attributes\Computed;
@@ -18,7 +19,7 @@ class SubmissionDetailPage extends Page
 {
     protected static string $resource = AssignmentResource::class;
 
-    protected string $view = 'filament.resources.learning.assignments.pages.submission-detail';
+    protected string $view = 'filament.resources.learning.assignments.submission-detail';
 
     protected static ?string $title = 'Detail Rekap Pengumpulan';
 
@@ -32,27 +33,33 @@ class SubmissionDetailPage extends Page
                 'label' => $this->record->type === AssignmentType::Individual ? 'Total Mahasiswa' : 'Total Kelompok',
                 'value' => $this->totalCount,
                 'icon' => 'heroicon-o-user-group',
-                'color' => 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-900',
+                'color_classes' => 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-900',
             ],
             [
                 'label' => 'Sudah Kumpul',
                 'value' => $this->doneCount,
                 'icon' => 'heroicon-o-check-circle',
-                'color' => 'bg-success-100 dark:bg-success-900/30 text-success-700 dark:text-success-400',
+                'color_classes' => 'bg-success-100 dark:bg-success-900/30 text-success-700 dark:text-success-400',
             ],
             [
                 'label' => 'Belum Kumpul',
                 'value' => $this->totalCount - $this->doneCount,
                 'icon' => 'heroicon-o-x-circle',
-                'color' => 'bg-danger-100 dark:bg-danger-900/30 text-danger-700 dark:text-danger-400',
+                'color_classes' => 'bg-danger-100 dark:bg-danger-900/30 text-danger-700 dark:text-danger-400',
             ],
             [
                 'label' => 'Persentase',
                 'value' => $this->percentage.'%',
                 'icon' => 'heroicon-o-chart-bar',
-                'color' => 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400',
+                'color_classes' => 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400',
             ],
         ];
+    }
+
+    #[Computed]
+    public function progressColorClass(): string
+    {
+        return $this->percentage === 100 ? 'bg-success-500' : ($this->percentage > 0 ? 'bg-warning-500' : 'bg-gray-300');
     }
 
     #[Computed]
@@ -78,10 +85,16 @@ class SubmissionDetailPage extends Page
                     'is_individual' => true,
                     'primary_name' => $student->full_name,
                     'secondary_info' => $student->student_number,
-                    'submission' => $submission,
+                    'submission_id' => $submission?->id,
                     'submitted' => $isSubmitted,
                     'submitted_at_formatted' => $isSubmitted ? $submission->submitted_at?->translatedFormat('l, d F Y, H:i') : '-',
                     'has_file' => $isSubmitted && $submission->hasMedia('submission'),
+                    'status_classes' => Arr::toCssClasses([
+                        'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium',
+                        'bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-400' => $isSubmitted,
+                        'bg-danger-100 text-danger-700 dark:bg-danger-900/30 dark:text-danger-400' => ! $isSubmitted,
+                    ]),
+                    'status_label' => $isSubmitted ? '✓ Terkumpul' : 'Belum',
                 ];
             })->sortBy('secondary_info')->values();
         } else {
@@ -101,10 +114,16 @@ class SubmissionDetailPage extends Page
                     'is_individual' => false,
                     'primary_name' => $group->name,
                     'secondary_info' => $isSubmitted ? $submission->student->full_name : '-',
-                    'submission' => $submission,
+                    'submission_id' => $submission?->id,
                     'submitted' => $isSubmitted,
                     'submitted_at_formatted' => $isSubmitted ? $submission->submitted_at?->translatedFormat('l, d F Y, H:i') : '-',
                     'has_file' => $isSubmitted && $submission->hasMedia('submission'),
+                    'status_classes' => Arr::toCssClasses([
+                        'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium',
+                        'bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-400' => $isSubmitted,
+                        'bg-danger-100 text-danger-700 dark:bg-danger-900/30 dark:text-danger-400' => ! $isSubmitted,
+                    ]),
+                    'status_label' => $isSubmitted ? '✓ Terkumpul' : 'Belum',
                 ];
             })->sortBy('primary_name')->values();
         }
@@ -136,7 +155,8 @@ class SubmissionDetailPage extends Page
         return now()->isAfter($this->record->due_date);
     }
 
-    public function getAssignmentInfo(): array
+    #[Computed]
+    public function assignmentSummary(): array
     {
         return [
             'title' => $this->record->title,

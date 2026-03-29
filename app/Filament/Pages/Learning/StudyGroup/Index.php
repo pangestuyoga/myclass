@@ -24,7 +24,9 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\Computed;
 use UnitEnum;
 
 class Index extends Page implements HasActions, HasForms
@@ -48,7 +50,7 @@ class Index extends Page implements HasActions, HasForms
         return 'View:StudyGroup';
     }
 
-    protected string $view = 'filament.pages.learning.study-groups';
+    protected string $view = 'filament.pages.learning.study-group.index';
 
     public ?int $course_id = null;
 
@@ -101,7 +103,8 @@ class Index extends Page implements HasActions, HasForms
             ->visible(fn () => auth()->user()->can('Delete:StudyGroup'));
     }
 
-    public function getStudyGroups(): Collection
+    #[Computed]
+    public function studyGroups(): Collection
     {
         $query = StudyGroup::with(['leader', 'students', 'courses'])
             ->whereHas('courses', fn ($q) => $q->where('courses.semester', app(GeneralSettings::class)->current_semester));
@@ -110,15 +113,35 @@ class Index extends Page implements HasActions, HasForms
             $query->whereHas('courses', fn ($q) => $q->where('courses.id', $this->course_id));
         }
 
-        return $query->latest()->get();
-    }
+        $studentId = auth()->user()?->student?->id;
 
-    protected function getViewData(): array
-    {
-        return [
-            'groups' => $this->getStudyGroups(),
-            'studentId' => auth()->user()?->student?->id,
-        ];
+        return $query->latest()->get()->map(function ($record) use ($studentId) {
+            $isMyGroup = ($studentId && ($record->leader_id === $studentId || $record->students->contains($studentId)));
+
+            return (object) [
+                'id' => $record->id,
+                'name' => $record->name,
+                'is_my_group' => $isMyGroup,
+                'leader_avatar' => $record->leader?->user?->facehash_avatar_url,
+                'leader_name' => $record->leader->full_name ?? 'Belum Ditentukan',
+                'is_leader' => $studentId && $record->leader_id === $studentId,
+                'courses' => $record->courses->map(fn ($c) => (object) [
+                    'name' => $c->name,
+                ]),
+                'students_count' => $record->students->count(),
+                'students' => $record->students->map(fn ($s) => (object) [
+                    'id' => $s->id,
+                    'full_name' => $s->full_name,
+                    'is_me' => $studentId && $s->id === $studentId,
+                ]),
+                // Pre-calculated classes
+                'card_classes' => Arr::toCssClasses([
+                    'fi-card flex flex-col justify-between rounded-xl border transition duration-200 group relative',
+                    'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md' => ! $isMyGroup,
+                    'bg-primary-50/30 dark:bg-primary-900/10 border-primary-500 shadow-md ring-1 ring-primary-500' => $isMyGroup,
+                ]),
+            ];
+        });
     }
 
     public function isMyGroup(StudyGroup $record): bool

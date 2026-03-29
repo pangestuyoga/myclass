@@ -23,6 +23,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\Computed;
 use UnitEnum;
 
 class Index extends Page implements HasActions, HasForms
@@ -43,7 +44,7 @@ class Index extends Page implements HasActions, HasForms
 
     protected static ?string $slug = 'information/course-schedules';
 
-    protected string $view = 'filament.pages.information.course-schedules';
+    protected string $view = 'filament.pages.information.course-schedule.index';
 
     public ?string $search = '';
 
@@ -111,23 +112,39 @@ class Index extends Page implements HasActions, HasForms
                 ['day_of_week', 'asc'],
                 ['start_time', 'asc'],
             ])
-            ->groupBy('day_of_week');
+            ->groupBy('day_of_week')
+            ->map(function ($daySchedules) {
+                return $daySchedules->map(fn ($schedule) => (object) [
+                    'id' => $schedule->id,
+                    'course_code' => $schedule->course->code ?? 'MATKUL',
+                    'course_name' => $schedule->course->name ?? 'Mata Kuliah Tidak Diketahui',
+                    'lecturer' => $schedule->course->lecturer ?? 'Dosen Belum Ditentukan',
+                    'semester' => $schedule->course->semester,
+                    'credit' => $schedule->course->credit ?? '-',
+                    'room' => $schedule->room,
+                    'mode_label' => $schedule->mode?->getLabel(),
+                    'mode_color' => $schedule->mode?->getColor(),
+                    'time_range' => $schedule->start_time->format('H:i').' – '.$schedule->end_time->format('H:i'),
+                ]);
+            });
     }
 
-    protected function getViewData(): array
+    #[Computed]
+    public function schedulesGrouped(): Collection
     {
-        return [
-            'schedules' => $this->getSchedules(),
-            'days' => [
-                1 => 'Senin',
-                2 => 'Selasa',
-                3 => 'Rabu',
-                4 => 'Kamis',
-                5 => 'Jumat',
-                6 => 'Sabtu',
-                7 => 'Minggu',
-            ],
+        $days = [
+            1 => 'Senin',
+            2 => 'Selasa',
+            3 => 'Rabu',
+            4 => 'Kamis',
+            5 => 'Jumat',
+            6 => 'Sabtu',
+            7 => 'Minggu',
         ];
+
+        return $this->getSchedules()->mapWithKeys(function ($schedules, $day) use ($days) {
+            return [$days[$day] ?? 'Lainnya' => $schedules];
+        });
     }
 
     public function scheduleFormSchema(): array

@@ -9,15 +9,15 @@
                 {{ $this->getTitle() }}
             </h1>
             <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                Data sesi pembelajaran untuk mata kuliah {{ $this->getCourse()->name }}
+                {{ $this->description }}
             </p>
         </div>
     </div>
 
     <x-filament::section>
-        @if ($this->getSessions()->isNotEmpty())
+        @if ($this->sessions->isNotEmpty())
             <div class="space-y-4">
-                @foreach ($this->getSessions() as $session)
+                @foreach ($this->sessions as $session)
                     <div
                         class="fi-card p-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm flex items-center justify-between hover:shadow-md transition">
                         <div class="flex items-start gap-4">
@@ -31,25 +31,24 @@
                                     class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500 dark:text-gray-400">
                                     <div class="flex items-center gap-1.5 font-bold text-gray-900 dark:text-white">
                                         <x-heroicon-o-calendar class="w-4 h-4 text-primary-500" />
-                                        {{ $session->date->format('l, d F Y') }}
+                                        {{ $session->date_formatted }}
                                     </div>
                                     <div class="flex items-center gap-1.5 font-medium">
                                         <x-heroicon-o-clock class="w-4 h-4 text-primary-500" />
-                                        {{ $session->start_time->format('H:i') }} -
-                                        {{ $session->end_time->format('H:i') }}
+                                        {{ $session->time_range }}
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="flex items-center gap-1">
-                            {{ ($this->editSessionAction)(['session' => $session->id]) }}
-                            {{ ($this->deleteSessionAction)(['session' => $session->id]) }}
+                            {{ $this->editSessionAction(['session' => $session->id]) }}
+                            {{ $this->deleteSessionAction(['session' => $session->id]) }}
                         </div>
                     </div>
                 @endforeach
             </div>
-        @else
+@else
             <x-filament::empty-state icon="heroicon-o-presentation-chart-bar" heading="Tidak ada data yang ditemukan"
                 description="Setelah Anda membuat data pertama, maka akan muncul disini." iconColor="gray">
             </x-filament::empty-state>

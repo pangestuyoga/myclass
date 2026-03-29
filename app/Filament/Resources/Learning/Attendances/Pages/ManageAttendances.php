@@ -20,6 +20,8 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
+use Livewire\Attributes\Computed;
 
 class ManageAttendances extends Page implements HasForms, HasTable
 {
@@ -31,7 +33,7 @@ class ManageAttendances extends Page implements HasForms, HasTable
 
     protected static ?string $navigationLabel = 'Presensi';
 
-    protected string $view = 'filament.resources.learning.attendances.pages.list-attendances';
+    protected string $view = 'filament.resources.learning.attendances.index';
 
     public function getSchedules()
     {
@@ -59,7 +61,8 @@ class ManageAttendances extends Page implements HasForms, HasTable
             ->get();
     }
 
-    public function getScheduleCards()
+    #[Computed]
+    public function scheduleCards()
     {
         return $this->getSchedules()
             ->map(function ($schedule) {
@@ -68,7 +71,6 @@ class ManageAttendances extends Page implements HasForms, HasTable
 
                 $now = now();
                 $startTime = now()->setTimeFrom($schedule->start_time);
-
                 $canAttend = $now->greaterThanOrEqualTo($startTime);
 
                 $statusLabel = 'Belum Presensi';
@@ -96,15 +98,44 @@ class ManageAttendances extends Page implements HasForms, HasTable
                     'status_color' => $statusColor,
                     'status_icon' => $statusIcon,
                     'attended_at' => $isAttended ? $attendance->attended_at->format('H:i') : null,
+                    // Pre-calculated classes
+                    'card_classes' => Arr::toCssClasses([
+                        'fi-card flex flex-col justify-between rounded-xl border transition duration-200 group relative',
+                        'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md' => ! $isAttended,
+                        'bg-primary-50/30 dark:bg-primary-900/10 border-primary-500 shadow-md ring-1 ring-primary-500' => $isAttended,
+                    ]),
+                    'title_classes' => Arr::toCssClasses([
+                        'text-lg font-bold leading-tight flex items-center gap-2 transition-colors',
+                        'text-gray-950 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400' => ! $isAttended,
+                        'text-primary-900 dark:text-primary-100' => $isAttended,
+                    ]),
+                    'lecturer_wrapper_classes' => Arr::toCssClasses([
+                        'flex items-center gap-1.5',
+                        'text-gray-500 dark:text-gray-400' => ! $isAttended,
+                        'text-primary-600 dark:text-primary-400' => $isAttended,
+                    ]),
+                    'icon_wrapper_classes' => Arr::toCssClasses([
+                        'w-8 h-8 rounded-full flex items-center justify-center mr-3 shrink-0 border',
+                        'bg-primary-100 dark:bg-primary-900/40 border-primary-200 dark:border-primary-800' => ! $isAttended,
+                        'bg-white dark:bg-primary-800 border-primary-300 dark:border-primary-600' => $isAttended,
+                    ]),
+                    'time_label_classes' => Arr::toCssClasses([
+                        'truncate font-medium',
+                        'text-gray-100 dark:text-gray-200' => ! $isAttended,
+                        'text-primary-900 dark:text-primary-50' => $isAttended,
+                    ]),
+                    'status_badge_classes' => Arr::toCssClasses([
+                        'text-[10px] font-bold px-1.5 py-0.5 rounded ring-1 ring-inset',
+                        'bg-success-50 dark:bg-success-500/10 text-success-600 dark:text-success-400 ring-success-600/20' => $isAttended,
+                        'bg-warning-50 dark:bg-warning-500/10 text-warning-600 dark:text-warning-400 ring-warning-600/20' => ! $isAttended && $canAttend && ! $isAttended,
+                        'bg-gray-50 dark:bg-gray-500/10 text-gray-600 dark:text-gray-400 ring-gray-600/20' => ! $isAttended && ! $canAttend,
+                    ]),
+                    'footer_classes' => Arr::toCssClasses([
+                        'flex items-center justify-end gap-2 p-4 pt-0 rounded-b-xl',
+                        'bg-primary-100/30 dark:bg-primary-900/10 pt-4' => $isAttended || ($canAttend && ! $isAttended),
+                    ]),
                 ];
             });
-    }
-
-    protected function getViewData(): array
-    {
-        return [
-            'scheduleCards' => $this->getScheduleCards(),
-        ];
     }
 
     public function attend(int $scheduleId): void

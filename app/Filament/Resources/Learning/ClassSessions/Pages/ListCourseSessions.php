@@ -16,6 +16,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Pages\Page;
 use Filament\Support\Enums\Width;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\Computed;
 
 class ListCourseSessions extends Page implements HasActions, HasForms
 {
@@ -23,7 +24,7 @@ class ListCourseSessions extends Page implements HasActions, HasForms
 
     protected static string $resource = ClassSessionResource::class;
 
-    protected string $view = 'filament.resources.learning.class-sessions.pages.list-course-sessions';
+    protected string $view = 'filament.resources.learning.class-sessions.index';
 
     public $courseId;
 
@@ -32,19 +33,35 @@ class ListCourseSessions extends Page implements HasActions, HasForms
         $this->courseId = $courseId;
     }
 
-    public function getCourse(): Course
+    #[Computed]
+    public function course(): Course
     {
         return Course::findOrFail($this->courseId);
     }
 
-    public function getSessions(): Collection
+    #[Computed]
+    public function sessions(): Collection
     {
-        return $this->getCourse()->classSessions()->orderBy('session_number', 'asc')->get();
+        return $this->course->classSessions()
+            ->orderBy('session_number', 'asc')
+            ->get()
+            ->map(fn ($session) => (object) [
+                'id' => $session->id,
+                'session_number' => $session->session_number,
+                'date_formatted' => $session->date->format('l, d F Y'),
+                'time_range' => $session->start_time->format('H:i').' - '.$session->end_time->format('H:i'),
+            ]);
+    }
+
+    #[Computed]
+    public function description(): string
+    {
+        return 'Data sesi pembelajaran untuk mata kuliah '.$this->course->name;
     }
 
     public function getTitle(): string
     {
-        return 'Sesi Kelas - '.$this->getCourse()->name;
+        return 'Sesi Kelas - '.$this->course->name;
     }
 
     protected function getHeaderActions(): array
