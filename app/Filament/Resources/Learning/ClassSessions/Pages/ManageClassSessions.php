@@ -26,7 +26,7 @@ class ManageClassSessions extends Page implements HasActions, HasForms
 
     protected static ?string $title = 'Sesi Kelas';
 
-    protected string $view = 'filament.pages.learning.class-session.index';
+    protected string $view = 'filament.resources.learning.class-sessions.index';
 
     public ?string $search = '';
 

@@ -1,54 +1,134 @@
 <x-filament-panels::page>
-    <div class="flex items-center gap-4 mb-6">
-        <a href="{{ \App\Filament\Resources\Learning\ClassSessions\ClassSessionResource::getUrl('index') }}"
-            class="fi-btn fi-btn-size-md relative grid-flow-col items-center justify-center font-semibold outline-none transition duration-75 focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-70 fi-btn-color-gray fi-color-gray bg-white dark:bg-white/5 text-gray-950 dark:text-white shadow-sm ring-1 ring-gray-950/10 dark:ring-white/20 hover:bg-gray-50 dark:hover:bg-white/10 fi-btn-icon-start gap-1 p-2 rounded-lg">
-            <x-heroicon-m-arrow-left class="w-5 h-5 text-gray-500" />
-        </a>
-        <div class="space-y-1">
-            <h1 class="text-2xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-3xl">
-                {{ $this->getTitle() }}
-            </h1>
-            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                {{ $this->description }}
-            </p>
-        </div>
-    </div>
-
+    <!-- Search Section -->
     <x-filament::section>
-        @if ($this->sessions->isNotEmpty())
+        <div class="flex items-center justify-between gap-4">
+            <div class="w-full max-w-xl">
+                {{ $this->form }}
+            </div>
+        </div>
+    </x-filament::section>
+
+    <!-- Today's Sessions Section -->
+    @if ($this->todaySessions->isNotEmpty())
+        <x-filament::section icon="heroicon-o-bolt" icon-color="primary">
+            <x-slot name="heading">
+                Sesi Hari Ini
+            </x-slot>
+            <x-slot name="description">
+                Sesi yang dijadwalkan pada {{ $this->today_date }}
+            </x-slot>
+
             <div class="space-y-4">
-                @foreach ($this->sessions as $session)
-                    <div
-                        class="fi-card p-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm flex items-center justify-between hover:shadow-md transition">
-                        <div class="flex items-start gap-4">
-                            <div
-                                class="flex flex-col items-center justify-center w-12 h-12 rounded-lg bg-primary-100 dark:bg-primary-500/10 text-primary-700 dark:text-primary-300 font-bold border border-primary-200 dark:border-primary-500/20">
-                                <span class="text-[10px] uppercase leading-none opacity-60 mb-0.5 mt-1">Sesi</span>
-                                <span class="text-xl leading-none mb-1">#{{ $session->session_number }}</span>
+                @foreach ($this->todaySessions as $session)
+                    @if ($session->is_pending)
+                        <div class="{{ $session->card_classes }}">
+                    @else
+                        <a href="{{ $session->url }}" class="{{ $session->card_classes }}">
+                    @endif
+                        <div class="flex flex-1 items-start gap-4 p-5">
+                            <div class="{{ $session->session_badge_classes }}">
+                                <span class="text-[9px] uppercase leading-none opacity-60 mb-0.5 font-bold">Sesi</span>
+                                <span class="text-sm font-bold italic">Ke-{{ $session->session_number }}</span>
                             </div>
-                            <div class="space-y-1">
-                                <div
-                                    class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500 dark:text-gray-400">
-                                    <div class="flex items-center gap-1.5 font-bold text-gray-900 dark:text-white">
-                                        <x-heroicon-o-calendar class="w-4 h-4 text-primary-500" />
-                                        {{ $session->date_formatted }}
+
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-start justify-between gap-3 flex-wrap">
+                                    <div>
+                                        <h3 class="{{ $session->title_classes }}">
+                                            {{ $session->course_name }}
+                                        </h3>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5 font-medium">
+                                            {{ $session->course_code }} • {{ $session->lecturer }}
+                                        </p>
                                     </div>
-                                    <div class="flex items-center gap-1.5 font-medium">
-                                        <x-heroicon-o-clock class="w-4 h-4 text-primary-500" />
+                                    <div class="{{ $session->status_badge_classes }}">
+                                        <x-heroicon-s-clock class="w-3.5 h-3.5" />
                                         {{ $session->time_range }}
                                     </div>
+                                    @if ($session->is_pending)
+                                        <div
+                                            class="mt-2 flex items-center gap-1.5 text-[10px] text-gray-400 dark:text-gray-500 font-medium italic">
+                                            <x-heroicon-m-calendar-days class="w-3.5 h-3.5" />
+                                            Sesuai Jadwal Hari Ini
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="{{ $session->attendance_section_classes }}">
+                                @if ($session->is_pending)
+                                    <div class="flex items-center gap-2 text-gray-400 dark:text-gray-500 p-2 opacity-50">
+                                        <x-heroicon-m-clock class="w-5 h-5" />
+                                    </div>
+                                @else
+                                    <div class="flex flex-col items-center justify-center min-w-[60px] p-2">
+                                        <span class="text-lg font-bold text-primary-600 dark:text-primary-400 leading-none">
+                                            {{ $session->attendances_count }}
+                                        </span>
+                                        <span class="text-[9px] uppercase font-bold text-gray-500 mt-1 leading-none tracking-wider">
+                                            Hadir
+                                        </span>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                    @if ($session->is_pending)
+                        </div>
+                    @else
+                        </a>
+                    @endif
+                @endforeach
+            </div>
+        </x-filament::section>
+    @endif
+
+    <!-- All Courses Section -->
+    <x-filament::section icon="heroicon-o-academic-cap" icon-color="gray">
+        <x-slot name="heading">
+            Daftar Mata Kuliah Semester Ini
+        </x-slot>
+        <x-slot name="description">
+            Pilih mata kuliah untuk melihat dan mengelola semua riwayat sesi.
+        </x-slot>
+
+        @if ($this->courses->isNotEmpty())
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach ($this->courses as $course)
+                    <a href="{{ $course->url }}"
+                        class="fi-card rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm overflow-hidden transition hover:shadow-md h-fit block group">
+
+                        <div class="p-5 space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span
+                                    class="inline-flex items-center rounded-md bg-primary-50 dark:bg-primary-500/10 px-2 py-1 text-xs font-semibold text-primary-700 dark:text-primary-300 ring-1 ring-inset ring-primary-600/20">
+                                    {{ $course->code }}
+                                </span>
+
+                                <div class="flex items-center gap-2 text-gray-400 dark:text-gray-500">
+                                    <span class="text-xs font-medium">
+                                        {{ $course->sessions_count }} Sesi
+                                    </span>
+                                    <x-heroicon-m-chevron-right
+                                        class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                                </div>
+                            </div>
+
+                            <div class="space-y-1">
+                                <h3
+                                    class="text-base font-bold text-gray-950 dark:text-white leading-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition">
+                                    {{ $course->name }}
+                                </h3>
+                                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                    <x-heroicon-m-user class="w-4 h-4 mr-1.5 opacity-70" />
+                                    <span class="truncate">{{ $course->lecturer }}</span>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="flex items-center gap-1">
-                            {{ ($this->editSessionAction)(['session' => $session->id]) }}
-                            {{ ($this->deleteSessionAction)(['session' => $session->id]) }}
-                        </div>
-                    </div>
+                    </a>
                 @endforeach
             </div>
-@else
+        @else
             <x-filament::empty-state icon="heroicon-o-presentation-chart-bar" heading="Tidak ada data yang ditemukan"
                 description="Setelah Anda membuat data pertama, maka akan muncul disini." iconColor="gray">
             </x-filament::empty-state>
