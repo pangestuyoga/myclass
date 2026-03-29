@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages\Auth;
 
+use App\Enums\IsActive;
 use App\Filament\Support\SystemNotification;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use DiogoGPinto\AuthUIEnhancer\Pages\Auth\Concerns\HasCustomLayout;
@@ -90,6 +91,17 @@ class Login extends FilamentLogin
 
             $this->fireFailedEvent($authGuard, $user, $credentials);
             $this->throwFailureValidationException();
+        }
+
+        if ($user->is_active === IsActive::Inactive) {
+            SystemNotification::danger(
+                'Akses Ditangguhkan ⛔',
+                'Maaf, Anda tidak dapat masuk karena status akun saat ini sedang tidak aktif. Silakan hubungi Administrator untuk informasi lebih lanjut. 😴'
+            )->send();
+
+            throw ValidationException::withMessages([
+                'login' => 'Akun Anda sedang dinonaktifkan.',
+            ]);
         }
 
         if (
