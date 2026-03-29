@@ -20,11 +20,7 @@
 
             <div class="space-y-4">
                 @foreach ($this->todaySessions as $session)
-                    @if ($session->is_pending)
-                        <div class="{{ $session->card_classes }}">
-                    @else
-                        <a href="{{ $session->url }}" class="{{ $session->card_classes }}">
-                    @endif
+                    <a href="{{ $session->url }}" class="{{ $session->card_classes }}">
                         <div class="flex flex-1 items-start gap-4 p-5">
                             <div class="{{ $session->session_badge_classes }}">
                                 <span class="text-[9px] uppercase leading-none opacity-60 mb-0.5 font-bold">Sesi</span>
@@ -73,11 +69,7 @@
                             </div>
                         </div>
 
-                    @if ($session->is_pending)
-                        </div>
-                    @else
-                        </a>
-                    @endif
+                    </a>
                 @endforeach
             </div>
         </x-filament::section>
