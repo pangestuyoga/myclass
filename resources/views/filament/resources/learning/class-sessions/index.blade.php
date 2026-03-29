@@ -41,14 +41,22 @@
                                         <x-heroicon-s-clock class="w-3.5 h-3.5" />
                                         {{ $session->time_range }}
                                     </div>
-                                    <div class="flex items-center gap-2 mt-2">
-                                        <div class="flex items-center gap-1 text-[10px] font-bold text-amber-600 dark:text-amber-400">
-                                            <x-heroicon-o-document-text class="w-3 h-3" />
-                                            {{ $session->materials_count }} Materi
+                                    <div class="flex gap-4">
+                                        <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-900/10 cursor-pointer transition-colors"
+                                             wire:click="mountAction('viewMaterials', { session: {{ $session->id }} })"
+                                             onclick="event.stopPropagation()">
+                                            <x-heroicon-o-document-text class="w-4 h-4 text-amber-500" />
+                                            <span class="text-xs font-bold text-gray-600 dark:text-gray-400">
+                                                {{ $session->materials_count }}<span class="ml-1 font-medium text-gray-400">Materi</span>
+                                            </span>
                                         </div>
-                                        <div class="flex items-center gap-1 text-[10px] font-bold text-info-600 dark:text-info-400">
-                                            <x-heroicon-o-clipboard-document-list class="w-3 h-3" />
-                                            {{ $session->assignments_count }} Tugas
+                                        <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/10 cursor-pointer transition-colors"
+                                             wire:click="mountAction('viewAssignments', { session: {{ $session->id }} })"
+                                             onclick="event.stopPropagation()">
+                                            <x-heroicon-o-pencil-square class="w-4 h-4 text-primary-500" />
+                                            <span class="text-xs font-bold text-gray-600 dark:text-gray-400">
+                                                {{ $session->assignments_count }}<span class="ml-1 font-medium text-gray-400">Tugas</span>
+                                            </span>
                                         </div>
                                     </div>
                                     @if ($session->is_pending)

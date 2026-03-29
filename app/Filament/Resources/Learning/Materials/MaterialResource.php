@@ -10,6 +10,7 @@ use App\Filament\Actions\Cheerful\RestoreAction;
 use App\Filament\Actions\DefaultBulkActions;
 use App\Filament\Columns\TimestampColumns;
 use App\Filament\Resources\Learning\Materials\Pages\ManageMaterials;
+use App\Models\ClassSession;
 use App\Models\Course;
 use App\Models\Material;
 use App\Settings\GeneralSettings;
@@ -71,13 +72,24 @@ class MaterialResource extends Resource
                             ->live()
                             ->required(),
 
-                        DatePicker::make('published_at')
-                            ->label('Tanggal Publikasi')
-                            ->placeholder('Pilih Tanggal')
-                            ->required()
-                            ->native(false)
-                            ->displayFormat('l, d F Y')
-                            ->default(now()->toDateString()),
+                        Select::make('class_session_id')
+                            ->label('Pertemuan Ke-')
+                            ->placeholder('Pilih Pertemuan (Opsional)')
+                            ->options(function ($get) {
+                                $courseId = $get('course_id');
+                                if (! $courseId) {
+                                    return [];
+                                }
+
+                                return ClassSession::where('course_id', $courseId)
+                                    ->orderBy('session_number')
+                                    ->pluck('session_number', 'id')
+                                    ->map(fn ($num) => "Sesi Ke-$num")
+                                    ->toArray();
+                            })
+                            ->searchable()
+                            ->nullable()
+                            ->helperText('Kosongkan jika materi tidak terkait dengan sesi tertentu.'),
                     ])
                     ->columnSpanFull(),
 
@@ -128,15 +140,17 @@ class MaterialResource extends Resource
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('published_at')
-                    ->label('Tanggal Publikasi')
+                TextColumn::make('created_at')
+                    ->label('Tanggal Dibuat')
                     ->date('l, d F Y')
                     ->sortable(),
 
-                TextColumn::make('description')
-                    ->label('Deskripsi')
-                    ->searchable()
-                    ->sortable(),
+                TextColumn::make('classSession.session_number')
+                    ->label('Pertemuan')
+                    ->formatStateUsing(fn ($state) => $state ? "Sesi Ke-$state" : '-')
+                    ->sortable()
+                    ->badge()
+                    ->color('gray'),
 
                 ...TimestampColumns::make(),
             ])
@@ -151,17 +165,17 @@ class MaterialResource extends Resource
                     })
                     ->searchable(),
 
-                Filter::make('published_at')
+                Filter::make('created_at')
                     ->schema([
                         DatePicker::make('date')
-                            ->label('Tanggal Publikasi')
+                            ->label('Tanggal Dibuat')
                             ->placeholder('Pilih Tanggal')
                             ->native(false),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query->when(
                             $data['date'],
-                            fn (Builder $query, $date): Builder => $query->whereDate('published_at', $date),
+                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', $date),
                         );
                     }),
 

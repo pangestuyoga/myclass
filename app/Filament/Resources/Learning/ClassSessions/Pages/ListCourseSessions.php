@@ -185,7 +185,7 @@ class ListCourseSessions extends Page implements HasActions, HasForms
             });
     }
 
-    public function viewAttendanceAction(): Action
+    protected function viewAttendanceAction(): Action
     {
         return Action::make('viewAttendance')
             ->label('Lihat Presensi')
@@ -195,6 +195,32 @@ class ListCourseSessions extends Page implements HasActions, HasForms
             ->modalWidth(Width::ExtraLarge)
             ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.attendance-modal', [
                 'attendances' => ClassSession::find($arguments['session'])->attendances()->with('student')->latest('attended_at')->get(),
+            ]));
+    }
+
+    protected function viewMaterialsAction(): Action
+    {
+        return Action::make('viewMaterials')
+            ->label('Daftar Materi')
+            ->modalHeading(fn (array $arguments) => 'Materi Kuliah - Sesi Ke-'.ClassSession::find($arguments['session'])->session_number)
+            ->modalSubmitAction(false)
+            ->modalCancelActionLabel('Tutup')
+            ->modalWidth(Width::Large)
+            ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.materials-modal', [
+                'materials' => ClassSession::find($arguments['session'])->materials()->latest()->get(),
+            ]));
+    }
+
+    protected function viewAssignmentsAction(): Action
+    {
+        return Action::make('viewAssignments')
+            ->label('Daftar Tugas')
+            ->modalHeading(fn (array $arguments) => 'Tugas Kuliah - Sesi Ke-'.ClassSession::find($arguments['session'])->session_number)
+            ->modalSubmitAction(false)
+            ->modalCancelActionLabel('Tutup')
+            ->modalWidth(Width::Large)
+            ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.assignments-modal', [
+                'assignments' => ClassSession::find($arguments['session'])->assignments()->latest()->get(),
             ]));
     }
 

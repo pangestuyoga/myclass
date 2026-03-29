@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Learning\Assignments\Schemas;
 
 use App\Enums\AssignmentType;
 use App\Filament\Resources\Learning\Assignments\Actions\SelectAllStudentsAction;
+use App\Models\ClassSession;
 use App\Models\Course;
 use App\Models\Student;
 use App\Settings\GeneralSettings;
@@ -39,7 +40,7 @@ class AssignmentForm
                             ->autofocus()
                             ->columnSpanFull(),
 
-                        Grid::make(3)
+                        Grid::make(2)
                             ->schema([
                                 Select::make('course_id')
                                     ->label('Mata Kuliah')
@@ -52,6 +53,25 @@ class AssignmentForm
                                     ->searchable()
                                     ->live()
                                     ->required(),
+
+                                Select::make('class_session_id')
+                                    ->label('Pertemuan Ke-')
+                                    ->placeholder('Pilih Pertemuan (Opsional)')
+                                    ->options(function (Get $get) {
+                                        $courseId = $get('course_id');
+                                        if (! $courseId) {
+                                            return [];
+                                        }
+
+                                        return ClassSession::where('course_id', $courseId)
+                                            ->orderBy('session_number')
+                                            ->pluck('session_number', 'id')
+                                            ->map(fn ($num) => "Sesi Ke-$num")
+                                            ->toArray();
+                                    })
+                                    ->searchable()
+                                    ->nullable()
+                                    ->helperText('Kosongkan jika tugas tidak terkait dengan sesi tertentu.'),
 
                                 DateTimePicker::make('due_date')
                                     ->label('Batas Waktu')
@@ -70,6 +90,7 @@ class AssignmentForm
                                     ->afterStateUpdated(function (Set $set) {
                                         $set('student_ids', []);
                                         $set('study_group_ids', []);
+                                        $set('class_session_id', null);
                                     }),
                             ])
                             ->columnSpanFull(),

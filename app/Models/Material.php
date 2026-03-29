@@ -15,10 +15,6 @@ class Material extends Model implements HasMedia
 
     protected $guarded = ['id'];
 
-    protected $casts = [
-        'published_at' => 'datetime',
-    ];
-
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);

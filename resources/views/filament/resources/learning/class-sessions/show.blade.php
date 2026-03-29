@@ -36,12 +36,14 @@
                                             <span class="text-[10px] font-bold text-gray-500">{{ $session->attendance_percentage }}%</span>
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-1.5 font-bold text-amber-600 dark:text-amber-400">
+                                    <div class="flex items-center gap-1.5 font-bold text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/10 px-2 py-0.5 rounded-lg transition-colors cursor-pointer"
+                                         wire:click="mountAction('viewMaterials', { session: {{ $session->id }} })">
                                         <x-heroicon-o-document-text class="w-4 h-4" />
                                         {{ $session->materials_count }} Materi
                                     </div>
-                                    <div class="flex items-center gap-1.5 font-bold text-info-600 dark:text-info-400">
-                                        <x-heroicon-o-clipboard-document-list class="w-4 h-4" />
+                                    <div class="flex items-center gap-1.5 font-bold text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/10 px-2 py-0.5 rounded-lg transition-colors cursor-pointer"
+                                         wire:click="mountAction('viewAssignments', { session: {{ $session->id }} })">
+                                        <x-heroicon-o-pencil-square class="w-4 h-4" />
                                         {{ $session->assignments_count }} Tugas
                                     </div>
                                 </div>

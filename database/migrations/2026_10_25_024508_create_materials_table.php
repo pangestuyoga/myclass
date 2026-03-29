@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('class_session_id')->nullable()->constrained()->nullOnDelete();
             $table->string('title', 100);
             $table->text('description')->nullable();
-            $table->timestamp('published_at')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
             $table->softDeletes();
