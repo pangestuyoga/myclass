@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Master\Students\Tables;
 
+use App\Enums\IsActive;
 use App\Enums\RoleEnum;
 use App\Enums\Sex;
 use App\Filament\Actions\Cheerful\DeleteAction;
@@ -11,15 +12,18 @@ use App\Filament\Actions\Cheerful\RestoreAction;
 use App\Filament\Actions\DefaultBulkActions;
 use App\Filament\Columns\TimestampColumns;
 use App\Filament\Resources\Master\Students\Actions\ChangePasswordAction;
+use App\Filament\Support\SystemNotification;
 use App\Models\Student;
 use Filament\Actions\BulkActionGroup;
 use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class StudentsTable
 {
@@ -80,9 +84,41 @@ class StudentsTable
                     ->label('Alamat')
                     ->limit(50),
 
+                ToggleColumn::make('user.is_active')
+                    ->label('Status')
+                    ->sortable()
+                    ->getStateUsing(fn (Student $record): bool => $record->user?->is_active === IsActive::Active)
+                    ->updateStateUsing(function (Student $record, bool $state): void {
+                        $user = $record->user;
+                        if (! $user) {
+                            return;
+                        }
+
+                        $user->is_active = $state ? IsActive::Active : IsActive::Inactive;
+                        $user->save();
+
+                        if ($user->is_active === IsActive::Inactive) {
+                            DB::table('sessions')
+                                ->where('user_id', $user->id)
+                                ->delete();
+                        }
+
+                        SystemNotification::success(
+                            $state ? 'Pengguna Diaktifkan! ✅' : 'Pengguna Dinonaktifkan ⛔',
+                            $state ? 'Status akun pengguna berhasil diaktifkan kembali. Siap beraksi! 🚀' : 'Status akun pengguna telah berhasil dinonaktifkan. Istirahat dulu ya... 😴'
+                        )->send();
+                    })
+                    ->visible(fn () => auth()->user()->hasRole([RoleEnum::Kosma, RoleEnum::Developer])),
+
                 ...TimestampColumns::make(),
             ])
             ->filters([
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->options(IsActive::class)
+                    ->query(fn (Builder $query, array $data) => $query->when($data['value'], fn ($q) => $q->whereHas('user', fn ($uq) => $uq->where('is_active', $data['value']))))
+                    ->native(false),
+
                 SelectFilter::make('sex')
                     ->label('Jenis Kelamin')
                     ->options(Sex::class)
