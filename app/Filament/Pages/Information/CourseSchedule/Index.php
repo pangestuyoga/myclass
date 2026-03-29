@@ -137,9 +137,16 @@ class Index extends Page implements HasActions, HasForms
                 ->schema([
                     Select::make('course_id')
                         ->label('Mata Kuliah')
-                        ->options(function () {
+                        ->options(function ($record) {
                             return Course::query()
                                 ->where('semester', app(GeneralSettings::class)->current_semester)
+                                ->where(function ($query) use ($record) {
+                                    $query->whereDoesntHave('courseSchedules');
+
+                                    if ($record && $record->course_id) {
+                                        $query->orWhere('id', $record->course_id);
+                                    }
+                                })
                                 ->pluck('name', 'id')
                                 ->toArray();
                         })
