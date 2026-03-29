@@ -98,7 +98,7 @@ class StudentForm
                             ->placeholder('Pilih Tanggal')
                             ->required()
                             ->native(false)
-                            ->displayFormat('l, d F Y')
+                            ->displayFormat('d F Y')
                             ->maxDate(Carbon::now()->subYears(15)),
 
                         TextInput::make('place_of_birth')

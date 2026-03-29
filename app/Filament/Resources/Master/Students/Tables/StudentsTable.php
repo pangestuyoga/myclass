@@ -10,6 +10,7 @@ use App\Filament\Actions\Cheerful\ForceDeleteAction;
 use App\Filament\Actions\Cheerful\RestoreAction;
 use App\Filament\Actions\DefaultBulkActions;
 use App\Filament\Columns\TimestampColumns;
+use App\Filament\Resources\Master\Students\Actions\ChangePasswordAction;
 use App\Models\Student;
 use Filament\Actions\BulkActionGroup;
 use Filament\Support\Enums\Width;
@@ -92,6 +93,8 @@ class StudentsTable
                     ->visible(fn () => auth()->user()->hasRole(RoleEnum::Developer)),
             ])
             ->recordActions([
+                ChangePasswordAction::make('changePassword'),
+
                 EditAction::make()
                     ->modalWidth(Width::Large),
 
