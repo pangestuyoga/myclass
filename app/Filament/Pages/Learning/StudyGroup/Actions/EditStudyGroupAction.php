@@ -21,14 +21,13 @@ class EditStudyGroupAction extends EditAction
         $this
             ->label('Ubah')
             ->icon(Heroicon::OutlinedPencilSquare)
-            ->color('warning')
             ->iconButton()
             ->tooltip('Ubah')
             ->record(fn (array $arguments): StudyGroup => StudyGroup::findOrFail($arguments['studyGroup']))
             ->modalHeading(fn (StudyGroup $record) => "Ubah {$record->name}")
             ->modalSubmitActionLabel('Simpan')
             ->modalCancelActionLabel('Batal')
-            ->modalWidth(Width::Large)
+            ->modalWidth(Width::ThreeExtraLarge)
             ->schema(fn ($livewire) => $livewire->studyGroupFormSchema())
             ->fillForm(function (StudyGroup $record): array {
                 return [
