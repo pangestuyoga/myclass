@@ -57,14 +57,16 @@
                                         <x-heroicon-m-clock class="w-5 h-5" />
                                     </div>
                                 @else
-                                    <div class="flex flex-col items-center justify-center min-w-[60px] p-2">
-                                        <span class="text-lg font-bold text-primary-600 dark:text-primary-400 leading-none">
-                                            {{ $session->attendances_count }}
-                                        </span>
-                                        <span class="text-[9px] uppercase font-bold text-gray-500 mt-1 leading-none tracking-wider">
-                                            Hadir
-                                        </span>
-                                    </div>
+                                    <div class="flex flex-col items-center justify-center min-w-[60px] p-2 hover:bg-white/50 dark:hover:bg-white/5 rounded-lg transition-colors cursor-pointer" 
+                                     onclick="event.preventDefault(); event.stopPropagation();"
+                                     wire:click="mountAction('viewAttendance', { session: {{ $session->id }} })">
+                                    <span class="text-lg font-bold text-primary-600 dark:text-primary-400 leading-none">
+                                        {{ $session->attendances_count }}
+                                    </span>
+                                    <span class="text-[9px] uppercase font-bold text-gray-500 mt-1 leading-none tracking-wider">
+                                        Hadir
+                                    </span>
+                                </div>
                                 @endif
                             </div>
                         </div>

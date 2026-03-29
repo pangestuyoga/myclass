@@ -6,6 +6,7 @@ use App\Filament\Resources\Learning\ClassSessions\ClassSessionResource;
 use App\Models\ClassSession;
 use App\Models\Course;
 use App\Settings\GeneralSettings;
+use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\TextInput;
@@ -13,6 +14,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Pages\Page;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\Width;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
 
@@ -94,9 +96,9 @@ class ManageClassSessions extends Page implements HasActions, HasForms
 
         if ($this->search) {
             $query->where(function ($q) {
-                $q->where('name', 'like', "%{$this->search}%")
-                    ->orWhere('code', 'like', "%{$this->search}%")
-                    ->orWhere('lecturer', 'like', "%{$this->search}%");
+                $q->where('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('code', 'like', '%'.$this->search.'%')
+                    ->orWhere('lecturer', 'like', '%'.$this->search.'%');
             });
         }
 
@@ -110,5 +112,18 @@ class ManageClassSessions extends Page implements HasActions, HasForms
                 'sessions_count' => $course->classSessions->count(),
                 'url' => ClassSessionResource::getUrl('course', ['courseId' => $course->id]),
             ]);
+    }
+
+    public function viewAttendanceAction(): Action
+    {
+        return Action::make('viewAttendance')
+            ->label('Lihat Presensi')
+            ->modalHeading(fn (array $arguments) => 'Daftar Presensi - Sesi Ke-'.ClassSession::find($arguments['session'])->session_number)
+            ->modalSubmitAction(false)
+            ->modalCancelActionLabel('Tutup')
+            ->modalWidth(Width::ExtraLarge)
+            ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.attendance-modal', [
+                'attendances' => ClassSession::find($arguments['session'])->attendances()->with('student')->latest('attended_at')->get(),
+            ]));
     }
 }

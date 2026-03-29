@@ -6,6 +6,7 @@ use App\Enums\RoleEnum;
 use App\Filament\Resources\Learning\Attendances\AttendanceResource;
 use App\Filament\Support\SystemNotification;
 use App\Models\Attendance;
+use App\Models\ClassSession;
 use App\Models\Course;
 use App\Models\CourseSchedule;
 use App\Models\User;
@@ -45,17 +46,10 @@ class ManageAttendances extends Page implements HasForms, HasTable
             return collect();
         }
 
-        $today = now()->dayOfWeekIso;
-        $semester = app(GeneralSettings::class)->current_semester;
-
-        return CourseSchedule::query()
-            ->where('day_of_week', $today)
-            ->whereHas('course', function ($q) use ($semester) {
-                $q->where('semester', $semester);
-            })
+        return ClassSession::query()
+            ->whereDate('date', now())
             ->with(['course', 'attendances' => function ($q) use ($student) {
-                $q->where('student_id', $student->id)
-                    ->whereDate('date', now()->toDateString());
+                $q->where('student_id', $student->id);
             }])
             ->orderBy('start_time')
             ->get();
@@ -138,7 +132,7 @@ class ManageAttendances extends Page implements HasForms, HasTable
             });
     }
 
-    public function attend(int $scheduleId): void
+    public function attend(int $sessionId): void
     {
         /** @var User $user */
         $user = auth()->user();
@@ -147,41 +141,46 @@ class ManageAttendances extends Page implements HasForms, HasTable
             return;
         }
 
-        $schedule = CourseSchedule::find($scheduleId);
-        if (! $schedule) {
+        $session = ClassSession::find($sessionId);
+        if (! $session) {
             return;
         }
 
         // Check if already attended
         $existing = Attendance::where('student_id', $student->id)
-            ->where('course_schedule_id', $scheduleId)
-            ->whereDate('date', now()->toDateString())
+            ->where('class_session_id', $sessionId)
             ->first();
 
         if ($existing) {
             SystemNotification::warning(
                 'Presensi Sudah Tercatat ⚠️',
-                'Anda telah melakukan presensi untuk jadwal perkuliahan ini pada hari ini.'
+                'Anda telah melakukan presensi untuk sesi perkuliahan ini.'
             )->send();
 
             return;
         }
 
         // Check time
-        $startTime = now()->setTimeFrom($schedule->start_time);
+        $startTime = $session->start_time;
         if (now()->lessThan($startTime)) {
             SystemNotification::warning(
                 'Presensi Belum Dibuka ⏳',
-                'Waktu presensi untuk jadwal perkuliahan ini belum dimulai. Silakan lakukan presensi setelah waktu dimulai.'
+                'Waktu presensi untuk sesi perkuliahan ini belum dimulai.'
             )->send();
 
             return;
         }
 
+        // Find schedule for compatibility
+        $schedule = CourseSchedule::where('course_id', $session->course_id)
+            ->where('day_of_week', $session->date->dayOfWeekIso)
+            ->first();
+
         Attendance::create([
             'student_id' => $student->id,
-            'course_schedule_id' => $scheduleId,
-            'date' => now()->toDateString(),
+            'class_session_id' => $sessionId,
+            'course_schedule_id' => $schedule?->id,
+            'date' => $session->date->toDateString(),
             'attended_at' => now(),
         ]);
 

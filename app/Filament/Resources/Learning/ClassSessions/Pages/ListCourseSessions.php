@@ -178,6 +178,19 @@ class ListCourseSessions extends Page implements HasActions, HasForms
             });
     }
 
+    public function viewAttendanceAction(): Action
+    {
+        return Action::make('viewAttendance')
+            ->label('Lihat Presensi')
+            ->modalHeading(fn (array $arguments) => 'Daftar Presensi - Sesi Ke-'.ClassSession::find($arguments['session'])->session_number)
+            ->modalSubmitAction(false)
+            ->modalCancelActionLabel('Tutup')
+            ->modalWidth(Width::ExtraLarge)
+            ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.attendance-modal', [
+                'attendances' => ClassSession::find($arguments['session'])->attendances()->with('student')->latest('attended_at')->get(),
+            ]));
+    }
+
     public function editSessionAction(): Action
     {
         return EditAction::make('editSession')

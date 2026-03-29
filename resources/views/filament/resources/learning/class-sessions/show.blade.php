@@ -40,6 +40,7 @@
                         </div>
 
                         <div class="flex items-center gap-1">
+                            {{ ($this->viewAttendanceAction)(['session' => $session->id]) }}
                             {{ ($this->editSessionAction)(['session' => $session->id]) }}
                             {{ ($this->deleteSessionAction)(['session' => $session->id]) }}
                         </div>
