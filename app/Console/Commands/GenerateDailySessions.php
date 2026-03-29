@@ -2,6 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Models\ClassSession;
+use App\Models\CourseSchedule;
+use App\Settings\GeneralSettings;
 use Illuminate\Console\Command;
 
 class GenerateDailySessions extends Command
@@ -21,9 +24,9 @@ class GenerateDailySessions extends Command
     public function handle()
     {
         $dayOfWeek = now()->dayOfWeekIso; // 1 (Mon) - 7 (Sun)
-        $currentSemester = app(\App\Settings\GeneralSettings::class)->current_semester;
+        $currentSemester = app(GeneralSettings::class)->current_semester;
 
-        $schedules = \App\Models\CourseSchedule::query()
+        $schedules = CourseSchedule::query()
             ->where('day_of_week', $dayOfWeek)
             ->whereHas('course', function ($query) use ($currentSemester) {
                 $query->where('semester', $currentSemester);
@@ -32,14 +35,14 @@ class GenerateDailySessions extends Command
 
         $count = 0;
         foreach ($schedules as $schedule) {
-            $exists = \App\Models\ClassSession::where('course_id', $schedule->course_id)
+            $exists = ClassSession::where('course_id', $schedule->course_id)
                 ->whereDate('date', now())
                 ->exists();
 
             if (! $exists) {
-                $lastSession = \App\Models\ClassSession::where('course_id', $schedule->course_id)->max('session_number');
+                $lastSession = ClassSession::where('course_id', $schedule->course_id)->max('session_number');
 
-                \App\Models\ClassSession::create([
+                ClassSession::create([
                     'course_id' => $schedule->course_id,
                     'session_number' => ($lastSession ?? 0) + 1,
                     'date' => now()->toDateString(),
