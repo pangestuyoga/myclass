@@ -48,7 +48,7 @@ class Index extends Page implements HasActions, HasForms
         return 'View:StudyGroup';
     }
 
-    protected string $view = 'filament.pages.information.list-study-groups';
+    protected string $view = 'filament.pages.learning.study-groups';
 
     public ?int $course_id = null;
 

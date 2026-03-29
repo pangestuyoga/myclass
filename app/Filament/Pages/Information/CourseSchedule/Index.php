@@ -43,7 +43,7 @@ class Index extends Page implements HasActions, HasForms
 
     protected static ?string $slug = 'information/course-schedules';
 
-    protected string $view = 'filament.pages.information.list-course-schedules';
+    protected string $view = 'filament.pages.information.course-schedules';
 
     public ?string $search = '';
 
