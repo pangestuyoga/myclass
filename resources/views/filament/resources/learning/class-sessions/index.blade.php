@@ -42,8 +42,8 @@
                         </div>
 
                         <div class="flex items-center gap-1">
-                            {{ $this->editSessionAction(['session' => $session->id]) }}
-                            {{ $this->deleteSessionAction(['session' => $session->id]) }}
+                            {{ ($this->editSessionAction)(['session' => $session->id]) }}
+                            {{ ($this->deleteSessionAction)(['session' => $session->id]) }}
                         </div>
                     </div>
                 @endforeach

@@ -136,9 +136,9 @@
                                     'border-gray-100 dark:border-gray-800' => !$record->is_my_group,
                                     'border-primary-200 dark:border-primary-800' => $record->is_my_group,
                                 ])>
-                                    {{ $this->editStudyGroupAction(['studyGroup' => $record->id]) }}
+                                    {{ ($this->editStudyGroupAction)(['studyGroup' => $record->id]) }}
 
-                                    {{ $this->deleteStudyGroupAction(['studyGroup' => $record->id]) }}
+                                    {{ ($this->deleteStudyGroupAction)(['studyGroup' => $record->id]) }}
                                 </div>
                             </div>
                         @endcanAny

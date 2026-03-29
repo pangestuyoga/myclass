@@ -98,9 +98,9 @@
                                             @canAny(['Update:CourseSchedule', 'Delete:CourseSchedule'])
                                                 <div
                                                     class="flex items-center justify-end gap-1 pt-3 border-t border-gray-100 dark:border-gray-800">
-                                                    {{ $this->editScheduleAction(['schedule' => $schedule->id]) }}
+                                                    {{ ($this->editScheduleAction)(['schedule' => $schedule->id]) }}
 
-                                                    {{ $this->deleteScheduleAction(['schedule' => $schedule->id]) }}
+                                                    {{ ($this->deleteScheduleAction)(['schedule' => $schedule->id]) }}
                                                 </div>
                                             @endcanAny
                                         </div>
