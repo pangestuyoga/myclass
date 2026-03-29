@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('class_session_id')->nullable()->constrained()->nullOnDelete();
             $table->string('title', 100);
             $table->text('description')->nullable();
             $table->timestamp('due_date');

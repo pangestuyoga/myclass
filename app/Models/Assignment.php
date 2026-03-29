@@ -18,6 +18,7 @@ class Assignment extends Model implements HasMedia
 
     protected $fillable = [
         'course_id',
+        'class_session_id',
         'description',
         'due_date',
         'title',
@@ -50,6 +51,11 @@ class Assignment extends Model implements HasMedia
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
+    }
+
+    public function classSession(): BelongsTo
+    {
+        return $this->belongsTo(ClassSession::class);
     }
 
     public function students(): BelongsToMany

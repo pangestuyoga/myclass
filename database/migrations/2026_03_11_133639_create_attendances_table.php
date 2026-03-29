@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('course_schedule_id')->constrained()->cascadeOnDelete();
-            $table->date('date');
+            $table->foreignId('class_session_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('course_schedule_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->date('date')->nullable();
             $table->timestamp('attended_at')->nullable();
             $table->timestamps();
 
-            $table->unique(['student_id', 'course_schedule_id', 'date']);
+            $table->unique(['student_id', 'class_session_id']);
+            $table->index(['student_id', 'course_schedule_id', 'date']);
         });
     }
 

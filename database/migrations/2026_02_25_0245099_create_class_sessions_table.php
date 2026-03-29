@@ -11,16 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('materials', function (Blueprint $table) {
+        Schema::create('class_sessions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('class_session_id')->nullable()->constrained()->nullOnDelete();
-            $table->string('title', 100);
-            $table->text('description')->nullable();
-            $table->timestamp('published_at')->nullable();
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
+            $table->unsignedTinyInteger('session_number'); // e.g., 1, 2, ...
+            $table->date('date');
+            $table->time('start_time');
+            $table->time('end_time');
+            $table->timestamps();
             $table->softDeletes();
+
+            $table->unique(['course_id', 'session_number'], 'class_sessions_course_session_unique');
         });
     }
 
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('materials');
+        Schema::dropIfExists('class_sessions');
     }
 };

@@ -23,4 +23,9 @@ class Material extends Model implements HasMedia
     {
         return $this->belongsTo(Course::class);
     }
+
+    public function classSession(): BelongsTo
+    {
+        return $this->belongsTo(ClassSession::class);
+    }
 }
