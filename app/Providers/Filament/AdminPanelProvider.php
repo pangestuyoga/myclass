@@ -15,7 +15,6 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets\AccountWidget;
 use Hammadzafar05\MobileBottomNav\MobileBottomNav;
 use Hammadzafar05\MobileBottomNav\MobileBottomNavItem;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -27,7 +26,6 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Saade\Facehash\Enums\Variant;
 use Saade\FilamentFacehash\FacehashPlugin;
 use Saade\FilamentFacehash\FacehashProvider;
-use SalmanAlmajali\JokesWidget\JokesWidget;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -49,10 +47,7 @@ class AdminPanelProvider extends PanelProvider
                 Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
-            ->widgets([
-                AccountWidget::class,
-                JokesWidget::class,
-            ])
+            ->widgets([])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
