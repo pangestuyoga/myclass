@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Learning\ClassSessions\Actions;
 use App\Models\ClassSession;
 use Filament\Actions\Action;
 use Filament\Support\Colors\Color;
+use Illuminate\Support\Facades\URL;
 
 class ShareAttendanceAction extends Action
 {
@@ -35,7 +36,7 @@ class ShareAttendanceAction extends Action
                 $session = ClassSession::find($arguments['session'] ?? null);
                 $date = $session ? $session->date->toDateString() : null;
 
-                $url = route('share.attendance', ['course' => $course->id, 'date' => $date]);
+                $url = URL::temporarySignedRoute('share.attendance', now()->addHour(), ['course' => $course->id, 'date' => $date]);
 
                 $text = "*Info Kelas {$course->name}*\nSesi ke-".($session->session_number ?? '-').' ('.($session->date->translatedFormat('d M Y') ?? '').")\n\nSilakan cek detail/rekap kehadiran melalui tautan ini:\n\n{$url}";
 

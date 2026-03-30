@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Learning\ClassSessions\Actions;
 use App\Models\ClassSession;
 use Filament\Actions\Action;
 use Filament\Support\Colors\Color;
+use Illuminate\Support\Facades\URL;
 
 class ShareAssignmentAction extends Action
 {
@@ -34,7 +35,7 @@ class ShareAssignmentAction extends Action
                 $course = $livewire->course;
                 $session = ClassSession::find($arguments['session'] ?? null);
 
-                $url = route('share.assignment', [
+                $url = URL::temporarySignedRoute('share.assignment', now()->addHour(), [
                     'course' => $course->id,
                     'session_id' => $session ? $session->id : null,
                 ]);
