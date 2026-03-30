@@ -6,16 +6,15 @@ use App\Enums\IsActive;
 use App\Enums\RoleEnum;
 use App\Enums\Sex;
 use App\Filament\Actions\Cheerful\DeleteAction;
-use App\Filament\Actions\Cheerful\EditAction;
 use App\Filament\Actions\Cheerful\ForceDeleteAction;
 use App\Filament\Actions\Cheerful\RestoreAction;
 use App\Filament\Actions\DefaultBulkActions;
 use App\Filament\Columns\TimestampColumns;
 use App\Filament\Resources\Master\Students\Actions\ChangePasswordAction;
+use App\Filament\Resources\Master\Students\Actions\EditStudentAction;
 use App\Filament\Support\SystemNotification;
 use App\Models\Student;
 use Filament\Actions\BulkActionGroup;
-use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -131,8 +130,7 @@ class StudentsTable
             ->recordActions([
                 ChangePasswordAction::make('changePassword'),
 
-                EditAction::make()
-                    ->modalWidth(Width::Large),
+                EditStudentAction::make(),
 
                 DeleteAction::make(),
 

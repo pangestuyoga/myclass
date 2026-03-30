@@ -4,11 +4,12 @@ namespace App\Filament\Resources\Learning\Materials;
 
 use App\Enums\RoleEnum;
 use App\Filament\Actions\Cheerful\DeleteAction;
-use App\Filament\Actions\Cheerful\EditAction;
 use App\Filament\Actions\Cheerful\ForceDeleteAction;
 use App\Filament\Actions\Cheerful\RestoreAction;
 use App\Filament\Actions\DefaultBulkActions;
 use App\Filament\Columns\TimestampColumns;
+use App\Filament\Resources\Learning\Materials\Actions\EditMaterialAction;
+use App\Filament\Resources\Learning\Materials\Actions\ViewMaterialAction;
 use App\Filament\Resources\Learning\Materials\Pages\ManageMaterials;
 use App\Models\ClassSession;
 use App\Models\Course;
@@ -18,7 +19,6 @@ use Asmit\FilamentUpload\Enums\PdfViewFit;
 use Asmit\FilamentUpload\Forms\Components\AdvancedFileUpload;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -26,7 +26,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
-use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -35,7 +34,6 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Joaopaulolndev\FilamentPdfViewer\Infolists\Components\PdfViewerEntry;
 use UnitEnum;
 
 class MaterialResource extends Resource
@@ -178,69 +176,9 @@ class MaterialResource extends Resource
                     ->visible(fn () => auth()->user()->hasRole(RoleEnum::Developer)),
             ])
             ->recordActions([
-                ViewAction::make()
-                    ->modalWidth(Width::FourExtraLarge)
-                    ->schema(function (Material $record) {
-                        return $record->getMedia('materials')->map(function ($item, $index) {
-                            return PdfViewerEntry::make('pdf_'.$index)
-                                ->hiddenLabel()
-                                ->fileUrl($item->getUrl())
-                                ->columnSpanFull();
-                        })->toArray();
-                    })
-                    ->visible(fn (Material $record) => $record->hasMedia('materials')),
+                ViewMaterialAction::make(),
 
-                EditAction::make()
-                    ->modalWidth(Width::FourExtraLarge)
-                    ->fillForm(function (Material $record): array {
-                        $data = $record->toArray();
-
-                        $data['pdf'] = $record->getMedia('materials')
-                            ->map(fn ($media) => $media->getPathRelativeToRoot())
-                            ->toArray();
-
-                        return $data;
-                    })
-                    ->using(function (Material $record, array $data): Material {
-                        $pdf = $data['pdf'] ?? [];
-                        unset($data['pdf']);
-
-                        $record->update($data);
-
-                        $existingMedia = $record->getMedia('materials');
-                        $mediaMap = [];
-
-                        foreach ($existingMedia as $media) {
-                            if (in_array($media->getPathRelativeToRoot(), $pdf)) {
-                                $mediaMap[$media->getPathRelativeToRoot()] = $media;
-                            } else {
-                                $media->delete();
-                            }
-                        }
-
-                        foreach ($pdf as $path) {
-                            if (! isset($mediaMap[$path])) {
-                                $newMedia = $record->addMediaFromDisk($path, config('filesystems.default'))
-                                    ->preservingOriginal()
-                                    ->withCustomProperties([
-                                        'feature' => 'materials',
-                                        'date' => now()->toDateString(),
-                                        'doc_type' => 'pdf',
-                                    ])
-                                    ->toMediaCollection('materials');
-                                $mediaMap[$path] = $newMedia;
-                            }
-                        }
-
-                        foreach ($pdf as $index => $path) {
-                            if (isset($mediaMap[$path])) {
-                                $mediaMap[$path]->order_column = $index + 1;
-                                $mediaMap[$path]->save();
-                            }
-                        }
-
-                        return $record;
-                    }),
+                EditMaterialAction::make(),
 
                 DeleteAction::make(),
 

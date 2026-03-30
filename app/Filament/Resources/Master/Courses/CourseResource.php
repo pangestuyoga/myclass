@@ -4,11 +4,11 @@ namespace App\Filament\Resources\Master\Courses;
 
 use App\Enums\RoleEnum;
 use App\Filament\Actions\Cheerful\DeleteAction;
-use App\Filament\Actions\Cheerful\EditAction;
 use App\Filament\Actions\Cheerful\ForceDeleteAction;
 use App\Filament\Actions\Cheerful\RestoreAction;
 use App\Filament\Actions\DefaultBulkActions;
 use App\Filament\Columns\TimestampColumns;
+use App\Filament\Resources\Master\Courses\Actions\EditCourseAction;
 use App\Filament\Resources\Master\Courses\Pages\ManageCourses;
 use App\Models\Course;
 use BackedEnum;
@@ -16,7 +16,6 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
@@ -122,8 +121,7 @@ class CourseResource extends Resource
                     ->visible(fn () => auth()->user()->hasRole(RoleEnum::Developer)),
             ])
             ->recordActions([
-                EditAction::make()
-                    ->modalWidth(Width::Large),
+                EditCourseAction::make(),
 
                 DeleteAction::make(),
 

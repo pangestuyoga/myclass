@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Learning\Assignments\Pages;
 
 use App\Enums\AssignmentType;
-use App\Filament\Actions\Cheerful\CreateAction;
+use App\Filament\Resources\Learning\Assignments\Actions\CreateAssignmentAction;
 use App\Filament\Resources\Learning\Assignments\Actions\DeleteAssignmentAction;
 use App\Filament\Resources\Learning\Assignments\Actions\EditAssignmentAction;
 use App\Filament\Resources\Learning\Assignments\Actions\PinAction;
@@ -30,8 +30,7 @@ class ListAssignments extends Page
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()
-                ->label('Tambah'),
+            CreateAssignmentAction::make(),
         ];
     }
 
