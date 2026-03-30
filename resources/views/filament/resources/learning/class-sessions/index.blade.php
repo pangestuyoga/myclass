@@ -9,15 +9,15 @@
     </x-filament::section>
 
     <!-- Today's Sessions Section -->
-    @if ($this->todaySessions->isNotEmpty())
-        <x-filament::section icon="heroicon-o-bolt" icon-color="primary">
-            <x-slot name="heading">
-                Sesi Hari Ini
-            </x-slot>
-            <x-slot name="description">
-                Sesi yang dijadwalkan pada {{ $this->today_date }}
-            </x-slot>
+    <x-filament::section icon="heroicon-o-bolt" icon-color="primary">
+        <x-slot name="heading">
+            Sesi Hari Ini
+        </x-slot>
+        <x-slot name="description">
+            Sesi yang dijadwalkan pada {{ $this->today_date }}
+        </x-slot>
 
+        @if ($this->todaySessions->isNotEmpty())
             <div class="space-y-4">
                 @foreach ($this->todaySessions as $session)
                     <a href="{{ $session->url }}" class="{{ $session->card_classes }}">
@@ -43,19 +43,21 @@
                                     </div>
                                     <div class="flex gap-4">
                                         <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-900/10 cursor-pointer transition-colors"
-                                             wire:click="mountAction('viewMaterials', { session: {{ $session->id }} })"
-                                             onclick="event.stopPropagation()">
+                                            wire:click="mountAction('viewMaterials', { session: {{ $session->id }} })"
+                                            onclick="event.stopPropagation()">
                                             <x-heroicon-o-document-text class="w-4 h-4 text-amber-500" />
                                             <span class="text-xs font-bold text-gray-600 dark:text-gray-400">
-                                                {{ $session->materials_count }}<span class="ml-1 font-medium text-gray-400">Materi</span>
+                                                {{ $session->materials_count }}<span
+                                                    class="ml-1 font-medium text-gray-400">Materi</span>
                                             </span>
                                         </div>
                                         <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/10 cursor-pointer transition-colors"
-                                             wire:click="mountAction('viewAssignments', { session: {{ $session->id }} })"
-                                             onclick="event.stopPropagation()">
+                                            wire:click="mountAction('viewAssignments', { session: {{ $session->id }} })"
+                                            onclick="event.stopPropagation()">
                                             <x-heroicon-o-pencil-square class="w-4 h-4 text-primary-500" />
                                             <span class="text-xs font-bold text-gray-600 dark:text-gray-400">
-                                                {{ $session->assignments_count }}<span class="ml-1 font-medium text-gray-400">Tugas</span>
+                                                {{ $session->assignments_count }}<span
+                                                    class="ml-1 font-medium text-gray-400">Tugas</span>
                                             </span>
                                         </div>
                                     </div>
@@ -71,25 +73,31 @@
 
                             <div class="{{ $session->attendance_section_classes }}">
                                 @if ($session->is_pending)
-                                    <div class="flex items-center gap-2 text-gray-400 dark:text-gray-500 p-2 opacity-50">
+                                    <div
+                                        class="flex items-center gap-2 text-gray-400 dark:text-gray-500 p-2 opacity-50">
                                         <x-heroicon-m-clock class="w-5 h-5" />
                                     </div>
                                 @else
                                     <div class="flex flex-col items-center justify-center min-w-[80px] p-2 hover:bg-white/50 dark:hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
-                                    onclick="event.preventDefault(); event.stopPropagation();"
-                                    wire:click="mountAction('viewAttendance', { session: {{ $session->id }} })">
-                                    <div class="flex flex-col items-center">
-                                        <span class="text-lg font-bold text-primary-600 dark:text-primary-400 leading-none">
-                                            {{ $session->attendances_count }}<span class="text-[10px] text-gray-400 font-normal ml-0.5">/{{ $session->total_students }}</span>
-                                        </span>
-                                        <div class="mt-1.5 w-12 h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                            <div class="h-full bg-primary-500 rounded-full transition-all duration-500" style="width: {{ $session->attendance_percentage }}%"></div>
+                                        onclick="event.preventDefault(); event.stopPropagation();"
+                                        wire:click="mountAction('viewAttendance', { session: {{ $session->id }} })">
+                                        <div class="flex flex-col items-center">
+                                            <span
+                                                class="text-lg font-bold text-primary-600 dark:text-primary-400 leading-none">
+                                                {{ $session->attendances_count }}<span
+                                                    class="text-[10px] text-gray-400 font-normal ml-0.5">/{{ $session->total_students }}</span>
+                                            </span>
+                                            <div
+                                                class="mt-1.5 w-12 h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                                <div class="h-full bg-primary-500 rounded-full transition-all duration-500"
+                                                    style="width: {{ $session->attendance_percentage }}%"></div>
+                                            </div>
+                                            <span
+                                                class="text-[9px] uppercase font-bold text-gray-500 mt-1 leading-none tracking-wider">
+                                                {{ $session->attendance_percentage }}% Hadir
+                                            </span>
                                         </div>
-                                        <span class="text-[9px] uppercase font-bold text-gray-500 mt-1 leading-none tracking-wider">
-                                            {{ $session->attendance_percentage }}% Hadir
-                                        </span>
                                     </div>
-                                </div>
                                 @endif
                             </div>
                         </div>
@@ -97,8 +105,12 @@
                     </a>
                 @endforeach
             </div>
-        </x-filament::section>
-    @endif
+        @else
+            <x-filament::empty-state icon="heroicon-o-calendar-days" heading="Tidak ada data yang ditemukan"
+                description="Tidak ada jadwal hari ini." iconColor="gray">
+            </x-filament::empty-state>
+        @endif
+    </x-filament::section>
 
     <!-- All Courses Section -->
     <x-filament::section icon="heroicon-o-academic-cap" icon-color="gray">
