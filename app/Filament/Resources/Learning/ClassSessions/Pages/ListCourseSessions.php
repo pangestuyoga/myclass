@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Learning\ClassSessions\Pages;
 
 use App\Filament\Actions\BackAction;
-use App\Filament\Actions\Cheerful\CreateAction;
+use App\Filament\Resources\Learning\ClassSessions\Actions\CreateSessionAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\DeleteSessionAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\EditSessionAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\GenerateSessionsAction;
@@ -26,7 +26,6 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Pages\Page;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
-use Filament\Support\Enums\Width;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
 
@@ -55,7 +54,7 @@ class ListCourseSessions extends Page implements HasActions, HasForms
     public function sessions(): Collection
     {
         $totalActiveStudents = Student::query()
-            ->whereHas('user', fn ($q) => $q->where('is_active', true))
+            ->whereHas('user', fn ($q) => $q->active())
             ->count();
 
         return $this->course->classSessions()
@@ -136,22 +135,7 @@ class ListCourseSessions extends Page implements HasActions, HasForms
 
             GenerateSessionsAction::make(),
 
-            CreateAction::make()
-                ->label('Tambah')
-                ->modalHeading('Tambah Sesi')
-                ->modalSubmitActionLabel('Simpan')
-                ->modalCancelActionLabel('Batal')
-                ->schema(fn (Schema $schema) => $this->form($schema))
-                ->mutateDataUsing(function (array $data): array {
-                    $data['course_id'] = $this->courseId;
-
-                    return $data;
-                })
-                ->extraModalFooterActions(fn (CreateAction $action): array => [
-                    $action->makeModalSubmitAction('createAnother', arguments: ['another' => true])
-                        ->label('Simpan dan Tambah Lagi'),
-                ])
-                ->modalWidth(Width::TwoExtraLarge),
+            CreateSessionAction::make(),
         ];
     }
 

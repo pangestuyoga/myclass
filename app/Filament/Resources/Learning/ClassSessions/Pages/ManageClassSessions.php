@@ -66,7 +66,7 @@ class ManageClassSessions extends Page implements HasActions, HasForms
     public function todaySessions(): Collection
     {
         $totalActiveStudents = Student::query()
-            ->whereHas('user', fn ($q) => $q->where('is_active', true))
+            ->whereHas('user', fn ($q) => $q->active())
             ->count();
 
         return ClassSession::query()
@@ -118,7 +118,7 @@ class ManageClassSessions extends Page implements HasActions, HasForms
         }
 
         $totalActiveStudents = Student::query()
-            ->whereHas('user', fn ($q) => $q->where('is_active', true))
+            ->whereHas('user', fn ($q) => $q->active())
             ->count();
 
         return $query->get()
