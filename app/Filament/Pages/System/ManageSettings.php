@@ -40,7 +40,7 @@ class ManageSettings extends SettingsPage
 
     protected static string $settings = GeneralSettings::class;
 
-    public function schema(Schema $schema): Schema
+    public function form(Schema $schema): Schema
     {
         return $schema
             ->components([

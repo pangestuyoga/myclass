@@ -58,7 +58,7 @@ class Index extends Page implements HasActions, HasForms
         $this->form->fill();
     }
 
-    public function schema(Schema $schema): Schema
+    public function form(Schema $schema): Schema
     {
         return $schema
             ->schema([

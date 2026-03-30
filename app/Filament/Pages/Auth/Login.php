@@ -29,7 +29,7 @@ class Login extends FilamentLogin
         return '';
     }
 
-    public function schema(Schema $schema): Schema
+    public function form(Schema $schema): Schema
     {
         return $schema
             ->components([

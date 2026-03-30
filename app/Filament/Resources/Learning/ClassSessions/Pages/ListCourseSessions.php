@@ -74,7 +74,7 @@ class ListCourseSessions extends Page implements HasActions, HasForms
             ]);
     }
 
-    public function schema(): array
+    public function form(): array
     {
         return [
             Grid::make(['default' => 2])
