@@ -106,7 +106,7 @@ class Index extends Page implements HasActions, HasForms
     #[Computed]
     public function studyGroups(): Collection
     {
-        $query = StudyGroup::with(['leader', 'students', 'courses'])
+        $query = StudyGroup::with(['leader', 'students' => fn ($q) => $q->orderBy('full_name', 'asc'), 'courses'])
             ->whereHas('courses', fn ($q) => $q->where('courses.semester', app(GeneralSettings::class)->current_semester));
 
         if ($this->course_id) {
@@ -115,7 +115,7 @@ class Index extends Page implements HasActions, HasForms
 
         $studentId = auth()->user()?->student?->id;
 
-        return $query->latest()->get()->map(function ($record) use ($studentId) {
+        return $query->orderBy('name', 'asc')->get()->map(function ($record) use ($studentId) {
             $isMyGroup = ($studentId && ($record->leader_id === $studentId || $record->students->contains($studentId)));
 
             return (object) [
@@ -197,7 +197,7 @@ class Index extends Page implements HasActions, HasForms
                                 $query->whereNotIn('id', array_unique(array_merge($allBusyIds, $selectedMembers)));
                             }
 
-                            return $query->get()->pluck('full_name', 'id')->toArray();
+                            return $query->orderBy('full_name', 'asc')->get()->pluck('full_name', 'id')->toArray();
                         })
                         ->searchable()
                         ->required()
@@ -227,7 +227,7 @@ class Index extends Page implements HasActions, HasForms
                                     );
                                 }
 
-                                return $query->orderBy('student_number', 'asc');
+                                return $query->orderBy('full_name', 'asc');
                             }
                         )
                         ->multiple()
