@@ -22,191 +22,251 @@ class ShieldSeeder extends Seeder
                 "name": "Developer",
                 "guard_name": "web",
                 "permissions" : [
-                    "ViewAny:Student",
-                    "View:Student",
-                    "Create:Student",
-                    "Update:Student",
-                    "Delete:Student",
-                    "Restore:Student",
-                    "ForceDelete:Student",
-                    "ForceDeleteAny:Student",
-                    "RestoreAny:Student",
-                    "Replicate:Student",
-                    "Reorder:Student",
-                    
-
-                    "ViewAny:Course",
-                    "View:Course",
-                    "Create:Course",
-                    "Update:Course",
-                    "Delete:Course",
-                    "Restore:Course",
-                    "ForceDelete:Course",
-                    "ForceDeleteAny:Course",
-                    "RestoreAny:Course",
-                    "Replicate:Course",
-                    "Reorder:Course",
-
-                    "ViewAny:CourseSchedule",
-                    "View:CourseSchedule",
-                    "Create:CourseSchedule",
-                    "Update:CourseSchedule",
-                    "Delete:CourseSchedule",
-                    "Restore:CourseSchedule",
-                    "ForceDelete:CourseSchedule",
-                    "ForceDeleteAny:CourseSchedule",
-                    "RestoreAny:CourseSchedule",
-                    "Replicate:CourseSchedule",
-                    "Reorder:CourseSchedule",
-
-                    "ViewAny:Assignment",
-                    "View:Assignment",
                     "Create:Assignment",
-                    "Update:Assignment",
                     "Delete:Assignment",
-                    "Restore:Assignment",
                     "ForceDelete:Assignment",
                     "ForceDeleteAny:Assignment",
-                    "RestoreAny:Assignment",
                     "Replicate:Assignment",
                     "Reorder:Assignment",
+                    "Restore:Assignment",
+                    "RestoreAny:Assignment",
+                    "Update:Assignment",
+                    "View:Assignment",
+                    "ViewAny:Assignment",
 
-                    "ViewAny:Attendance",
-                    "View:Attendance",
                     "Create:Attendance",
-                    "Update:Attendance",
                     "Delete:Attendance",
-                    "Restore:Attendance",
                     "ForceDelete:Attendance",
                     "ForceDeleteAny:Attendance",
-                    "RestoreAny:Attendance",
                     "Replicate:Attendance",
                     "Reorder:Attendance",
+                    "Restore:Attendance",
+                    "RestoreAny:Attendance",
+                    "Update:Attendance",
+                    "View:Attendance",
+                    "ViewAny:Attendance",
 
-                    "ViewAny:Material",
-                    "View:Material",
-                    "Create:Material",
-                    "Update:Material",
-                    "Delete:Material",
-                    "Restore:Material",
-                    "ForceDelete:Material",
-                    "ForceDeleteAny:Material",
-                    "RestoreAny:Material",
-                    "Replicate:Material",
-                    "Reorder:Material",
-
-                    "ViewAny:StudyGroup",
-                    "View:StudyGroup",
-                    "Create:StudyGroup",
-                    "Update:StudyGroup",
-                    "Delete:StudyGroup",
-                    "Restore:StudyGroup",
-                    "ForceDelete:StudyGroup",
-                    "ForceDeleteAny:StudyGroup",
-                    "RestoreAny:StudyGroup",
-                    "Replicate:StudyGroup",
-                    "Reorder:StudyGroup",
-
-                    "ViewAny:Role",
-                    "View:Role",
-                    "Create:Role",
-                    "Update:Role",
-                    "Delete:Role",
-                    "Restore:Role",
-                    "ForceDelete:Role",
-                    "ForceDeleteAny:Role",
-                    "RestoreAny:Role",
-                    "Replicate:Role",
-                    "Reorder:Role",
-
-                    "View:LogTable",
-                    "View:ManageSettings",
-
-                    "ViewAny:AttendanceMonitoring",
-                    "View:AttendanceMonitoring",
                     "Create:AttendanceMonitoring",
-                    "Update:AttendanceMonitoring",
                     "Delete:AttendanceMonitoring",
-                    "Restore:AttendanceMonitoring",
                     "ForceDelete:AttendanceMonitoring",
                     "ForceDeleteAny:AttendanceMonitoring",
-                    "RestoreAny:AttendanceMonitoring",
                     "Replicate:AttendanceMonitoring",
-                    "Reorder:AttendanceMonitoring"
+                    "Reorder:AttendanceMonitoring",
+                    "Restore:AttendanceMonitoring",
+                    "RestoreAny:AttendanceMonitoring",
+                    "Update:AttendanceMonitoring",
+                    "View:AttendanceMonitoring",
+                    "ViewAny:AttendanceMonitoring",
+
+                    "Create:ClassSession",
+                    "Delete:ClassSession",
+                    "ForceDelete:ClassSession",
+                    "ForceDeleteAny:ClassSession",
+                    "Replicate:ClassSession",
+                    "Reorder:ClassSession",
+                    "Restore:ClassSession",
+                    "RestoreAny:ClassSession",
+                    "Update:ClassSession",
+                    "View:ClassSession",
+                    "ViewAny:ClassSession",
+
+                    "Create:Course",
+                    "Delete:Course",
+                    "ForceDelete:Course",
+                    "ForceDeleteAny:Course",
+                    "Replicate:Course",
+                    "Reorder:Course",
+                    "Restore:Course",
+                    "RestoreAny:Course",
+                    "Update:Course",
+                    "View:Course",
+                    "ViewAny:Course",
+
+                    "Create:CourseSchedule",
+                    "Delete:CourseSchedule",
+                    "ForceDelete:CourseSchedule",
+                    "ForceDeleteAny:CourseSchedule",
+                    "Replicate:CourseSchedule",
+                    "Reorder:CourseSchedule",
+                    "Restore:CourseSchedule",
+                    "RestoreAny:CourseSchedule",
+                    "Update:CourseSchedule",
+                    "View:CourseSchedule",
+                    "ViewAny:CourseSchedule",
+
+                    "View:LogTable",
+
+                    "View:ManageSettings",
+
+                    "Create:Material",
+                    "Delete:Material",
+                    "ForceDelete:Material",
+                    "ForceDeleteAny:Material",
+                    "Replicate:Material",
+                    "Reorder:Material",
+                    "Restore:Material",
+                    "RestoreAny:Material",
+                    "Update:Material",
+                    "View:Material",
+                    "ViewAny:Material",
+
+                    "Create:Role",
+                    "Delete:Role",
+                    "ForceDelete:Role",
+                    "ForceDeleteAny:Role",
+                    "Replicate:Role",
+                    "Reorder:Role",
+                    "Restore:Role",
+                    "RestoreAny:Role",
+                    "Update:Role",
+                    "View:Role",
+                    "ViewAny:Role",
+
+                    "Create:Student",
+                    "Delete:Student",
+                    "ForceDelete:Student",
+                    "ForceDeleteAny:Student",
+                    "Replicate:Student",
+                    "Reorder:Student",
+                    "Restore:Student",
+                    "RestoreAny:Student",
+                    "Update:Student",
+                    "View:Student",
+                    "ViewAny:Student",
+
+                    "Create:StudyGroup",
+                    "Delete:StudyGroup",
+                    "ForceDelete:StudyGroup",
+                    "ForceDeleteAny:StudyGroup",
+                    "Replicate:StudyGroup",
+                    "Reorder:StudyGroup",
+                    "Restore:StudyGroup",
+                    "RestoreAny:StudyGroup",
+                    "Update:StudyGroup",
+                    "View:StudyGroup",
+                    "ViewAny:StudyGroup"
                 ]
             },
             {
                 "name": "Mahasiswa",
                 "guard_name": "web",
                 "permissions" : [
-                    "ViewAny:Student",
-                    "View:Student",
-
-
-                    "ViewAny:Course",
-                    "View:Course",
-
-                    "ViewAny:CourseSchedule",
-                    "View:CourseSchedule",
-
-                    "ViewAny:Assignment",
                     "View:Assignment",
+                    "ViewAny:Assignment",
 
-                    "ViewAny:Attendance",
                     "View:Attendance",
+                    "ViewAny:Attendance",
 
-                    "ViewAny:Material",
+                    "View:Course",
+                    "ViewAny:Course",
+
+                    "View:CourseSchedule",
+                    "ViewAny:CourseSchedule",
+
                     "View:Material",
+                    "ViewAny:Material",
 
-                    "ViewAny:StudyGroup",
-                    "View:StudyGroup"
+                    "View:StudyGroup",
+                    "ViewAny:StudyGroup"
                 ]
             },
             {
                 "name": "Kosma",
                 "guard_name": "web",
                 "permissions" : [
-                    "Create:Student",
-                    "Update:Student",
-                    "Delete:Student",
-                
+                    "Create:Assignment",
+                    "Delete:Assignment",
+                    "ForceDelete:Assignment",
+                    "ForceDeleteAny:Assignment",
+                    "Restore:Assignment",
+                    "RestoreAny:Assignment",
+                    "Update:Assignment",
+                    "View:Assignment",
+                    "ViewAny:Assignment",
+
+                    "Create:Attendance",
+                    "Delete:Attendance",
+                    "ForceDelete:Attendance",
+                    "ForceDeleteAny:Attendance",
+                    "Restore:Attendance",
+                    "RestoreAny:Attendance",
+                    "Update:Attendance",
+                    "View:Attendance",
+                    "ViewAny:Attendance",
+
+                    "Create:AttendanceMonitoring",
+                    "Delete:AttendanceMonitoring",
+                    "ForceDelete:AttendanceMonitoring",
+                    "ForceDeleteAny:AttendanceMonitoring",
+                    "Restore:AttendanceMonitoring",
+                    "RestoreAny:AttendanceMonitoring",
+                    "Update:AttendanceMonitoring",
+                    "View:AttendanceMonitoring",
+                    "ViewAny:AttendanceMonitoring",
+
+                    "Create:ClassSession",
+                    "Delete:ClassSession",
+                    "ForceDelete:ClassSession",
+                    "ForceDeleteAny:ClassSession",
+                    "Restore:ClassSession",
+                    "RestoreAny:ClassSession",
+                    "Update:ClassSession",
+                    "View:ClassSession",
+                    "ViewAny:ClassSession",
 
                     "Create:Course",
-                    "Update:Course",
                     "Delete:Course",
+                    "ForceDelete:Course",
+                    "ForceDeleteAny:Course",
+                    "Restore:Course",
+                    "RestoreAny:Course",
+                    "Update:Course",
+                    "View:Course",
+                    "ViewAny:Course",
 
                     "Create:CourseSchedule",
-                    "Update:CourseSchedule",
                     "Delete:CourseSchedule",
-
-                    "Create:Assignment",
-                    "Update:Assignment",
-                    "Delete:Assignment",
-
-                    "Create:Material",
-                    "Update:Material",
-                    "Delete:Material",
-
-                    "Create:StudyGroup",
-                    "Update:StudyGroup",
-                    "Delete:StudyGroup",
+                    "ForceDelete:CourseSchedule",
+                    "ForceDeleteAny:CourseSchedule",
+                    "Restore:CourseSchedule",
+                    "RestoreAny:CourseSchedule",
+                    "Update:CourseSchedule",
+                    "View:CourseSchedule",
+                    "ViewAny:CourseSchedule",
 
                     "View:ManageSettings",
 
-                    "ViewAny:AttendanceMonitoring",
-                    "View:AttendanceMonitoring",
-                    "Create:AttendanceMonitoring",
-                    "Update:AttendanceMonitoring",
-                    "Delete:AttendanceMonitoring",
-                    "Restore:AttendanceMonitoring",
-                    "ForceDelete:AttendanceMonitoring",
-                    "ForceDeleteAny:AttendanceMonitoring",
-                    "RestoreAny:AttendanceMonitoring",
-                    "Replicate:AttendanceMonitoring",
-                    "Reorder:AttendanceMonitoring"
+                    "Create:Material",
+                    "Delete:Material",
+                    "ForceDelete:Material",
+                    "ForceDeleteAny:Material",
+                    "Restore:Material",
+                    "RestoreAny:Material",
+                    "Update:Material",
+                    "View:Material",
+                    "ViewAny:Material",
+
+                    "Create:Student",
+                    "Delete:Student",
+                    "ForceDelete:Student",
+                    "ForceDeleteAny:Student",
+                    "Restore:Student",
+                    "RestoreAny:Student",
+                    "Update:Student",
+                    "View:Student",
+                    "ViewAny:Student",
+
+                    "Create:StudyGroup",
+                    "Delete:StudyGroup",
+                    "ForceDelete:StudyGroup",
+                    "ForceDeleteAny:StudyGroup",
+                    "Restore:StudyGroup",
+                    "RestoreAny:StudyGroup",
+                    "Update:StudyGroup",
+                    "View:StudyGroup",
+                    "ViewAny:StudyGroup"
                 ]
             }
-
         ]
         JSON;
         $directPermissions = '[]';
@@ -260,11 +320,10 @@ class ShieldSeeder extends Seeder
             return;
         }
 
-        $userModel = 'App\Models\User';
+        $userModel = 'App\\Models\\User';
         $tenancyEnabled = false;
 
         foreach ($userData as $data) {
-            // Extract role/permission data before creating user
             $roles = $data['roles'] ?? [];
             $permissions = $data['permissions'] ?? [];
             $tenantRoles = $data['tenant_roles'] ?? [];
@@ -276,7 +335,6 @@ class ShieldSeeder extends Seeder
                 $data
             );
 
-            // Handle tenancy mode - sync roles/permissions per tenant
             if ($tenancyEnabled && (! empty($tenantRoles) || ! empty($tenantPermissions))) {
                 foreach ($tenantRoles as $tenantId => $roleNames) {
                     $contextId = $tenantId === '_global' ? null : $tenantId;
@@ -290,7 +348,6 @@ class ShieldSeeder extends Seeder
                     $user->syncPermissions($permissionNames);
                 }
             } else {
-                // Non-tenancy mode
                 if (! empty($roles)) {
                     $user->syncRoles($roles);
                 }
@@ -325,7 +382,7 @@ class ShieldSeeder extends Seeder
                 $uniqueKeys[$tenantForeignKey] = $row[$tenantForeignKey];
             }
 
-            if (! empty($uniqueKeys)) {
+            if (! empty($makeRolesWithPermissions)) {
                 DB::table($pivotTable)->updateOrInsert($uniqueKeys, $row);
             }
         }
@@ -348,7 +405,6 @@ class ShieldSeeder extends Seeder
         foreach ($rolePlusPermissions as $rolePlusPermission) {
             $tenantId = $rolePlusPermission[$teamForeignKey] ?? null;
 
-            // Set tenant context for role creation and permission sync
             if ($tenancyEnabled) {
                 setPermissionsTeamId($tenantId);
             }
@@ -358,7 +414,6 @@ class ShieldSeeder extends Seeder
                 'guard_name' => $rolePlusPermission['guard_name'],
             ];
 
-            // Include tenant ID in role data (can be null for global roles)
             if ($tenancyEnabled && ! blank($teamForeignKey)) {
                 $roleData[$teamForeignKey] = $tenantId;
             }
