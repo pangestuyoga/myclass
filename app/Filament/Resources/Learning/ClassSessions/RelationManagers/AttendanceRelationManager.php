@@ -13,7 +13,7 @@ use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class AttendanceRelationManager extends RelationManager
@@ -51,19 +51,19 @@ class AttendanceRelationManager extends RelationManager
             ->columns([
                 ...RowIndexColumn::make(),
 
-                Tables\Columns\TextColumn::make('student.student_number')
+                TextColumn::make('student.student_number')
                     ->label('NIM')
                     ->copyable()
                     ->searchable()
                     ->sortable()
                     ->color('gray'),
 
-                Tables\Columns\TextColumn::make('student.full_name')
+                TextColumn::make('student.full_name')
                     ->label('Nama Mahasiswa')
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('attended_at')
+                TextColumn::make('attended_at')
                     ->label('Waktu Presensi')
                     ->dateTime('l, d F Y H:i')
                     ->sortable()
