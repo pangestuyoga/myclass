@@ -16,7 +16,8 @@ class ChangePasswordAction extends Action
         parent::setUp();
 
         $this->label('Ganti Kata Sandi')
-            ->color('warning')
+            ->color('info')
+            ->icon('heroicon-o-key')
             ->modalWidth(Width::Medium)
             ->schema([
                 TextInput::make('password')
