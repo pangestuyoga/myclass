@@ -24,7 +24,7 @@ class EditStudyGroupAction extends EditAction
             ->link()
             ->tooltip('Ubah')
             ->record(fn (array $arguments): StudyGroup => StudyGroup::findOrFail($arguments['studyGroup']))
-            ->modalHeading(fn (StudyGroup $record) => "Ubah {$record->name}")
+            ->modalHeading('Ubah Data')
             ->modalSubmitActionLabel('Simpan')
             ->modalCancelActionLabel('Batal')
             ->modalWidth(Width::ThreeExtraLarge)

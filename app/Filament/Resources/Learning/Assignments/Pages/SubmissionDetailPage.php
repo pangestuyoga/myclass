@@ -171,7 +171,7 @@ class SubmissionDetailPage extends Page
     {
         return Action::make('previewSubmission')
             ->record(fn (array $arguments) => AssignmentSubmission::find($arguments['submissionId']))
-            ->modalHeading(fn (AssignmentSubmission $record) => 'File Tugas: '.($record->study_group_id ? $record->studyGroup->name : $record->student->full_name))
+            ->modalHeading('File Tugas')
             ->modalWidth(Width::SixExtraLarge)
             ->infolist([
                 PdfViewerEntry::make('submission')

@@ -18,7 +18,7 @@ class ViewMaterialDetailAction extends Action
         parent::setUp();
 
         $this->record(fn (array $arguments) => Material::find($arguments['record'] ?? null, ['*']))
-            ->modalHeading(fn (?Material $record) => $record?->title ?? 'Detail Materi')
+            ->modalHeading('Detail Materi')
             ->modalSubmitAction(false)
             ->modalCancelActionLabel('Tutup')
             ->modalWidth(Width::FourExtraLarge)

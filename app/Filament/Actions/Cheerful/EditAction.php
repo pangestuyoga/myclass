@@ -14,6 +14,7 @@ class EditAction extends ActionsEditAction
         $this->successNotification(
             SystemNotification::update()
         )
-            ->color('warning');
+            ->color('warning')
+            ->modalHeading('Ubah Data');
     }
 }

@@ -20,7 +20,7 @@ class DeleteAssignmentAction extends DeleteAction
             ->label('Hapus')
             ->icon('heroicon-o-trash')
             ->link()
-            ->modalHeading(fn (Assignment $record) => "Hapus {$record->title}")
+            ->modalHeading('Hapus Data')
             ->record(fn (array $arguments) => Assignment::find($arguments['record']))
             ->after(function ($livewire) {
                 unset($livewire->assignments);

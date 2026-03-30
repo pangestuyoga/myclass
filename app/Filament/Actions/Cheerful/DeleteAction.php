@@ -13,6 +13,7 @@ class DeleteAction extends ActionsDeleteAction
 
         $this->successNotification(
             SystemNotification::delete()
-        );
+        )
+            ->modalHeading('Hapus Data');
     }
 }

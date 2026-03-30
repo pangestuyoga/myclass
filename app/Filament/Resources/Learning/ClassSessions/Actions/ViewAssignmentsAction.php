@@ -21,7 +21,7 @@ class ViewAssignmentsAction extends Action
             ->color('info')
             ->icon('heroicon-o-clipboard-document-list')
             ->link()
-            ->modalHeading(fn (array $arguments) => 'Tugas Kuliah - Sesi Ke-'.(ClassSession::find($arguments['session'] ?? null, ['*'])?->session_number ?? ''))
+            ->modalHeading('Tugas Kuliah')
             ->modalSubmitAction(false)
             ->modalCancelActionLabel('Tutup')
             ->modalWidth(Width::Large)

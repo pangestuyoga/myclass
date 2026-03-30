@@ -29,7 +29,7 @@ class EditAssignmentAction extends EditAction
             ->link()
             ->tooltip('Ubah')
             ->record(fn (array $arguments) => Assignment::find($arguments['record']))
-            ->modalHeading(fn (Assignment $record) => "Ubah {$record->title}")
+            ->modalHeading('Ubah Data')
             ->modalWidth(Width::FourExtraLarge)
             ->form(AssignmentForm::configure(new Schema)->getComponents())
             ->fillForm(function (Assignment $record): array {

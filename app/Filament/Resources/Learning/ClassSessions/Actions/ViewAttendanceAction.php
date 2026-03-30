@@ -21,7 +21,7 @@ class ViewAttendanceAction extends Action
             ->color('success')
             ->icon('heroicon-o-check-circle')
             ->link()
-            ->modalHeading(fn (array $arguments) => 'Daftar Presensi - Sesi Ke-'.ClassSession::find($arguments['session'] ?? null, ['*'])?->session_number)
+            ->modalHeading('Daftar Presensi')
             ->modalSubmitAction(false)
             ->modalCancelActionLabel('Tutup')
             ->modalWidth(Width::ExtraLarge)

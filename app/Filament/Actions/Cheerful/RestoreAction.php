@@ -13,6 +13,7 @@ class RestoreAction extends ActionsRestoreAction
 
         $this->successNotification(
             SystemNotification::restore()
-        );
+        )
+            ->modalHeading('Pulihkan Data');
     }
 }

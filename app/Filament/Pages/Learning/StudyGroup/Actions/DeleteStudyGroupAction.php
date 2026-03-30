@@ -22,7 +22,7 @@ class DeleteStudyGroupAction extends DeleteAction
             ->color('danger')
             ->link()
             ->tooltip('Hapus')
-            ->modalHeading(fn (StudyGroup $record) => "Hapus {$record->name}")
+            ->modalHeading('Hapus Data')
             ->modalDescription('Apakah Anda yakin ingin menghapus kelompok ini? Tindakan ini tidak dapat dibatalkan.')
             ->modalSubmitActionLabel('Hapus')
             ->modalCancelActionLabel('Batal');

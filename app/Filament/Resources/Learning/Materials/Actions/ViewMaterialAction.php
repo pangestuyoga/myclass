@@ -19,6 +19,7 @@ class ViewMaterialAction extends ViewAction
         parent::setUp();
 
         $this->modalWidth(Width::FourExtraLarge)
+            ->modalHeading('Lihat Materi')
             ->schema(function (Material $record) {
                 return $record->getMedia('materials')->map(function ($item, $index) {
                     return PdfViewerEntry::make('pdf_'.$index)

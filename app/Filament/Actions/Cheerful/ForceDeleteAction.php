@@ -13,6 +13,7 @@ class ForceDeleteAction extends ActionsForceDeleteAction
 
         $this->successNotification(
             SystemNotification::forceDelete()
-        );
+        )
+            ->modalHeading('Hapus Data Selamanya');
     }
 }

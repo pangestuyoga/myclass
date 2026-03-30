@@ -19,7 +19,7 @@ class ViewAssignmentDetailAction extends Action
     {
         parent::setUp();
 
-        $this->modalHeading(fn (array $arguments) => Assignment::find($arguments['record'], ['*'])?->title ?? 'Detail Tugas')
+        $this->modalHeading('Detail Tugas')
             ->modalSubmitAction(false)
             ->modalCancelActionLabel('Tutup')
             ->modalWidth(Width::FourExtraLarge)

@@ -21,7 +21,7 @@ class ViewMaterialsAction extends Action
             ->color('warning')
             ->icon('heroicon-o-book-open')
             ->link()
-            ->modalHeading(fn (array $arguments) => 'Materi Kuliah - Sesi Ke-'.(ClassSession::find($arguments['session'] ?? null, ['*'])?->session_number ?? ''))
+            ->modalHeading('Materi Kuliah')
             ->modalSubmitAction(false)
             ->modalCancelActionLabel('Tutup')
             ->modalWidth(Width::Large)
