@@ -5,6 +5,7 @@ namespace App\Filament\Pages\Learning\StudyGroup;
 use App\Filament\Pages\Learning\StudyGroup\Actions\CreateStudyGroupAction;
 use App\Filament\Pages\Learning\StudyGroup\Actions\DeleteStudyGroupAction;
 use App\Filament\Pages\Learning\StudyGroup\Actions\EditStudyGroupAction;
+use App\Filament\Pages\Learning\StudyGroup\Actions\SelectAllCoursesAction;
 use App\Models\Course;
 use App\Models\Student;
 use App\Models\StudyGroup;
@@ -171,7 +172,8 @@ class Index extends Page implements HasActions, HasForms
                         ->searchable()
                         ->required()
                         ->live()
-                        ->columnSpanFull(),
+                        ->columnSpanFull()
+                        ->suffixAction(SelectAllCoursesAction::make()),
 
                     TextInput::make('name')
                         ->label('Nama Kelompok')
