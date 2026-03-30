@@ -13,7 +13,6 @@ use App\Settings\GeneralSettings;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
@@ -23,7 +22,7 @@ class AssignmentResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Pembelajaran';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-clipboard-document-list';
 
     protected static ?string $navigationLabel = 'Tugas';
 

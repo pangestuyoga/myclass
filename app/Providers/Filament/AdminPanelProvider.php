@@ -15,7 +15,6 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Support\Icons\Heroicon;
 use Filament\Widgets\AccountWidget;
 use Hammadzafar05\MobileBottomNav\MobileBottomNav;
 use Hammadzafar05\MobileBottomNav\MobileBottomNavItem;
@@ -101,26 +100,26 @@ class AdminPanelProvider extends PanelProvider
                 MobileBottomNav::make()
                     ->items([
                         MobileBottomNavItem::make('Dasbor')
-                            ->icon(Heroicon::OutlinedHome)
-                            ->activeIcon(Heroicon::Home)
+                            ->icon('heroicon-o-home')
+                            ->activeIcon('heroicon-s-home')
                             ->url('/admin')
                             ->isActive(fn () => request()->is('admin')),
 
                         MobileBottomNavItem::make('Presensi')
-                            ->icon(Heroicon::OutlinedCheckCircle)
-                            ->activeIcon(Heroicon::CheckCircle)
+                            ->icon('heroicon-o-check-circle')
+                            ->activeIcon('heroicon-s-check-circle')
                             ->url('/admin/learning/attendances')
                             ->isActive(fn () => request()->is('admin/learning/attendances')),
 
                         MobileBottomNavItem::make('Materi')
-                            ->icon(Heroicon::OutlinedBookOpen)
-                            ->activeIcon(Heroicon::BookOpen)
+                            ->icon('heroicon-o-book-open')
+                            ->activeIcon('heroicon-s-book-open')
                             ->url('/admin/learning/materials')
                             ->isActive(fn () => request()->is('admin/learning/materials')),
 
                         MobileBottomNavItem::make('Tugas')
-                            ->icon(Heroicon::OutlinedClipboardDocumentList)
-                            ->activeIcon(Heroicon::ClipboardDocumentList)
+                            ->icon('heroicon-o-clipboard-document-list')
+                            ->activeIcon('heroicon-s-clipboard-document-list')
                             ->url('/admin/learning/assignments')
                             ->isActive(fn () => request()->is('admin/learning/assignments')),
                     ])

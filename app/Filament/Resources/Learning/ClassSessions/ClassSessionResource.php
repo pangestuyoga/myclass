@@ -9,7 +9,6 @@ use App\Models\ClassSession;
 use App\Settings\GeneralSettings;
 use BackedEnum;
 use Filament\Resources\Resource;
-use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use UnitEnum;
@@ -20,7 +19,7 @@ class ClassSessionResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Pembelajaran';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPresentationChartBar;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-calendar-days';
 
     protected static ?string $navigationLabel = 'Sesi Kelas';
 

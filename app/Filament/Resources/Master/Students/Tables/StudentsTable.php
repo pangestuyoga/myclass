@@ -14,8 +14,7 @@ use App\Filament\Resources\Master\Students\Actions\ChangePasswordAction;
 use App\Filament\Resources\Master\Students\Actions\EditStudentAction;
 use App\Filament\Support\SystemNotification;
 use App\Models\Student;
-use Filament\Actions\BulkActionGroup;
-use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -143,7 +142,7 @@ class StudentsTable
                     ...DefaultBulkActions::make('Mahasiswa'),
                 ]),
             ])
-            ->emptyStateIcon(Heroicon::OutlinedUserPlus)
+            ->emptyStateIcon('heroicon-o-user-plus')
             ->emptyStateDescription('Setelah Anda membuat data pertama, maka akan muncul disini.')
             ->defaultSort('created_at', 'desc')
             ->deferFilters(false)

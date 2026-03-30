@@ -14,7 +14,6 @@ use Filament\Notifications\Notification;
 use Filament\Pages\SettingsPage;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use UnitEnum;
 
 class ManageSettings extends SettingsPage
@@ -23,7 +22,7 @@ class ManageSettings extends SettingsPage
 
     protected static string|UnitEnum|null $navigationGroup = 'Sistem';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
     protected static ?string $title = 'Pengaturan';
 

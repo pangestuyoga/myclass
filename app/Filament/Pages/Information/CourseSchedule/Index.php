@@ -21,7 +21,6 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
 use UnitEnum;
@@ -34,7 +33,7 @@ class Index extends Page implements HasActions, HasForms
 
     protected static string|UnitEnum|null $navigationGroup = 'Informasi';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-calendar-days';
 
     protected static ?string $title = 'Jadwal Kuliah';
 

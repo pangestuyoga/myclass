@@ -26,7 +26,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -42,7 +41,7 @@ class MaterialResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Pembelajaran';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-book-open';
 
     protected static ?string $navigationLabel = 'Materi';
 

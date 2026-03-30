@@ -16,7 +16,6 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Grouping\Group;
@@ -31,7 +30,7 @@ class CourseResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Master';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationLabel = 'Mata Kuliah';
 
@@ -134,7 +133,7 @@ class CourseResource extends Resource
                     ...DefaultBulkActions::make('Mata Kuliah'),
                 ]),
             ])
-            ->emptyStateIcon(Heroicon::OutlinedRectangleStack)
+            ->emptyStateIcon('heroicon-o-rectangle-stack')
             ->emptyStateDescription('Setelah Anda membuat data pertama, maka akan muncul disini.')
             ->defaultSort('code', 'desc')
             ->defaultGroup('semester')

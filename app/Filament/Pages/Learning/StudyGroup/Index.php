@@ -22,7 +22,6 @@ use Filament\Pages\Page;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -37,7 +36,7 @@ class Index extends Page implements HasActions, HasForms
 
     protected static string|UnitEnum|null $navigationGroup = 'Pembelajaran';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
     protected static ?string $title = 'Kelompok Belajar';
 
