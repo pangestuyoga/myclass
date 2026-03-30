@@ -7,7 +7,6 @@ use App\Enums\Sex;
 use App\Filament\Support\SystemNotification;
 use Carbon\Carbon;
 use Filament\Auth\Pages\EditProfile;
-use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;

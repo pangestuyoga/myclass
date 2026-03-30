@@ -33,8 +33,10 @@ class CopyAssignmentLinkAction extends Action
                 $livewire->js("if (navigator.clipboard) { navigator.clipboard.writeText('{$url}').catch(() => {}); }");
 
                 SystemNotification::success(
-                    'Tautan Berhasil Disalin ✨',
-                    'Tautan telah disalin ke clipboard dan siap untuk dibagikan.'
+                    'Tautan Berhasil Disalin ✨🚀',
+                    'Tautan telah disalin ke clipboard dan siap untuk dibagikan. 📋',
+                    'Penyalinan Tautan Berhasil',
+                    'Tautan URL telah berhasil disalin ke papan klip sistem.'
                 )->send();
             });
     }
