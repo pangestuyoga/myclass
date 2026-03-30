@@ -8,5 +8,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/share/presensi/{token}', [ShareAttendanceController::class, 'show'])->name('share.attendance');
-Route::get('/share/tugas/{token}', [ShareAssignmentController::class, 'show'])->name('share.assignment');
+Route::get('/share/presensi/{course}', [ShareAttendanceController::class, 'show'])->name('share.attendance');
+Route::get('/share/tugas/{course}', [ShareAssignmentController::class, 'show'])->name('share.assignment');

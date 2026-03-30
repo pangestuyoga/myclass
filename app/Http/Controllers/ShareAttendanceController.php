@@ -13,9 +13,8 @@ use Illuminate\Http\Request;
 
 class ShareAttendanceController extends Controller
 {
-    public function show(Request $request, string $token): View
+    public function show(Request $request, Course $course): View
     {
-        $course = Course::where('sharing_token', $token)->firstOrFail();
 
         $latestAttendance = Attendance::whereHas('courseSchedule', function ($query) use ($course) {
             $query->where('course_id', $course->id);

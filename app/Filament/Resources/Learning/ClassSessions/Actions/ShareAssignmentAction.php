@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Learning\ClassSessions\Actions;
 
 use App\Models\ClassSession;
 use Filament\Actions\Action;
-use Illuminate\Support\Str;
 
 class ShareAssignmentAction extends Action
 {
@@ -23,14 +22,11 @@ class ShareAssignmentAction extends Action
             ->link()
             ->action(function (array $arguments, $livewire) {
                 $course = $livewire->course;
-                if (empty($course->sharing_token)) {
-                    $course->update(['sharing_token' => Str::random(32)]);
-                }
 
                 $session = ClassSession::find($arguments['session'] ?? null);
 
                 $url = route('share.assignment', [
-                    'token' => $course->sharing_token,
+                    'course' => $course->id,
                     'session_id' => $session ? $session->id : null,
                 ]);
 

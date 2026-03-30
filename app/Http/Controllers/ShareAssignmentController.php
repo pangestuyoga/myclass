@@ -12,9 +12,8 @@ use Illuminate\Http\Request;
 
 class ShareAssignmentController extends Controller
 {
-    public function show(Request $request, string $token): View
+    public function show(Request $request, Course $course): View
     {
-        $course = Course::where('sharing_token', $token)->firstOrFail();
 
         // Retrieve available assignments for the dropdown (from the whole course)
         $availableAssignments = Assignment::where('course_id', $course->id)

@@ -14,13 +14,6 @@ class Course extends Model
 
     protected $guarded = ['id'];
 
-    protected static function booted()
-    {
-        static::creating(function ($course) {
-            $course->sharing_token = \Illuminate\Support\Str::random(32);
-        });
-    }
-
     public function assignments(): HasMany
     {
         return $this->hasMany(Assignment::class);

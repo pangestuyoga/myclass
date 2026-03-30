@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Learning\ClassSessions\Actions;
 
 use App\Models\ClassSession;
 use Filament\Actions\Action;
-use Illuminate\Support\Str;
 
 class ShareAttendanceAction extends Action
 {
@@ -23,14 +22,11 @@ class ShareAttendanceAction extends Action
             ->link()
             ->action(function (array $arguments, $livewire) {
                 $course = $livewire->course;
-                if (empty($course->sharing_token)) {
-                    $course->update(['sharing_token' => Str::random(32)]);
-                }
 
                 $session = ClassSession::find($arguments['session'] ?? null);
                 $date = $session ? $session->date->toDateString() : null;
 
-                $url = route('share.attendance', ['token' => $course->sharing_token, 'date' => $date]);
+                $url = route('share.attendance', ['course' => $course->id, 'date' => $date]);
 
                 $text = "*Info Kelas {$course->name}*\nSesi ke-".($session->session_number ?? '-').' ('.($session->date->translatedFormat('d M Y') ?? '').")\n\nSilakan cek detail/rekap kehadiran melalui tautan ini:\n\n{$url}";
 
