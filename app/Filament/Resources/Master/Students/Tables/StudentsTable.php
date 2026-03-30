@@ -14,7 +14,7 @@ use App\Filament\Resources\Master\Students\Actions\ChangePasswordAction;
 use App\Filament\Resources\Master\Students\Actions\EditStudentAction;
 use App\Filament\Support\SystemNotification;
 use App\Models\Student;
-use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Actions\BulkActionGroup;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
