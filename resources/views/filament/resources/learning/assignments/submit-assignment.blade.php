@@ -34,7 +34,7 @@
 
             @if ($this->record->hasMedia('assignments'))
                 <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
-                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Lampiran Tugas (PDF)</p>
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Lampiran Tugas</p>
                     <div
                         class="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
                         <iframe src="{{ $this->record->getFirstMediaUrl('assignments') }}" width="100%" height="500"
@@ -115,7 +115,7 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                            {{ $this->isResubmit ? 'Ganti File PDF (opsional)' : 'File Tugas (PDF)' }}
+                            {{ $this->isResubmit ? 'Ganti File PDF (opsional)' : 'File Tugas' }}
                             @if (!$this->isResubmit)
                                 <span class="text-danger-500">*</span>
                             @endif
@@ -164,18 +164,35 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Function to reset preview
+            function resetPreview() {
+                var preview = document.getElementById('pdf-submission-preview');
+                var frame = document.getElementById('pdf-submission-frame');
+                if (preview) preview.classList.add('hidden');
+                if (frame) frame.src = '';
+            }
+
+            // Delegation for change event
             document.addEventListener('change', function(e) {
                 if (e.target && e.target.id === 'assignment-file') {
                     var file = e.target.files[0];
                     var preview = document.getElementById('pdf-submission-preview');
                     var frame = document.getElementById('pdf-submission-frame');
+
                     if (file && preview && frame) {
                         frame.src = URL.createObjectURL(file);
                         preview.classList.remove('hidden');
-                    } else if (preview) {
-                        preview.classList.add('hidden');
+                    } else {
+                        resetPreview();
                     }
                 }
+            });
+
+            // Listen for the Livewire event after submission
+            window.addEventListener('submission-completed', function() {
+                var input = document.getElementById('assignment-file');
+                if (input) input.value = ''; 
+                resetPreview();
             });
         });
     </script>

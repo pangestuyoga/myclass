@@ -230,6 +230,8 @@ class SubmitAssignmentPage extends Page
 
         $this->file = null;
         unset($this->existingSubmission, $this->isResubmit);
+
+        $this->dispatch('submission-completed');
     }
 
     protected function getHeaderActions(): array
