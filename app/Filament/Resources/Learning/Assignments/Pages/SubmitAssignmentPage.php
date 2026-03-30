@@ -12,6 +12,7 @@ use App\Models\Student;
 use App\Models\StudyGroup;
 use Filament\Resources\Pages\Page;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\WithFileUploads;
 
@@ -63,7 +64,10 @@ class SubmitAssignmentPage extends Page
     #[Computed]
     public function student(): Student
     {
-        return auth()->user()->student;
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+
+        return $user?->student;
     }
 
     #[Computed]
@@ -154,7 +158,9 @@ class SubmitAssignmentPage extends Page
         if ($assignment->type === AssignmentType::Group && ! $this->currentGroup) {
             SystemNotification::danger(
                 'Gagal Mengumpulkan 🚫',
-                'Anda tidak terdaftar dalam kelompok manapun yang ditugaskan untuk tugas ini.'
+                'Anda tidak terdaftar dalam kelompok manapun yang ditugaskan untuk tugas ini. 😟',
+                'Kesalahan Pengumpulan Tugas',
+                'Data akun Anda tidak ditemukan dalam daftar kelompok yang ditugaskan untuk tugas ini.'
             )->send();
 
             return;
@@ -162,8 +168,10 @@ class SubmitAssignmentPage extends Page
 
         if (! $this->canSubmit) {
             SystemNotification::danger(
-                'Gagal Mengumpulkan 🚫',
-                'Hanya ketua kelompok yang diizinkan untuk mengumpulkan atau memperbarui tugas kelompok.'
+                'Akses Ditolak 🚫',
+                'Hanya ketua kelompok yang diizinkan untuk mengumpulkan atau memperbarui tugas kelompok. 👑',
+                'Batasan Otoritas Pengumpulan',
+                'Hanya ketua kelompok yang memiliki otoritas untuk memperbarui atau mengumpulkan tugas kelompok.'
             )->send();
 
             return;
@@ -173,8 +181,10 @@ class SubmitAssignmentPage extends Page
 
         if (! $existingSubmission && ! $this->file) {
             SystemNotification::warning(
-                'File Diperlukan',
-                'Silakan pilih file untuk dikumpulkan.'
+                'Pilih File Dulu Dong! 📁',
+                'Silakan pilih file untuk dikumpulkan agar sistem bisa menyimpannya ya! 😊',
+                'Kelengkapan Berkas Diperlukan',
+                'Mohon sertakan lampiran berkas sebelum melanjutkan proses pengumpulan tugas.'
             )->send();
 
             return;
@@ -206,8 +216,10 @@ class SubmitAssignmentPage extends Page
             ]);
 
             SystemNotification::success(
-                'Tugas Diperbarui ✅',
-                'File tugas Anda telah berhasil diunggah ulang dan diperbarui.'
+                'Keren! Tugas Sudah Update ✨',
+                'File tugas Anda telah berhasil diunggah ulang dan diperbarui di sistem. 📤',
+                'Pembaruan Berkas Berhasil',
+                'Berkas tugas telah berhasil diunggah ulang dan divalidasi oleh sistem.'
             )->send();
         } else {
             $submission = AssignmentSubmission::create([
@@ -223,8 +235,10 @@ class SubmitAssignmentPage extends Page
                 ->toMediaCollection('submission');
 
             SystemNotification::success(
-                'Tugas Dikumpulkan 🚀',
-                'Berhasil! Tugas Anda telah tercatat di sistem.'
+                'Yeay! Tugas Terkumpul! 🎉',
+                'Berhasil! Tugas Anda telah tercatat dengan aman di sistem. Semangat! 🎈',
+                'Konfirmasi Pengumpulan Berhasil',
+                'Seluruh berkas tugas Anda telah berhasil diverifikasi dan disimpan oleh sistem.'
             )->send();
         }
 

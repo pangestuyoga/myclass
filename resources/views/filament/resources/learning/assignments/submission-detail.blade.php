@@ -26,7 +26,10 @@
             style="width: {{ $this->percentage }}%"></div>
     </div>
 
-    <x-filament::section>
+    <x-filament::section 
+        icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-document-magnifying-glass' : 'heroicon-o-document-text' }}" 
+        icon-color="primary"
+    >
         <x-slot name="heading">{{ $this->assignmentSummary['title'] }}</x-slot>
         <x-slot name="description">
             {{ $this->assignmentSummary['course'] }}

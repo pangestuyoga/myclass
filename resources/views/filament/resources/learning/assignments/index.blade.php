@@ -1,7 +1,10 @@
 <x-filament-panels::page>
-    <x-filament::section>
-        <x-slot name="heading">Tugas Saya</x-slot>
-        <x-slot name="description">Klik tugas untuk melihat detail dan mengumpulkan file.</x-slot>
+    <x-filament::section 
+        icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-pencil-square' : 'heroicon-o-briefcase' }}" 
+        icon-color="primary"
+    >
+        <x-slot name="heading">{{ \App\Filament\Support\SystemNotification::getMessage('Daftar Tugas Bikin Lemes! 🤣📒', 'Tugas Saya') }}</x-slot>
+        <x-slot name="description">{{ \App\Filament\Support\SystemNotification::getMessage('Yuk, cek dan kumpulin tugasmu biar tenang hidupnya! Klik aja di tugasnya ya. 🚀👨‍💻', 'Klik pada tugas untuk melihat detail dan mengumpulkan file.') }}</x-slot>
 
         <div class="space-y-4">
             @forelse ($this->assignmentCards as $card)

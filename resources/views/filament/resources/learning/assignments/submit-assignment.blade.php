@@ -45,10 +45,12 @@
         </x-filament::section>
 
         @if ($this->isOverdue)
-            <x-filament::section>
-                <x-slot name="heading">Batas Waktu Telah Berakhir</x-slot>
-                <x-slot name="description">Proses pengumpulan tugas ini telah ditutup karena melewati batas
-                    waktu.</x-slot>
+            <x-filament::section 
+                icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-exclamation-triangle' : 'heroicon-o-lock-closed' }}" 
+                icon-color="danger"
+            >
+                <x-slot name="heading">{{ \App\Filament\Support\SystemNotification::getMessage('Yah, Batas Waktu Udah Habis! 😭⏳', 'Batas Waktu Telah Berakhir') }}</x-slot>
+                <x-slot name="description">{{ \App\Filament\Support\SystemNotification::getMessage('Maaf ya, kamu udah nggak bisa kumpulin tugas ini lagi karena waktunya udah lewat. Tetap semangat buat tugas selanjutnya! 💪', 'Proses pengumpulan tugas ini telah ditutup karena melewati batas waktu.') }}</x-slot>
 
                 <div class="flex items-center gap-3 mb-5">
                     <div
@@ -98,8 +100,11 @@
                 @endif
             </x-filament::section>
         @else
-            <x-filament::section>
-                <x-slot name="heading">{{ $this->isResubmit ? 'Perbarui Pengumpulan' : 'Kumpulkan Tugas' }}</x-slot>
+            <x-filament::section 
+                icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-paper-airplane' : 'heroicon-o-document-arrow-up' }}" 
+                icon-color="primary"
+            >
+                <x-slot name="heading">{{ $this->isResubmit ? \App\Filament\Support\SystemNotification::getMessage('Kuy Perbarui Tugasmu! 🔄✨', 'Perbarui Pengumpulan') : \App\Filament\Support\SystemNotification::getMessage('Kumpulkan Tugas Sekarang! 🚀📚', 'Kumpulkan Tugas') }}</x-slot>
 
                 @if ($this->isResubmit && ($url = $this->getSubmissionFileUrl()))
                     <div class="mb-4">

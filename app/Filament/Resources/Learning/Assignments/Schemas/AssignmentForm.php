@@ -3,7 +3,9 @@
 namespace App\Filament\Resources\Learning\Assignments\Schemas;
 
 use App\Enums\AssignmentType;
+use App\Enums\NotifStyle;
 use App\Filament\Resources\Learning\Assignments\Actions\SelectAllStudentsAction;
+use App\Filament\Support\SystemNotification;
 use App\Models\Assignment;
 use App\Models\ClassSession;
 use App\Models\Course;
@@ -28,7 +30,9 @@ class AssignmentForm
     {
         return $schema
             ->components([
-                Section::make('Informasi Tugas')
+                Section::make(SystemNotification::getMessage('Informasi Tugas 📝✨', 'Informasi Tugas'))
+                    ->description(SystemNotification::getMessage('Jelaskan tugasnya apa, kapan deadline-nya, dan buat sesi berapa. Semangat! 💪', 'Lengkapi informasi detail penugasan.'))
+                    ->icon(SystemNotification::getNotifStyle() === NotifStyle::Cheerful ? 'heroicon-o-document-text' : 'heroicon-o-information-circle')
                     ->schema([
 
                         TextInput::make('title')
@@ -125,7 +129,9 @@ class AssignmentForm
                     ])
                     ->columns(2),
 
-                Section::make('Target Penugasan')
+                Section::make(SystemNotification::getMessage('Target Penugasan 🎯🧑‍🎓', 'Target Penugasan'))
+                    ->description(SystemNotification::getMessage('Pilih siapa saja yang bakal ngerjain tugas ini. Jangan sampai salah sasaran ya! 🏹', 'Tentukan sasaran penerima penugasan ini.'))
+                    ->icon(SystemNotification::getNotifStyle() === NotifStyle::Cheerful ? 'heroicon-o-users' : 'heroicon-o-user-group')
                     ->schema([
                         Select::make('student_ids')
                             ->label('Mahasiswa')

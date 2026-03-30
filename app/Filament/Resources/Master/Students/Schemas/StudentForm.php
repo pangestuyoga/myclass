@@ -2,7 +2,9 @@
 
 namespace App\Filament\Resources\Master\Students\Schemas;
 
+use App\Enums\NotifStyle;
 use App\Enums\Sex;
+use App\Filament\Support\SystemNotification;
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Radio;
@@ -19,8 +21,12 @@ class StudentForm
     {
         return $schema
             ->components([
-                Section::make('Akun')
-                    ->description(new HtmlString('Alamat Surel dan Nama Pengguna akan digunakan untuk masuk ke dalam sistem. Kata sandi bawaan adalah <code class="text-sm bg-gray-100 text-red-400 px-1.5 py-0.5 rounded font-mono">Minimal8@</code>'))
+                Section::make(SystemNotification::getMessage('Kredensial Akun 🔑✨', 'Akun'))
+                    ->description(new HtmlString(SystemNotification::getMessage(
+                        'Pake email dan username ini buat login ya. Oh iya, password awalnya <code class="text-sm bg-gray-100 text-red-400 px-1.5 py-0.5 rounded font-mono">Minimal8@</code> 🥳',
+                        'Alamat Surel dan Nama Pengguna akan digunakan untuk masuk ke dalam sistem. Kata sandi bawaan adalah <code class="text-sm bg-gray-100 text-red-400 px-1.5 py-0.5 rounded font-mono">Minimal8@</code>'
+                    )))
+                    ->icon(SystemNotification::getNotifStyle() === NotifStyle::Cheerful ? 'heroicon-o-key' : 'heroicon-o-user')
                     ->schema([
                         TextInput::make('email')
                             ->label('Alamat Surel')
@@ -44,7 +50,9 @@ class StudentForm
                     ->columns(2)
                     ->hiddenOn('edit'),
 
-                Section::make('Informasi Mahasiswa')
+                Section::make(SystemNotification::getMessage('Data Mahasiswa 🎓📚', 'Informasi Mahasiswa'))
+                    ->description(SystemNotification::getMessage('Lengkapi data mahasiswa di bawah ini dengan benar ya! 🤓📝', 'Masukkan seluruh informasi akademik dan personal mahasiswa dengan benar.'))
+                    ->icon(SystemNotification::getNotifStyle() === NotifStyle::Cheerful ? 'heroicon-o-academic-cap' : 'heroicon-o-identification')
                     ->schema([
                         TextInput::make('full_name')
                             ->label('Nama Lengkap')

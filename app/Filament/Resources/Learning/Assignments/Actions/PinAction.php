@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Learning\Assignments\Actions;
 use App\Filament\Support\SystemNotification;
 use App\Models\AssignmentPin;
 use Filament\Actions\Action;
+use Illuminate\Support\Facades\Auth;
 
 class PinAction extends Action
 {
@@ -24,7 +25,9 @@ class PinAction extends Action
             ->tooltip(fn (array $arguments, $livewire) => in_array($arguments['record'], $livewire->pinnedIds) ? 'Lepas pin' : 'Pin tugas ini')
             ->action(function (array $arguments, $livewire) {
                 $assignmentId = $arguments['record'];
-                $studentProfile = auth()->user()?->student;
+                /** @var \App\Models\User|null $user */
+                $user = Auth::user();
+                $studentProfile = $user?->student;
 
                 if (! $studentProfile) {
                     return;
@@ -36,13 +39,24 @@ class PinAction extends Action
 
                 if ($existing) {
                     $existing->delete();
-                    SystemNotification::success('Pin Tugas Dilepas 📌', 'Pin pada tugas ini telah berhasil dilepas dari daftar prioritas Anda.')->send();
+                    SystemNotification::success(
+                        'Pin Dilepas! Bye 📌',
+                        'Pin pada tugas ini sukses dilepas dari daftar prioritas kamu. Semangat! 👋',
+                        'Pembatalan Prioritas Berhasil',
+                        'Penanda prioritas pada tugas ini telah berhasil dihapus dari daftar akun Anda.'
+                    )->send();
                 } else {
                     AssignmentPin::create([
                         'student_id' => $studentProfile->id,
                         'assignment_id' => $assignmentId,
                     ]);
-                    SystemNotification::success('Tugas Berhasil Di-pin 📍', 'Tugas ini sekarang berada di posisi teratas daftar prioritas Anda.')->send();
+
+                    SystemNotification::success(
+                        'Keren! Tugas Jadi Utama 📍',
+                        'Tugas ini sekarang nangkring di posisi teratas daftar prioritas kamu. Sikat! 🚀',
+                        'Penandaan Prioritas Berhasil',
+                        'Tugas ini telah berhasil ditandai sebagai prioritas utama dalam daftar tugas Anda.'
+                    )->send();
                 }
 
                 unset($livewire->assignments, $livewire->pinnedIds);

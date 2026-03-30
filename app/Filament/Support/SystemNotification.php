@@ -127,7 +127,8 @@ class SystemNotification
             self::make()
                 ->title(self::clean($finalTitle))
                 ->body(self::clean($finalBody))
-                ->success()
+                ->success(),
+            'success'
         );
     }
 
@@ -143,7 +144,8 @@ class SystemNotification
             self::make()
                 ->title(self::clean($finalTitle))
                 ->body(self::clean($finalBody))
-                ->info()
+                ->info(),
+            'info'
         );
     }
 
@@ -159,7 +161,8 @@ class SystemNotification
             self::make()
                 ->title(self::clean($finalTitle))
                 ->body(self::clean($finalBody))
-                ->warning()
+                ->warning(),
+            'warning'
         );
     }
 
@@ -175,17 +178,32 @@ class SystemNotification
             self::make()
                 ->title(self::clean($finalTitle))
                 ->body(self::clean($finalBody))
-                ->danger()
+                ->danger(),
+            'danger'
         );
     }
 
     /**
      * Apply the user's selected style to the notification.
      */
-    protected static function applyStyle(Notification $notification): Notification
+    protected static function applyStyle(Notification $notification, string $status): Notification
     {
-        if (self::getNotifStyle() === NotifStyle::Formal) {
-            $notification->icon(null);
+        $isCheerful = self::getNotifStyle() === NotifStyle::Cheerful;
+
+        if ($isCheerful) {
+            $notification
+                ->duration(6000)
+                ->icon(match ($status) {
+                    'success' => 'heroicon-o-sparkles',
+                    'danger' => 'heroicon-o-fire',
+                    'warning' => 'heroicon-o-bolt',
+                    'info' => 'heroicon-o-megaphone',
+                    default => null,
+                });
+        } else {
+            $notification
+                ->icon(null)
+                ->duration(4000);
         }
 
         return $notification;
@@ -197,7 +215,7 @@ class SystemNotification
     public static function getNotifStyle(): NotifStyle
     {
         try {
-            /** @var \App\Models\User $user */
+            /** @var \App\Models\User|null $user */
             $user = Auth::user();
 
             return $user?->settings?->notif_style ?? NotifStyle::Cheerful;

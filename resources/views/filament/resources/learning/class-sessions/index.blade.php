@@ -5,9 +5,12 @@
         </div>
     </x-filament::section>
 
-    <x-filament::section icon="heroicon-o-bolt" icon-color="primary">
-        <x-slot name="heading">Sesi Hari Ini</x-slot>
-        <x-slot name="description">Sesi yang dijadwalkan pada {{ $this->today_date }}</x-slot>
+    <x-filament::section 
+        icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-sparkles' : 'heroicon-o-bolt' }}" 
+        icon-color="primary"
+    >
+        <x-slot name="heading">{{ \App\Filament\Support\SystemNotification::getMessage('Sesi Kelas Hari Ini ✨🚀', 'Sesi Hari Ini') }}</x-slot>
+        <x-slot name="description">{{ \App\Filament\Support\SystemNotification::getMessage('Daftar sesi seru yang udah dijadwalkan buat hari ini (' . $this->today_date . '). Semangat belajar! 💪', 'Sesi yang dijadwalkan pada ' . $this->today_date) }}</x-slot>
 
         <div class="space-y-4">
             @forelse ($this->todaySessions as $session)
@@ -98,9 +101,12 @@
         </div>
     </x-filament::section>
 
-    <x-filament::section icon="heroicon-o-academic-cap" icon-color="gray">
-        <x-slot name="heading">Daftar Mata Kuliah Semester Ini</x-slot>
-        <x-slot name="description">Pilih mata kuliah untuk melihat dan mengelola semua riwayat sesi.</x-slot>
+    <x-filament::section 
+        icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-book-open' : 'heroicon-o-academic-cap' }}" 
+        icon-color="gray"
+    >
+        <x-slot name="heading">{{ \App\Filament\Support\SystemNotification::getMessage('Daftar Mata Kuliah Semester Ini 📚🎓', 'Daftar Mata Kuliah Semester Ini') }}</x-slot>
+        <x-slot name="description">{{ \App\Filament\Support\SystemNotification::getMessage('Pilih aja mata kuliahnya buat ngecek materi sama tugas-tugas seru lainnya! 🧐✨', 'Pilih mata kuliah untuk melihat dan mengelola semua riwayat sesi.') }}</x-slot>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             @forelse ($this->courses as $course)

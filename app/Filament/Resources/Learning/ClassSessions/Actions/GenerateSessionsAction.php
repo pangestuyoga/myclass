@@ -38,7 +38,12 @@ class GenerateSessionsAction extends Action
                 $schedule = $course->courseSchedules()->first();
 
                 if (! $schedule) {
-                    SystemNotification::danger('Batal!', 'Jadwal belum ditentukan untuk mata kuliah ini.')->send();
+                    SystemNotification::danger(
+                        'Oops! Gagal Generate 🚫',
+                        'Jadwal belum ditentukan untuk mata kuliah ini, jadi sistem bingung mau buat sesi kapan. 😟',
+                        'Eksekusi Dibatalkan',
+                        'Penjadwalan resmi belum dikonfigurasi untuk mata kuliah ini. Proses pembuatan sesi otomatis tidak dapat dilanjutkan.'
+                    )->send();
 
                     return;
                 }
@@ -59,7 +64,12 @@ class GenerateSessionsAction extends Action
                     );
                 }
 
-                SystemNotification::success('Selesai!', '16 Sesi berhasil digenerate/diperbarui.')->send();
+                SystemNotification::success(
+                    'Hore! Sesi Siap ✨🚀',
+                    '16 Sesi berhasil digenerate dan diperbarui. Selamat mengajar! 🎉',
+                    'Verifikasi Sesi Berhasil',
+                    'Seluruh 16 sesi pembelajaran telah berhasil dikonfigurasi secara otomatis ke dalam sistem.'
+                )->send();
             });
     }
 }

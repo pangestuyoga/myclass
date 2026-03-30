@@ -105,8 +105,10 @@ class StudentsTable
                         }
 
                         SystemNotification::success(
-                            $state ? 'Pengguna Diaktifkan! ✅' : 'Pengguna Dinonaktifkan ⛔',
-                            $state ? 'Status akun pengguna berhasil diaktifkan kembali. Siap beraksi! 🚀' : 'Status akun pengguna telah berhasil dinonaktifkan. Istirahat dulu ya... 😴'
+                            $state ? 'Pengguna Diaktifkan! ✅✨' : 'Pengguna Dinonaktifkan ⛔👋',
+                            $state ? 'Status akun pengguna berhasil diaktifkan kembali. Siap beraksi! 🚀' : 'Status akun pengguna telah berhasil dinonaktifkan. Istirahat dulu ya... 😴',
+                            $state ? 'Aktivasi Akun Berhasil' : 'Penonaktifan Akun Berhasil',
+                            $state ? 'Status akun pengguna terpilih telah diubah menjadi aktif.' : 'Status akun pengguna terpilih telah diubah menjadi tidak aktif.'
                         )->send();
                     })
                     ->visible(fn () => auth()->user()->hasRole([RoleEnum::Kosma, RoleEnum::Developer])),

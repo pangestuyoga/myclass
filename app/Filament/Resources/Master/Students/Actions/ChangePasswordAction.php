@@ -34,8 +34,10 @@ class ChangePasswordAction extends Action
                 ]);
 
                 SystemNotification::success(
-                    'Kata sandi berhasil diubah! 🔑',
-                    "Kata sandi untuk mahasiswa {$record->full_name} telah diperbarui."
+                    'Aha! Kata Sandi Baru Berhasil 🔑✨',
+                    "Kata sandi untuk {$record->full_name} sudah update nih. Jangan lupa ingatkan mereka ya! 😉",
+                    'Perubahan Kata Sandi Berhasil',
+                    "Kredensial keamanan untuk mahasiswa {$record->full_name} telah diperbarui sesuai dengan entri sistem."
                 )->send();
             });
     }

@@ -20,6 +20,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 
 class ManageAttendances extends Page implements HasForms, HasTable
@@ -36,8 +37,8 @@ class ManageAttendances extends Page implements HasForms, HasTable
 
     public function getSchedules()
     {
-        /** @var User $user */
-        $user = auth()->user();
+        /** @var User|null $user */
+        $user = Auth::user();
         $student = $user->student;
 
         if (! $student) {
@@ -132,8 +133,8 @@ class ManageAttendances extends Page implements HasForms, HasTable
 
     public function attend(int $sessionId): void
     {
-        /** @var User $user */
-        $user = auth()->user();
+        /** @var User|null $user */
+        $user = Auth::user();
         $student = $user->student;
         if (! $student) {
             return;
@@ -152,7 +153,9 @@ class ManageAttendances extends Page implements HasForms, HasTable
         if ($existing) {
             SystemNotification::warning(
                 'Presensi Sudah Tercatat ⚠️',
-                'Anda telah melakukan presensi untuk sesi perkuliahan ini.'
+                'Anda telah melakukan presensi untuk sesi perkuliahan ini. Jangan lupa belajar yang rajin ya! 📚✨',
+                'Pemberitahuan Presensi',
+                'Status kehadiran Anda untuk sesi perkuliahan ini telah tercatat sebelumnya dalam sistem.'
             )->send();
 
             return;
@@ -162,8 +165,10 @@ class ManageAttendances extends Page implements HasForms, HasTable
         $startTime = $session->start_time;
         if (now()->lessThan($startTime)) {
             SystemNotification::warning(
-                'Presensi Belum Dibuka ⏳',
-                'Waktu presensi untuk sesi perkuliahan ini belum dimulai.'
+                'Sabar Yaa! Belum Dibuka ⏳',
+                'Waktu presensi untuk sesi perkuliahan ini belum dimulai nih. Tunggu sebentar lagi, ya! ☕😊',
+                'Sesi Presensi Belum Dimulai',
+                'Akses pengisian presensi untuk sesi ini belum diaktifkan sesuai dengan jadwal yang ditentukan.'
             )->send();
 
             return;
@@ -183,15 +188,17 @@ class ManageAttendances extends Page implements HasForms, HasTable
         ]);
 
         SystemNotification::success(
-            'Presensi Berhasil Dicatat ✅',
-            'Kehadiran Anda telah berhasil direkam ke dalam sistem.'
+            'Mantap! Presensi Berhasil ✨🚀',
+            'Kehadiran Anda telah berhasil direkam. Semangat belajarnya hari ini! 💪✅',
+            'Konfirmasi Presensi Berhasil',
+            'Informasi kehadiran Anda telah berhasil diverifikasi dan disimpan secara resmi ke dalam sistem.'
         )->send();
     }
 
     public function table(Table $table): Table
     {
-        /** @var User $user */
-        $user = auth()->user();
+        /** @var User|null $user */
+        $user = Auth::user();
 
         return $table
             ->query(AttendanceResource::getEloquentQuery())
