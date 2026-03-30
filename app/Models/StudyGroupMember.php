@@ -10,10 +10,7 @@ class StudyGroupMember extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'student_id',
-        'study_group_id',
-    ];
+    protected $guarded = ['id'];
 
     public function student(): BelongsTo
     {

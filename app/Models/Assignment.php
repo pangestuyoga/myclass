@@ -16,14 +16,7 @@ class Assignment extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, SoftDeletes;
 
-    protected $fillable = [
-        'course_id',
-        'class_session_id',
-        'description',
-        'due_date',
-        'title',
-        'type',
-    ];
+    protected $guarded = ['id'];
 
     protected function casts(): array
     {
@@ -48,14 +41,14 @@ class Assignment extends Model implements HasMedia
         return $this->hasMany(AssignmentTarget::class);
     }
 
-    public function course(): BelongsTo
-    {
-        return $this->belongsTo(Course::class);
-    }
-
     public function classSession(): BelongsTo
     {
         return $this->belongsTo(ClassSession::class);
+    }
+
+    public function course(): BelongsTo
+    {
+        return $this->belongsTo(Course::class);
     }
 
     public function students(): BelongsToMany

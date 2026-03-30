@@ -21,6 +21,21 @@ class Course extends Model
         });
     }
 
+    public function assignments(): HasMany
+    {
+        return $this->hasMany(Assignment::class);
+    }
+
+    public function classSessions(): HasMany
+    {
+        return $this->hasMany(ClassSession::class);
+    }
+
+    public function courseSchedules(): HasMany
+    {
+        return $this->hasMany(CourseSchedule::class);
+    }
+
     public function materials(): HasMany
     {
         return $this->hasMany(Material::class);
@@ -29,15 +44,5 @@ class Course extends Model
     public function studyGroups(): BelongsToMany
     {
         return $this->belongsToMany(StudyGroup::class, 'study_group_courses');
-    }
-
-    public function courseSchedules(): HasMany
-    {
-        return $this->hasMany(CourseSchedule::class);
-    }
-
-    public function classSessions(): HasMany
-    {
-        return $this->hasMany(ClassSession::class);
     }
 }

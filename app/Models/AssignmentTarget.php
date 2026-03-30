@@ -10,11 +10,7 @@ class AssignmentTarget extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'assignment_id',
-        'student_id',
-        'study_group_id',
-    ];
+    protected $guarded = ['id'];
 
     public function assignment(): BelongsTo
     {

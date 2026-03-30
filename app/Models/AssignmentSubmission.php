@@ -12,13 +12,7 @@ class AssignmentSubmission extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
-    protected $fillable = [
-        'assignment_id',
-        'notes',
-        'student_id',
-        'study_group_id',
-        'submitted_at',
-    ];
+    protected $guarded = ['id'];
 
     protected function casts(): array
     {

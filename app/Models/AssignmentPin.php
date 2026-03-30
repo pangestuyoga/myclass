@@ -7,10 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AssignmentPin extends Model
 {
-    protected $fillable = [
-        'assignment_id',
-        'student_id',
-    ];
+    protected $guarded = ['id'];
 
     public function assignment(): BelongsTo
     {

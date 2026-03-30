@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Attendance extends Model
 {
@@ -16,18 +17,18 @@ class Attendance extends Model
         ];
     }
 
-    public function student()
+    public function classSession(): BelongsTo
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(ClassSession::class);
     }
 
-    public function courseSchedule()
+    public function courseSchedule(): BelongsTo
     {
         return $this->belongsTo(CourseSchedule::class);
     }
 
-    public function classSession()
+    public function student(): BelongsTo
     {
-        return $this->belongsTo(ClassSession::class);
+        return $this->belongsTo(Student::class);
     }
 }

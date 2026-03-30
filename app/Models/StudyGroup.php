@@ -13,14 +13,31 @@ class StudyGroup extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'leader_id',
-        'name',
-    ];
+    protected $guarded = ['id'];
 
     public function isLeader(Student $student): bool
     {
         return $this->leader_id === $student->id;
+    }
+
+    public function assignmentSubmissions(): HasMany
+    {
+        return $this->hasMany(AssignmentSubmission::class);
+    }
+
+    public function assignmentTargets(): HasMany
+    {
+        return $this->hasMany(AssignmentTarget::class);
+    }
+
+    public function assignments(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Assignment::class,
+            'assignment_targets',
+            'study_group_id',
+            'assignment_id'
+        );
     }
 
     public function courses(): BelongsToMany

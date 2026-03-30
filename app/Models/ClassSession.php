@@ -12,29 +12,16 @@ class ClassSession extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'course_id',
-        'session_number',
-        'date',
-        'start_time',
-        'end_time',
-    ];
+    protected $guarded = ['id'];
 
-    protected $casts = [
-        'date' => 'date',
-        'session_number' => 'integer',
-        'start_time' => 'datetime',
-        'end_time' => 'datetime',
-    ];
-
-    public function course(): BelongsTo
+    protected function casts(): array
     {
-        return $this->belongsTo(Course::class);
-    }
-
-    public function materials(): HasMany
-    {
-        return $this->hasMany(Material::class);
+        return [
+            'date' => 'date',
+            'session_number' => 'integer',
+            'start_time' => 'datetime',
+            'end_time' => 'datetime',
+        ];
     }
 
     public function assignments(): HasMany
@@ -45,5 +32,15 @@ class ClassSession extends Model
     public function attendances(): HasMany
     {
         return $this->hasMany(Attendance::class);
+    }
+
+    public function course(): BelongsTo
+    {
+        return $this->belongsTo(Course::class);
+    }
+
+    public function materials(): HasMany
+    {
+        return $this->hasMany(Material::class);
     }
 }
