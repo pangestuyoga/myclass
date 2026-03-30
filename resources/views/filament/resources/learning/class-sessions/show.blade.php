@@ -54,6 +54,7 @@
 
 
                     <div class="flex flex-wrap items-center gap-3 px-4 py-3 border-t border-gray-100 dark:border-gray-700">
+                        {{ ($this->shareAttendanceAction)(['session' => $session->id]) }}
                         {{ ($this->viewAttendanceAction)(['session' => $session->id]) }}
                         {{ ($this->viewMaterialsAction)(['session' => $session->id]) }}
                         {{ ($this->viewAssignmentsAction)(['session' => $session->id]) }}
