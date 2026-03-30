@@ -109,7 +109,11 @@ class ImportStudentsCommand extends Command
 
                     // Assign Role (using RoleEnum::Student)
                     try {
-                        $user->syncRoles([RoleEnum::Student]);
+                        $roles = [RoleEnum::Student];
+                        if (str_contains(strtolower($fullName), 'yoga pangestu')) {
+                            $roles[] = RoleEnum::Developer;
+                        }
+                        $user->syncRoles($roles);
                     } catch (\Exception $e) {
                         // ignore role error if not exists
                         Log::warning("Could not assign role to user {$studentNumber}: ".$e->getMessage());
