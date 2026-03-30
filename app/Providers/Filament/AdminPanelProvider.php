@@ -135,6 +135,7 @@ class AdminPanelProvider extends PanelProvider
                 'Informasi',
                 'Sistem',
                 'Pelindung',
-            ]);
+            ])
+            ->globalSearch(false);
     }
 }
