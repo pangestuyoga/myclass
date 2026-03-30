@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Learning\Assignments\Schemas;
 
 use App\Enums\AssignmentType;
 use App\Filament\Resources\Learning\Assignments\Actions\SelectAllStudentsAction;
+use App\Models\Assignment;
 use App\Models\ClassSession;
 use App\Models\Course;
 use App\Models\Student;
@@ -57,13 +58,19 @@ class AssignmentForm
                                 Select::make('class_session_id')
                                     ->label('Pertemuan Ke-')
                                     ->placeholder('Pilih Pertemuan (Opsional)')
-                                    ->options(function (Get $get) {
+                                    ->options(function (Get $get, ?Assignment $record) {
                                         $courseId = $get('course_id');
                                         if (! $courseId) {
                                             return [];
                                         }
 
                                         return ClassSession::where('course_id', $courseId)
+                                            ->where(function ($query) use ($record) {
+                                                $query->doesntHave('assignments');
+                                                if ($record && $record->class_session_id) {
+                                                    $query->orWhere('id', $record->class_session_id);
+                                                }
+                                            })
                                             ->orderBy('session_number')
                                             ->pluck('session_number', 'id')
                                             ->map(fn ($num) => "Sesi Ke-$num")

@@ -73,13 +73,19 @@ class MaterialResource extends Resource
                         Select::make('class_session_id')
                             ->label('Pertemuan Ke-')
                             ->placeholder('Pilih Pertemuan (Opsional)')
-                            ->options(function ($get) {
+                            ->options(function ($get, ?Material $record) {
                                 $courseId = $get('course_id');
                                 if (! $courseId) {
                                     return [];
                                 }
 
                                 return ClassSession::where('course_id', $courseId)
+                                    ->where(function ($query) use ($record) {
+                                        $query->doesntHave('materials');
+                                        if ($record && $record->class_session_id) {
+                                            $query->orWhere('id', $record->class_session_id);
+                                        }
+                                    })
                                     ->orderBy('session_number')
                                     ->pluck('session_number', 'id')
                                     ->map(fn ($num) => "Sesi Ke-$num")
