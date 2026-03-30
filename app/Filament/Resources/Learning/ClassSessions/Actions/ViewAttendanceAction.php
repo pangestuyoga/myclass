@@ -24,7 +24,7 @@ class ViewAttendanceAction extends Action
             ->modalHeading('Daftar Presensi')
             ->modalSubmitAction(false)
             ->modalCancelActionLabel('Tutup')
-            ->modalWidth(Width::ExtraLarge)
+            ->modalWidth(Width::TwoExtraLarge)
             ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.attendance-modal', [
                 'attendances' => ClassSession::find($arguments['session'] ?? null, ['*'])?->attendances()->with('student')->latest('attended_at')->get() ?? collect(),
             ]));

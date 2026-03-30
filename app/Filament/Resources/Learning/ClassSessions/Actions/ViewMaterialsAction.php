@@ -21,10 +21,10 @@ class ViewMaterialsAction extends Action
             ->color('warning')
             ->icon('heroicon-o-book-open')
             ->link()
-            ->modalHeading('Materi Kuliah')
+            ->modalHeading('Materi Sesi')
             ->modalSubmitAction(false)
             ->modalCancelActionLabel('Tutup')
-            ->modalWidth(Width::Large)
+            ->modalWidth(Width::TwoExtraLarge)
             ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.materials-modal', [
                 'materials' => ClassSession::find($arguments['session'] ?? null, ['*'])?->materials()
                     ->latest()

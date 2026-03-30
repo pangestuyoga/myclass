@@ -22,7 +22,6 @@
             </div>
             <div class="flex items-center gap-2">
                 <a href="{{ \App\Filament\Resources\Learning\Assignments\AssignmentResource::getUrl('submit', ['record' => $assignment->id]) }}"
-                    wire:navigate
                     class="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 text-gray-500 transition-colors"
                     title="Lihat Detail">
                     <x-heroicon-o-chevron-right class="w-5 h-5" />

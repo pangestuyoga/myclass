@@ -7,7 +7,6 @@
             @forelse ($this->assignmentCards as $card)
                 <div class="{{ $card->card_classes }}">
                     <a href="{{ \App\Filament\Resources\Learning\Assignments\AssignmentResource::getUrl('submit', ['record' => $card->id]) }}"
-                        wire:navigate
                         class="flex flex-1 items-start gap-4 p-5 text-left min-w-0 hover:bg-primary-500/5 transition-colors cursor-pointer">
                         <div class="{{ $card->icon_wrapper_classes }}">
                             <x-filament::icon :icon="$card->status_icon" class="h-6 w-6" />

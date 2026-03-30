@@ -21,10 +21,10 @@ class ViewAssignmentsAction extends Action
             ->color('info')
             ->icon('heroicon-o-clipboard-document-list')
             ->link()
-            ->modalHeading('Tugas Kuliah')
+            ->modalHeading('Tugas Sesi')
             ->modalSubmitAction(false)
             ->modalCancelActionLabel('Tutup')
-            ->modalWidth(Width::Large)
+            ->modalWidth(Width::TwoExtraLarge)
             ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.assignments-modal', [
                 'assignments' => ClassSession::find($arguments['session'] ?? null, ['*'])?->assignments()
                     ->latest()
