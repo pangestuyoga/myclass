@@ -9,6 +9,7 @@ use App\Filament\Actions\Cheerful\DeleteAction;
 use App\Filament\Actions\Cheerful\ForceDeleteAction;
 use App\Filament\Actions\Cheerful\RestoreAction;
 use App\Filament\Actions\DefaultBulkActions;
+use App\Filament\Columns\RowIndexColumn;
 use App\Filament\Columns\TimestampColumns;
 use App\Filament\Resources\Master\Students\Actions\ChangePasswordAction;
 use App\Filament\Resources\Master\Students\Actions\EditStudentAction;
@@ -29,6 +30,8 @@ class StudentsTable
     {
         return $table
             ->columns([
+                ...RowIndexColumn::make(),
+
                 TextColumn::make('user.email')
                     ->label('Akun')
                     ->formatStateUsing(fn ($state, Student $record) => "

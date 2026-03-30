@@ -6,6 +6,7 @@ use App\Filament\Actions\Cheerful\CreateAction;
 use App\Filament\Actions\Cheerful\DeleteAction;
 use App\Filament\Actions\Cheerful\EditAction;
 use App\Filament\Actions\DefaultBulkActions;
+use App\Filament\Columns\RowIndexColumn;
 use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
@@ -48,6 +49,8 @@ class AttendanceRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('student.full_name')
             ->columns([
+                ...RowIndexColumn::make(),
+
                 Tables\Columns\TextColumn::make('student.student_number')
                     ->label('NIM')
                     ->copyable()

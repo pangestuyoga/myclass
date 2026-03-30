@@ -7,6 +7,7 @@ use App\Filament\Actions\Cheerful\DeleteAction;
 use App\Filament\Actions\Cheerful\ForceDeleteAction;
 use App\Filament\Actions\Cheerful\RestoreAction;
 use App\Filament\Actions\DefaultBulkActions;
+use App\Filament\Columns\RowIndexColumn;
 use App\Filament\Columns\TimestampColumns;
 use App\Filament\Resources\Master\Courses\Actions\EditCourseAction;
 use App\Filament\Resources\Master\Courses\Pages\ManageCourses;
@@ -94,6 +95,8 @@ class CourseResource extends Resource
     {
         return $table
             ->columns([
+                ...RowIndexColumn::make(),
+
                 TextColumn::make('name')
                     ->label('Nama')
                     ->searchable(query: function (Builder $query, string $search) {

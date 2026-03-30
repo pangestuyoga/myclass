@@ -7,6 +7,7 @@ use App\Filament\Actions\Cheerful\DeleteAction;
 use App\Filament\Actions\Cheerful\ForceDeleteAction;
 use App\Filament\Actions\Cheerful\RestoreAction;
 use App\Filament\Actions\DefaultBulkActions;
+use App\Filament\Columns\RowIndexColumn;
 use App\Filament\Columns\TimestampColumns;
 use App\Filament\Resources\Learning\Materials\Actions\EditMaterialAction;
 use App\Filament\Resources\Learning\Materials\Actions\ViewMaterialAction;
@@ -127,6 +128,8 @@ class MaterialResource extends Resource
     {
         return $table
             ->columns([
+                ...RowIndexColumn::make(),
+
                 TextColumn::make('course.name')
                     ->label('Mata Kuliah')
                     ->searchable()
