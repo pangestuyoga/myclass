@@ -51,7 +51,7 @@
                         @auth
                             <a href="{{ url('/admin') }}"
                                 class="inline-flex items-center justify-center rounded-lg bg-primary-600 px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-primary-600/30 ring-1 ring-primary-600/50 hover:bg-primary-500 hover:-translate-y-0.5 hover:shadow-primary-600/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 transition-all duration-300">
-                                Buka Dashboard
+                                Buka Dasbor
                             </a>
                         @else
                             <a href="{{ route('filament.admin.auth.login') }}"
