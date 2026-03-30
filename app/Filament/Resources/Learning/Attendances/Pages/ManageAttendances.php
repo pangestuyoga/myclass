@@ -29,7 +29,7 @@ class ManageAttendances extends Page implements HasForms, HasTable
 
     protected static string $resource = AttendanceResource::class;
 
-    protected static ?string $title = 'Presensi Kuliah';
+    protected static ?string $title = 'Presensi';
 
     protected static ?string $navigationLabel = 'Presensi';
 
