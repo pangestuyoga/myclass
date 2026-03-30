@@ -4,17 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Assignment;
 use App\Models\Attendance;
+use App\Models\ClassSession;
 use App\Models\Course;
+use App\Models\Student;
+use Carbon\Carbon;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class ShareAttendanceController extends Controller
 {
-    public function show(Request $request, string $token)
+    public function show(Request $request, string $token): View
     {
-        app()->setLocale('id');
         $course = Course::where('sharing_token', $token)->firstOrFail();
 
-        // Define default date: if today has no attendance, use the most recent attendance date
         $latestAttendance = Attendance::whereHas('courseSchedule', function ($query) use ($course) {
             $query->where('course_id', $course->id);
         })
@@ -45,6 +47,26 @@ class ShareAttendanceController extends Controller
             ->latest()
             ->get();
 
-        return view('pages.share-attendance', compact('course', 'attendances', 'date', 'availableDates', 'assignments'));
+        $sessionInfo = ClassSession::where('course_id', $course->id)->whereDate('date', $date)->first();
+        $totalStudents = Student::whereHas('user', fn ($q) => $q->active())->count();
+        $presentCount = $attendances->count();
+        $attendancePercentage = $totalStudents > 0 ? round(($presentCount / $totalStudents) * 100) : 0;
+
+        $formattedTime = $sessionInfo
+            ? Carbon::parse($sessionInfo->start_time)->format('H:i').' - '.Carbon::parse($sessionInfo->end_time)->format('H:i')
+            : '-';
+
+        return view('pages.share-attendance', compact(
+            'course',
+            'attendances',
+            'date',
+            'availableDates',
+            'assignments',
+            'sessionInfo',
+            'totalStudents',
+            'presentCount',
+            'attendancePercentage',
+            'formattedTime'
+        ));
     }
 }
