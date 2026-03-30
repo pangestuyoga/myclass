@@ -171,21 +171,17 @@
                         <div
                             class="fi-card rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm p-5 flex flex-col gap-5">
                             <div class="flex flex-col gap-1">
-                                <label for="assignment-selector"
-                                    class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-1">
-                                    Pilih Tugas
-                                </label>
-                                <div class="relative">
-                                    <select id="assignment-selector" onchange="window.location.href = '?assignment_id=' + this.value"
-                                        class="w-full h-10 rounded-lg border-0 bg-white dark:bg-white/5 py-1.5 pl-3 pr-10 text-gray-950 dark:text-white font-medium shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6 transition-colors appearance-none cursor-pointer">
-                                        @foreach ($availableAssignments as $availableAssignment)
-                                            <option value="{{ $availableAssignment->id }}"
-                                                {{ $assignment && $assignment->id == $availableAssignment->id ? 'selected' : '' }}>
-                                                {{ Str::limit($availableAssignment->title, 40) }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <span class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-1">
+                                    Judul Tugas
+                                </span>
+                                <h4 class="text-sm font-bold text-gray-950 dark:text-white pl-1 leading-tight mb-0.5">
+                                    {{ $assignment ? $assignment->title : 'Tugas belum dipilih' }}
+                                </h4>
+                                @if($assignment && $assignment->classSession)
+                                    <span class="text-[10px] font-bold text-fuchsia-600 dark:text-fuchsia-400 uppercase tracking-widest pl-1">
+                                        Sesi Ke-{{ $assignment->classSession->session_number }}
+                                    </span>
+                                @endif
                             </div>
 
                             <div class="border-t border-gray-100 dark:border-gray-800"></div>
