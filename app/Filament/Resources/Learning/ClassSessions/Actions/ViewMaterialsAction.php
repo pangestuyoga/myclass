@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Learning\ClassSessions\Actions;
 
 use App\Models\ClassSession;
 use Filament\Actions\Action;
+use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Width;
 
 class ViewMaterialsAction extends Action
@@ -18,7 +19,7 @@ class ViewMaterialsAction extends Action
         parent::setUp();
 
         $this->label('Materi')
-            ->color('warning')
+            ->color(Color::Purple)
             ->icon('heroicon-o-book-open')
             ->link()
             ->modalHeading('Materi Sesi')

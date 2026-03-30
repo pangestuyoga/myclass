@@ -7,6 +7,7 @@ use App\Models\ClassSession;
 use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
+use Filament\Support\Colors\Color;
 
 class GenerateSessionsAction extends Action
 {
@@ -20,7 +21,7 @@ class GenerateSessionsAction extends Action
         parent::setUp();
 
         $this->label('Generate Sesi')
-            ->color('warning')
+            ->color(Color::Orange)
             ->requiresConfirmation()
             ->modalHeading('Generate Sesi Pembelajaran')
             ->modalDescription('Sistem akan men-generate atau memperbarui sesi 1 sampai 16 secara otomatis berdasarkan jadwal mata kuliah ini.')

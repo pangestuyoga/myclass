@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Learning\ClassSessions\Actions;
 
 use App\Models\ClassSession;
 use Filament\Actions\Action;
+use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Width;
 
 class ViewAssignmentsAction extends Action
@@ -18,7 +19,7 @@ class ViewAssignmentsAction extends Action
         parent::setUp();
 
         $this->label('Tugas')
-            ->color('info')
+            ->color(Color::Sky)
             ->icon('heroicon-o-clipboard-document-list')
             ->link()
             ->modalHeading('Tugas Sesi')

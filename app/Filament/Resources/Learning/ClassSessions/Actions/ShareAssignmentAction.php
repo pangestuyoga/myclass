@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Learning\ClassSessions\Actions;
 
 use App\Models\ClassSession;
 use Filament\Actions\Action;
+use Filament\Support\Colors\Color;
 
 class ShareAssignmentAction extends Action
 {
@@ -18,7 +19,7 @@ class ShareAssignmentAction extends Action
 
         $this->label('Bagikan Tugas')
             ->icon('heroicon-o-paper-airplane')
-            ->color('warning')
+            ->color(Color::Fuchsia)
             ->link()
             ->action(function (array $arguments, $livewire) {
                 $course = $livewire->course;

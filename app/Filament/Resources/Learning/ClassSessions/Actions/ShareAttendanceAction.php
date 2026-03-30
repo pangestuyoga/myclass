@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Learning\ClassSessions\Actions;
 
 use App\Models\ClassSession;
 use Filament\Actions\Action;
+use Filament\Support\Colors\Color;
 
 class ShareAttendanceAction extends Action
 {
@@ -18,7 +19,7 @@ class ShareAttendanceAction extends Action
 
         $this->label('Bagikan')
             ->icon('heroicon-o-share')
-            ->color('info')
+            ->color(Color::Teal)
             ->link()
             ->action(function (array $arguments, $livewire) {
                 $course = $livewire->course;
