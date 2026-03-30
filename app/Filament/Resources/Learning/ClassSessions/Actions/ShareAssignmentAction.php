@@ -21,9 +21,17 @@ class ShareAssignmentAction extends Action
             ->icon('heroicon-o-paper-airplane')
             ->color(Color::Fuchsia)
             ->link()
+            ->requiresConfirmation()
+            ->modalIcon('heroicon-o-paper-airplane')
+            ->modalHeading('Bagikan Info Tugas')
+            ->modalDescription('Pilih metode untuk membagikan tautan publik status pengumpulan tugas sesi ini.')
+            ->modalSubmitActionLabel('Ke WhatsApp')
+            ->modalCancelAction(false)
+            ->extraModalFooterActions([
+                CopyAssignmentLinkAction::make(),
+            ])
             ->action(function (array $arguments, $livewire) {
                 $course = $livewire->course;
-
                 $session = ClassSession::find($arguments['session'] ?? null);
 
                 $url = route('share.assignment', [
@@ -39,10 +47,6 @@ class ShareAssignmentAction extends Action
                     <<<JS
 const text = {$escapedText};
 const url = 'https://wa.me/?text=' + encodeURIComponent(text);
-
-if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).catch(() => {});
-}
 window.open(url, '_blank');
 JS
                 );

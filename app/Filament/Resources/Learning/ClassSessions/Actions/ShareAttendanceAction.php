@@ -21,9 +21,17 @@ class ShareAttendanceAction extends Action
             ->icon('heroicon-o-share')
             ->color(Color::Teal)
             ->link()
+            ->requiresConfirmation()
+            ->modalIcon('heroicon-o-share')
+            ->modalHeading('Bagikan Info Presensi')
+            ->modalDescription('Pilih metode untuk membagikan tautan publik status presensi sesi ini.')
+            ->modalSubmitActionLabel('Ke WhatsApp')
+            ->modalCancelAction(false)
+            ->extraModalFooterActions([
+                CopyAttendanceLinkAction::make(),
+            ])
             ->action(function (array $arguments, $livewire) {
                 $course = $livewire->course;
-
                 $session = ClassSession::find($arguments['session'] ?? null);
                 $date = $session ? $session->date->toDateString() : null;
 
@@ -37,10 +45,6 @@ class ShareAttendanceAction extends Action
                     <<<JS
 const text = {$escapedText};
 const url = 'https://wa.me/?text=' + encodeURIComponent(text);
-
-if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).catch(() => {});
-}
 window.open(url, '_blank');
 JS
                 );
