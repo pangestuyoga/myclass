@@ -18,7 +18,7 @@ class ChangePasswordAction extends Action
         $this->label('Ganti Kata Sandi')
             ->color('info')
             ->icon('heroicon-o-key')
-            ->modalWidth(Width::Medium)
+            ->modalWidth(Width::Large)
             ->schema([
                 TextInput::make('password')
                     ->label('Kata Sandi Baru')
