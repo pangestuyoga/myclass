@@ -139,7 +139,7 @@ class ListCourseSessions extends Page implements HasActions, HasForms
                 ->modalHeading('Tambah Sesi')
                 ->modalSubmitActionLabel('Simpan')
                 ->modalCancelActionLabel('Batal')
-                ->schema($this->schema())
+                ->schema($this->form())
                 ->mutateDataUsing(function (array $data): array {
                     $data['course_id'] = $this->courseId;
 
