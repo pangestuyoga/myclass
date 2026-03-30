@@ -105,7 +105,6 @@
                                                     class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-[10px] uppercase tracking-widest">
                                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                                     {{ $attendance->attended_at ? $attendance->attended_at->format('H:i') : '-' }}
-                                                    WIB
                                                 </div>
                                             </td>
                                         </tr>
