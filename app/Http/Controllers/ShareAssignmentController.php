@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AssignmentType;
 use App\Models\Assignment;
 use App\Models\AssignmentSubmission;
 use App\Models\Course;
@@ -15,13 +16,11 @@ class ShareAssignmentController extends Controller
     public function show(Request $request, Course $course): View
     {
 
-        // Retrieve available assignments for the dropdown (from the whole course)
         $availableAssignments = Assignment::where('course_id', $course->id)
             ->with('classSession')
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Default: If session_id is provided, try to find an assignment for that session, or fallback to latest assignment.
         $assignmentId = $request->query('assignment_id');
         $sessionId = $request->query('session_id');
 
@@ -36,17 +35,28 @@ class ShareAssignmentController extends Controller
 
         $sessionInfo = $assignment ? $assignment->classSession : null;
 
-        // Get submissions and calculate stats
         $submissions = collect();
+        $isGroup = false;
+        $totalTargets = 0;
+
         if ($assignment) {
-            $submissions = AssignmentSubmission::with(['student', 'media'])
+            $isGroup = $assignment->type === AssignmentType::Group;
+            $submissions = AssignmentSubmission::with(['student', 'media', 'studyGroup.students'])
                 ->where('assignment_id', $assignment->id)
                 ->get();
+
+            if ($isGroup) {
+                $totalTargets = $assignment->studyGroups()->count();
+            } else {
+                $totalTargets = $assignment->students()->count();
+                if ($totalTargets === 0) {
+                    $totalTargets = Student::whereHas('user', fn ($q) => $q->active())->count();
+                }
+            }
         }
 
-        $totalStudents = Student::whereHas('user', fn ($q) => $q->active())->count();
         $submittedCount = $submissions->count();
-        $submissionPercentage = $totalStudents > 0 ? round(($submittedCount / $totalStudents) * 100) : 0;
+        $submissionPercentage = $totalTargets > 0 ? round(($submittedCount / $totalTargets) * 100) : 0;
 
         $formattedDeadline = $assignment && $assignment->due_date
             ? Carbon::parse($assignment->due_date)->translatedFormat('l, d F Y H:i')
@@ -58,10 +68,11 @@ class ShareAssignmentController extends Controller
             'availableAssignments',
             'sessionInfo',
             'submissions',
-            'totalStudents',
+            'totalTargets',
             'submittedCount',
             'submissionPercentage',
-            'formattedDeadline'
+            'formattedDeadline',
+            'isGroup'
         ));
     }
 }

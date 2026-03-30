@@ -73,8 +73,8 @@
                                 <thead
                                     class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
                                     <tr>
-                                        <th class="px-5 py-4 font-semibold text-gray-950 dark:text-white">Mahasiswa</th>
-                                        <th class="px-5 py-4 font-semibold text-gray-950 dark:text-white">Nomor Induk
+                                        <th class="px-5 py-4 font-semibold text-gray-950 dark:text-white">{{ $isGroup ? 'Kelompok' : 'Mahasiswa' }}</th>
+                                        <th class="px-5 py-4 font-semibold text-gray-950 dark:text-white">{{ $isGroup ? 'Anggota' : 'Nomor Induk' }}
                                         </th>
                                         <th class="px-5 py-4 font-semibold text-gray-950 dark:text-white">Hasil Tugas
                                         </th>
@@ -88,15 +88,29 @@
                                             <td class="px-5 py-4">
                                                 <div class="flex items-center gap-3">
                                                     <div class="flex flex-col gap-0.5">
-                                                        <span
-                                                            class="font-bold text-gray-950 dark:text-white text-sm">{{ $submission->student->full_name }}</span>
+                                                        @if($isGroup && $submission->studyGroup)
+                                                            <span class="font-bold text-gray-950 dark:text-white text-sm">{{ $submission->studyGroup->name }}</span>
+                                                            <span class="text-[10px] text-gray-500 dark:text-gray-400">Pengumpul: {{ $submission->student->full_name }}</span>
+                                                        @else
+                                                            <span class="font-bold text-gray-950 dark:text-white text-sm">{{ $submission->student->full_name }}</span>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </td>
                                             <td class="px-5 py-4">
-                                                <span class="text-gray-500 dark:text-gray-400 font-medium text-sm">
-                                                    {{ $submission->student->student_number }}
-                                                </span>
+                                                @if($isGroup && $submission->studyGroup)
+                                                    <div class="flex flex-wrap gap-1 max-w-[200px]">
+                                                        @foreach($submission->studyGroup->students as $member)
+                                                            <span class="inline-flex items-center rounded-md bg-gray-50 dark:bg-gray-800/50 px-1.5 py-0.5 text-[10px] font-medium text-gray-600 dark:text-gray-400 ring-1 ring-inset ring-gray-500/10 whitespace-nowrap">
+                                                                {{ $member->full_name }}
+                                                            </span>
+                                                        @endforeach
+                                                    </div>
+                                                @else
+                                                    <span class="text-gray-500 dark:text-gray-400 font-medium text-sm">
+                                                        {{ $submission->student->student_number }}
+                                                    </span>
+                                                @endif
                                             </td>
                                             <td class="px-5 py-4">
                                                 <div class="flex flex-col gap-2 max-w-sm">
@@ -182,6 +196,10 @@
                                         Sesi Ke-{{ $assignment->classSession->session_number }}
                                     </span>
                                 @endif
+
+                                <span class="inline-flex items-center rounded-md {{ $isGroup ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 ring-indigo-500/20' : 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 ring-emerald-500/20' }} px-2 py-0.5 mt-2 text-[10px] font-bold uppercase tracking-wider ring-1 ring-inset w-fit ml-1">
+                                    {{ $isGroup ? 'Tugas Kelompok' : 'Tugas Individu' }}
+                                </span>
                             </div>
 
                             <div class="border-t border-gray-100 dark:border-gray-800"></div>
@@ -192,8 +210,8 @@
                                         class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-0.5">Terkumpul</span>
                                     <span
                                         class="text-sm font-bold text-gray-950 dark:text-white">{{ $submittedCount }}<span
-                                            class="text-[10px] text-gray-400 font-normal ml-0.5">/{{ $totalStudents }}</span>
-                                        Orang</span>
+                                            class="text-[10px] text-gray-400 font-normal ml-0.5">/{{ $totalTargets }}</span>
+                                        {{ $isGroup ? 'Kelompok' : 'Orang' }}</span>
 
                                     <div class="mt-2 flex items-center gap-2">
                                         <div

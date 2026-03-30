@@ -55,10 +55,9 @@ class ListAssignments extends Page
     public function assignments(): Collection
     {
         $studentProfile = auth()->user()->student;
-
         $pinnedIds = $this->pinnedIds;
 
-        return Assignment::with(['course', 'assignmentSubmissions' => function ($q) use ($studentProfile) {
+        $assignments = Assignment::with(['course', 'assignmentSubmissions' => function ($q) use ($studentProfile) {
             $q->where('student_id', $studentProfile->id)
                 ->orWhereHas('studyGroup', fn ($sq) => $sq->where('leader_id', $studentProfile->id)->orWhereHas('students', fn ($ssq) => $ssq->whereKey($studentProfile->id)));
         }, 'studyGroups.students'])
@@ -69,12 +68,49 @@ class ListAssignments extends Page
                 $query->whereHas('students', fn ($q) => $q->whereKey($studentProfile->id))
                     ->orWhereHas('studyGroups', fn ($q) => $q->where('leader_id', $studentProfile->id)->orWhereHas('students', fn ($sq) => $sq->whereKey($studentProfile->id)));
             })
-            ->when(! empty($pinnedIds), function ($query) use ($pinnedIds) {
-                $ids = implode(',', $pinnedIds);
-                $query->orderByRaw("FIELD(id, $ids) DESC");
-            })
-            ->orderBy('due_date')
             ->get();
+
+        return $assignments->sort(function ($a, $b) use ($pinnedIds) {
+            if (! empty($pinnedIds)) {
+                $aIndex = array_search($a->id, $pinnedIds);
+                $bIndex = array_search($b->id, $pinnedIds);
+
+                $aPinned = $aIndex !== false;
+                $bPinned = $bIndex !== false;
+
+                if ($aPinned && $bPinned) {
+                    return $bIndex <=> $aIndex;
+                }
+                if ($aPinned) {
+                    return -1;
+                }
+                if ($bPinned) {
+                    return 1;
+                }
+            }
+
+            $aPriority = $this->getAssignmentPriority($a);
+            $bPriority = $this->getAssignmentPriority($b);
+
+            if ($aPriority !== $bPriority) {
+                return $aPriority <=> $bPriority;
+            }
+
+            return $a->due_date <=> $b->due_date;
+        });
+    }
+
+    private function getAssignmentPriority($assignment): int
+    {
+        $isSubmitted = $assignment->assignmentSubmissions->isNotEmpty();
+        $isOverdue = now()->isAfter($assignment->due_date);
+
+        if (! $isOverdue) {
+            return $isSubmitted ? 2 : 1;
+        }
+
+        // Overdue
+        return $isSubmitted ? 3 : 4;
     }
 
     #[Computed]
