@@ -73,7 +73,7 @@
                                 <x-filament::button wire:click="attend({{ $card->id }})" color="primary"
                                     size="xs"
                                     class="rounded-lg shadow-sm font-bold uppercase tracking-tight text-[10px]">
-                                    Absen Sekarang
+                                    Presensi Sekarang
                                 </x-filament::button>
                             @elseif ($card->is_attended)
                                 <div
