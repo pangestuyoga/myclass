@@ -60,14 +60,14 @@ class ListAssignments extends Page
 
         return Assignment::with(['course', 'assignmentSubmissions' => function ($q) use ($studentProfile) {
             $q->where('student_id', $studentProfile->id)
-                ->orWhereHas('studyGroup', fn ($sq) => $sq->whereHas('students', fn ($ssq) => $ssq->whereKey($studentProfile->id)));
+                ->orWhereHas('studyGroup', fn ($sq) => $sq->where('leader_id', $studentProfile->id)->orWhereHas('students', fn ($ssq) => $ssq->whereKey($studentProfile->id)));
         }, 'studyGroups.students'])
             ->whereHas('course', function ($q) {
                 $q->where('semester', app(GeneralSettings::class)->current_semester);
             })
             ->where(function ($query) use ($studentProfile) {
                 $query->whereHas('students', fn ($q) => $q->whereKey($studentProfile->id))
-                    ->orWhereHas('studyGroups', fn ($q) => $q->whereHas('students', fn ($sq) => $sq->whereKey($studentProfile->id)));
+                    ->orWhereHas('studyGroups', fn ($q) => $q->where('leader_id', $studentProfile->id)->orWhereHas('students', fn ($sq) => $sq->whereKey($studentProfile->id)));
             })
             ->when(! empty($pinnedIds), function ($query) use ($pinnedIds) {
                 $ids = implode(',', $pinnedIds);
@@ -91,7 +91,7 @@ class ListAssignments extends Page
             $isLeader = false;
             if ($isGroup) {
                 $userGroup = $assignment->studyGroups->first(function ($g) use ($studentProfile) {
-                    return $g->students->contains($studentProfile->id);
+                    return $g->leader_id === $studentProfile->id || $g->students->contains($studentProfile->id);
                 });
                 $isLeader = $userGroup && $userGroup->leader_id === $studentProfile->id;
             }

@@ -72,7 +72,7 @@ class SubmitAssignmentPage extends Page
         $student = $this->student;
 
         return $this->record->studyGroups()
-            ->whereHas('students', fn ($q) => $q->whereKey($student->id))
+            ->where(fn ($q) => $q->where('leader_id', $student->id)->orWhereHas('students', fn ($sq) => $sq->whereKey($student->id)))
             ->first();
     }
 
