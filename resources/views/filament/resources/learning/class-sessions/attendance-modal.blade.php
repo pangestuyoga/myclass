@@ -1,20 +1,17 @@
 <div class="space-y-3">
-    @if ($attendances->isEmpty())
-        <x-filament::empty-state icon="heroicon-o-user-group" heading="Tidak ada data yang ditemukan"
-            description="Belum ada mahasiswa yang melakukan presensi pada sesi ini." iconColor="gray">
-        </x-filament::empty-state>
-    @else
-        <div
-            class="fi-ta-content overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
-            <table class="w-full text-sm text-left divider-y dark:divider-white/5">
-                <thead class="bg-gray-50 dark:bg-white/5">
-                    <tr>
-                        <th class="px-4 py-3 font-bold text-gray-900 dark:text-white">Mahasiswa</th>
-                        <th class="px-4 py-3 font-bold text-gray-900 dark:text-white text-right">Waktu Presensi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200 dark:divide-white/5">
-                    @foreach ($attendances as $attendance)
+    @forelse ($attendances as $attendance)
+        @if ($loop->first)
+            <div
+                class="fi-ta-content overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+                <table class="w-full text-sm text-left divider-y dark:divider-white/5">
+                    <thead class="bg-gray-50 dark:bg-white/5">
+                        <tr>
+                            <th class="px-4 py-3 font-bold text-gray-900 dark:text-white">Mahasiswa</th>
+                            <th class="px-4 py-3 font-bold text-gray-900 dark:text-white text-right">Waktu Presensi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-white/5">
+        @endif
                         <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                             <td class="px-4 py-3 text-gray-950 dark:text-white font-medium">
                                 <div class="flex flex-col">
@@ -31,16 +28,21 @@
                                 </span>
                             </td>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        <div class="mt-4 flex items-center justify-between px-2">
-            <p class="text-xs text-gray-500 font-medium">
-                Total Kehadiran: <span
-                    class="text-primary-600 dark:text-primary-400 font-bold font-mono">{{ $attendances->count() }}
-                    Mahasiswa</span>
-            </p>
-        </div>
-    @endif
+        @if ($loop->last)
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-4 flex items-center justify-between px-2">
+                <p class="text-xs text-gray-500 font-medium">
+                    Total Kehadiran: <span
+                        class="text-primary-600 dark:text-primary-400 font-bold font-mono">{{ $loop->count }}
+                        Mahasiswa</span>
+                </p>
+            </div>
+        @endif
+    @empty
+        <x-filament::empty-state icon="heroicon-o-user-group" heading="Tidak ada data yang ditemukan"
+            description="Belum ada mahasiswa yang melakukan presensi pada sesi ini." iconColor="gray">
+        </x-filament::empty-state>
+    @endforelse
 </div>

@@ -191,8 +191,8 @@ class MaterialResource extends Resource
                     ...DefaultBulkActions::make('Materi'),
                 ]),
             ])
-            ->emptyStateIcon(Heroicon::OutlinedBookOpen)
-            ->emptyStateDescription('Setelah Anda membuat data pertama, maka akan muncul disini.')
+            ->emptyStateIcon('heroicon-o-book-open')
+            ->emptyStateDescription('Belum ada materi pembelajaran yang terdaftar dalam sistem saat ini.')
             ->defaultSort('created_at', 'desc')
             ->deferFilters(false)
             ->paginated([25, 50, 100, 'all'])

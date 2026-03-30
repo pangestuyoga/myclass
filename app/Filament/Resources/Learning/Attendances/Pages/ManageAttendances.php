@@ -14,7 +14,6 @@ use App\Settings\GeneralSettings;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Pages\Page;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -237,8 +236,8 @@ class ManageAttendances extends Page implements HasForms, HasTable
                     })
                     ->searchable(),
             ])
-            ->emptyStateIcon(Heroicon::OutlinedCheckCircle)
-            ->emptyStateDescription('Setelah Anda membuat data pertama, maka akan muncul disini.')
+            ->emptyStateIcon('heroicon-o-finger-print')
+            ->emptyStateDescription('Belum ada riwayat presensi yang tercatat untuk Anda saat ini.')
             ->deferFilters(false)
             ->paginated([25, 50, 100, 'all'])
             ->defaultPaginationPageOption(25);

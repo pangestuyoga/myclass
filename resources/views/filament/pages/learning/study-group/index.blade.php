@@ -6,9 +6,8 @@
             </div>
         </div>
 
-        @if ($this->studyGroups->isNotEmpty())
         <div class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
-            @foreach ($this->studyGroups as $record)
+            @forelse ($this->studyGroups as $record)
                 <div class="break-inside-avoid mb-6">
                     <div class="{{ $record->card_classes }}">
 
@@ -144,14 +143,11 @@
                         @endcanAny
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <x-filament::empty-state icon="heroicon-o-users" heading="Tidak ada data yang ditemukan"
+                    description="Anda belum terdaftar dalam kelompok belajar apapun untuk saat ini." iconColor="gray">
+                </x-filament::empty-state>
+            @endforelse
         </div>
-    @endif
-
-        @if ($this->studyGroups->isEmpty())
-            <x-filament::empty-state icon="heroicon-o-users" heading="Tidak ada data yang ditemukan"
-                description="Setelah Anda membuat data pertama, maka akan muncul disini." iconColor="gray">
-            </x-filament::empty-state>
-        @endif
     </x-filament::section>
 </x-filament-panels::page>
