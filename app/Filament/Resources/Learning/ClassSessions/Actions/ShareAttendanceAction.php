@@ -17,7 +17,7 @@ class ShareAttendanceAction extends Action
     {
         parent::setUp();
 
-        $this->label('Bagikan')
+        $this->label('Bagikan Presensi')
             ->icon('heroicon-o-share')
             ->color(Color::Teal)
             ->link()
