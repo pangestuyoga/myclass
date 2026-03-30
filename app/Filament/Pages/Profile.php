@@ -2,14 +2,18 @@
 
 namespace App\Filament\Pages;
 
+use App\Enums\NotifStyle;
 use App\Enums\Sex;
 use App\Filament\Support\SystemNotification;
 use Carbon\Carbon;
 use Filament\Auth\Pages\EditProfile;
+use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -157,15 +161,91 @@ class Profile extends EditProfile
                                     ->prefixIcon('heroicon-o-lock-closed'),
                             ]),
                     ]),
+
+                Section::make(SystemNotification::getMessage('Pengaturan Tampilan & UX 🎨✨', 'Preferensi Tampilan'))
+                    ->description(SystemNotification::getMessage('Personalisasi pengalaman aplikasi Anda agar lebih nyaman dan sesuai selera! 🌈🚀', 'Sesuaikan gaya bahasa, warna tema, dan jenis huruf aplikasi Anda.'))
+                    ->icon(SystemNotification::getNotifStyle() === NotifStyle::Cheerful ? 'heroicon-o-swatch' : 'heroicon-o-paint-brush')
+                    ->schema([
+                        Grid::make(2)
+                            ->schema([
+                                Select::make('settings.notif_style')
+                                    ->label('Gaya Bahasa')
+                                    ->options(NotifStyle::class)
+                                    ->native(false)
+                                    ->required(),
+
+                                Select::make('settings.primary_color')
+                                    ->label('Tema Warna')
+                                    ->options([
+                                        'blue' => '🔵 Biru (Default)',
+                                        'sky' => '💎 Biru Langit',
+                                        'cyan' => '🌊 Biru Tosca (Cyan)',
+                                        'emerald' => '🟢 Emerald (Hijau)',
+                                        'teal' => '🍃 Teal (Hijau Keunguan)',
+                                        'lime' => '🍋 Lime (Hijah Muda)',
+                                        'amber' => '🟡 Amber (Kuning)',
+                                        'orange' => '🟠 Orange',
+                                        'rose' => '🔴 Rose (Merah)',
+                                        'fuchsia' => '🌸 Fuchsia (Pink Cerah)',
+                                        'violet' => '🟣 Violet (Ungu)',
+                                        'indigo' => '🌌 Indigo (Ungu Gelap)',
+                                    ])
+                                    ->placeholder('Pilih warna tema')
+                                    ->native(false),
+
+                                Select::make('settings.font')
+                                    ->label('Jenis Huruf (Font)')
+                                    ->options([
+                                        'Inter' => 'Inter (Modern)',
+                                        'Roboto' => 'Roboto (Clean)',
+                                        'Poppins' => 'Poppins (Rounder)',
+                                        'Outfit' => 'Outfit (Premium)',
+                                        'Montserrat' => 'Montserrat (Classic)',
+                                        'Lexend' => 'Lexend (Readable)',
+                                    ])
+                                    ->native(false),
+
+                                Select::make('settings.content_width')
+                                    ->label('Lebar Konten')
+                                    ->options([
+                                        'full' => '↔️ Lebar Penuh (Full)',
+                                        'centered' => '🏢 Terpusat (Centered)',
+                                    ])
+                                    ->native(false),
+
+                                Select::make('settings.border_radius')
+                                    ->label('Radius Sudut (Border)')
+                                    ->options([
+                                        'none' => '📐 Tegas (Sharp)',
+                                        'md' => '📱 Modern (Default)',
+                                        'lg' => '🎉 Rounded (Cheerful)',
+                                        'xl' => '🎈 Extra Round',
+                                    ])
+                                    ->native(false),
+
+                                Toggle::make('settings.top_navigation')
+                                    ->label('Navigasi Atas (Top Nav)')
+                                    ->helperText('Pindahkan menu navigasi dari samping ke bagian atas layar.')
+                                    ->onIcon('heroicon-m-window')
+                                    ->offIcon('heroicon-m-arrow-top-right-on-square')
+                                    ->inline(false),
+                            ]),
+                    ]),
             ]);
     }
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        $student = $this->getUser()->student;
+        $user = $this->getUser();
+        $student = $user->student;
+        $settings = $user->settings;
 
         if ($student) {
             $data['student'] = $student->toArray();
+        }
+
+        if ($settings) {
+            $data['settings'] = $settings->toArray();
         }
 
         return $data;
@@ -174,14 +254,22 @@ class Profile extends EditProfile
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
         $studentData = $data['student'] ?? null;
-        unset($data['student']);
+        $settingsData = $data['settings'] ?? null;
+        unset($data['student'], $data['settings']);
 
         $record->update($data);
 
-        if ($studentData && $record->student) {
+        /** @var \App\Models\User $record */
+        if ($studentData && $record->student()->exists()) {
             $record->student->update($studentData);
         } elseif ($studentData) {
             $record->student()->create($studentData);
+        }
+
+        if ($settingsData && $record->settings()->exists()) {
+            $record->settings->update($settingsData);
+        } elseif ($settingsData) {
+            $record->settings()->create($settingsData);
         }
 
         return $record;

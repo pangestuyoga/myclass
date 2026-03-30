@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\IsActive;
+use App\Enums\NotifStyle;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -62,5 +63,17 @@ class User extends Authenticatable implements FilamentUser
     public function student(): HasOne
     {
         return $this->hasOne(Student::class);
+    }
+
+    public function settings(): HasOne
+    {
+        return $this->hasOne(UserSetting::class)->withDefault([
+            'notif_style' => NotifStyle::Cheerful,
+            'primary_color' => 'amber', // Cheerful yellow
+            'font' => 'Inter',
+            'content_width' => 'full',
+            'border_radius' => 'lg',
+            'top_navigation' => false,
+        ]);
     }
 }

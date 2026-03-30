@@ -5,6 +5,8 @@ namespace App\Providers\Filament;
 use AchyutN\FilamentLogViewer\FilamentLogViewer;
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Profile;
+use App\Http\Middleware\DynamicFilamentTheme;
+use App\Models\User;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
 use Filament\Http\Middleware\Authenticate;
@@ -58,6 +60,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                DynamicFilamentTheme::class,
             ])
             ->authMiddleware([
                 Authenticate::class,
