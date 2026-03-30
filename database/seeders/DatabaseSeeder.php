@@ -14,12 +14,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            ShieldSeeder::class,
-            UserSeeder::class,
-            StudentSeeder::class,
-            CourseSeeder::class,
-            CourseScheduleSeeder::class,
-        ]);
+        if (! app()->isLocal()) {
+            $this->call([
+                ShieldSeeder::class,
+                CourseSeeder::class,
+                CourseScheduleSeeder::class,
+            ]);
+        } else {
+            $this->call([
+                ShieldSeeder::class,
+                UserSeeder::class,
+                StudentSeeder::class,
+                CourseSeeder::class,
+                CourseScheduleSeeder::class,
+            ]);
+        }
     }
 }
