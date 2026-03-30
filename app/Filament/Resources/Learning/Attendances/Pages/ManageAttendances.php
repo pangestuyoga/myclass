@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Learning\Attendances\Pages;
 
-use App\Enums\RoleEnum;
 use App\Filament\Resources\Learning\Attendances\AttendanceResource;
 use App\Filament\Support\SystemNotification;
 use App\Models\Attendance;
@@ -198,12 +197,6 @@ class ManageAttendances extends Page implements HasForms, HasTable
             ->query(AttendanceResource::getEloquentQuery())
             ->modifyQueryUsing(fn (Builder $query) => $query->where('student_id', $user->student?->id))
             ->columns([
-                TextColumn::make('student.full_name')
-                    ->label('Mahasiswa')
-                    ->sortable()
-                    ->searchable()
-                    ->visible(fn () => $user->hasRole([RoleEnum::Developer, RoleEnum::Kosma])),
-
                 TextColumn::make('date')
                     ->label('Tanggal')
                     ->date('l, d F Y')
