@@ -22,7 +22,9 @@ class EditSessionAction extends EditAction
             ->icon('heroicon-o-pencil')
             ->link()
             ->record(fn (array $arguments) => ClassSession::find($arguments['session'], ['*']))
-            ->schema(fn ($livewire) => $livewire->schema())
+            ->schema(function ($schema, $livewire) {
+                return $livewire->form($schema);
+            })
             ->modalWidth(Width::TwoExtraLarge);
     }
 }

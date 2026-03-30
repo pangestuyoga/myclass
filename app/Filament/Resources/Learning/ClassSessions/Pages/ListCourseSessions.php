@@ -25,6 +25,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Pages\Page;
 use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
@@ -74,45 +75,46 @@ class ListCourseSessions extends Page implements HasActions, HasForms
             ]);
     }
 
-    public function form(): array
+    public function form(Schema $schema): Schema
     {
-        return [
-            Grid::make(['default' => 2])
-                ->schema([
-                    TextInput::make('session_number')
-                        ->label('Pertemuan Ke-')
-                        ->placeholder('1')
-                        ->numeric()
-                        ->required()
-                        ->minValue(1)
-                        ->maxValue(16)
-                        ->autocomplete(false),
+        return $schema
+            ->schema([
+                Grid::make(['default' => 2])
+                    ->schema([
+                        TextInput::make('session_number')
+                            ->label('Pertemuan Ke-')
+                            ->placeholder('1')
+                            ->numeric()
+                            ->required()
+                            ->minValue(1)
+                            ->maxValue(16)
+                            ->autocomplete(false),
 
-                    DatePicker::make('date')
-                        ->label('Tanggal')
-                        ->placeholder('Pilih Tanggal')
-                        ->required()
-                        ->native(false)
-                        ->displayFormat('l, d F Y')
-                        ->default(now()->toDateString()),
+                        DatePicker::make('date')
+                            ->label('Tanggal')
+                            ->placeholder('Pilih Tanggal')
+                            ->required()
+                            ->native(false)
+                            ->displayFormat('l, d F Y')
+                            ->default(now()->toDateString()),
 
-                    TimePicker::make('start_time')
-                        ->label('Waktu Mulai')
-                        ->placeholder('08:00')
-                        ->native(false)
-                        ->displayFormat('H:i')
-                        ->seconds(false)
-                        ->required(),
+                        TimePicker::make('start_time')
+                            ->label('Waktu Mulai')
+                            ->placeholder('08:00')
+                            ->native(false)
+                            ->displayFormat('H:i')
+                            ->seconds(false)
+                            ->required(),
 
-                    TimePicker::make('end_time')
-                        ->label('Waktu Selesai')
-                        ->placeholder('10:00')
-                        ->native(false)
-                        ->displayFormat('H:i')
-                        ->seconds(false)
-                        ->required(),
-                ]),
-        ];
+                        TimePicker::make('end_time')
+                            ->label('Waktu Selesai')
+                            ->placeholder('10:00')
+                            ->native(false)
+                            ->displayFormat('H:i')
+                            ->seconds(false)
+                            ->required(),
+                    ]),
+            ]);
     }
 
     #[Computed]
@@ -139,7 +141,7 @@ class ListCourseSessions extends Page implements HasActions, HasForms
                 ->modalHeading('Tambah Sesi')
                 ->modalSubmitActionLabel('Simpan')
                 ->modalCancelActionLabel('Batal')
-                ->schema($this->form())
+                ->schema(fn (Schema $schema) => $this->form($schema))
                 ->mutateDataUsing(function (array $data): array {
                     $data['course_id'] = $this->courseId;
 
