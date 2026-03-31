@@ -37,8 +37,7 @@ class Login extends FilamentLogin
                     ->label('Nama Pengguna atau Alamat Surel')
                     ->placeholder('johndoe@example.com')
                     ->required()
-                    ->autocomplete(false)
-                    ->autofocus(),
+                    ->autocomplete(false),
 
                 TextInput::make('password')
                     ->label('Kata Sandi')

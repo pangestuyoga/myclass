@@ -75,7 +75,6 @@ class Profile extends EditProfile
                             ->required()
                             ->maxLength(100)
                             ->minLength(3)
-                            ->autofocus()
                             ->columnSpanFull(),
 
                         Grid::make(3)

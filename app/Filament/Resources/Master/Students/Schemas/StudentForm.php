@@ -61,7 +61,6 @@ class StudentForm
                             ->required()
                             ->maxLength(100)
                             ->minLength(3)
-                            ->autofocus()
                             ->columnSpanFull(),
 
                         Grid::make(3)

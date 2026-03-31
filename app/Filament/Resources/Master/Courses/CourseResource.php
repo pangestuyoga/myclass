@@ -49,7 +49,6 @@ class CourseResource extends Resource
                     ->label('Kode')
                     ->placeholder('FSI419')
                     ->autocomplete(false)
-                    ->autofocus()
                     ->required()
                     ->maxLength(20)
                     ->unique(ignoreRecord: true),
