@@ -133,6 +133,11 @@ class AdminPanelProvider extends PanelProvider
                 'Sistem',
                 'Pelindung',
             ])
-            ->globalSearch(false);
+            ->globalSearch(false)
+            ->brandLogo(fn () => asset('images/logo.png'))
+            ->favicon(fn () => asset('images/logo.png'))
+            ->brandLogoHeight(function () {
+                return request()->is('admin/login') ? '120px' : '40px';
+            });
     }
 }

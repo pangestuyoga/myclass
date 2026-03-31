@@ -5,6 +5,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{ config('app.name', 'MyClass') }} - Sistem Informasi Manajemen</title>
+        <link rel="icon" type="image/x-icon" href="/images/logo.png">
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <style>
             :root {
@@ -18,8 +19,8 @@
                 --radius-2xl: {{ $userTheme->border_radius }} !important;
 
                 /* Dynamic Primary Color Overrides */
-                @foreach($primaryColors as $shade => $rgb)
-                --color-primary-{{ $shade }}: rgb({{ $rgb }}) !important;
+                @foreach ($primaryColors as $shade => $rgb)
+                    --color-primary-{{ $shade }}: rgb({{ $rgb }}) !important;
                 @endforeach
             }
 
@@ -41,14 +42,19 @@
             }
 
             /* Apply border radius override to everything with standard rounded classes */
-            .rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl {
+            .rounded-md,
+            .rounded-lg,
+            .rounded-xl,
+            .rounded-2xl {
                 border-radius: var(--c-border-radius) !important;
             }
         </style>
-        @if($userTheme->font !== 'Inter')
+        @if ($userTheme->font !== 'Inter')
             <link rel='preconnect' href='https://fonts.googleapis.com'>
             <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
-            <link href='https://fonts.googleapis.com/css2?family={{ $userTheme->font }}:wght@400;500;600;700&display=swap' rel='stylesheet'>
+            <link
+                href='https://fonts.googleapis.com/css2?family={{ $userTheme->font }}:wght@400;500;600;700&display=swap'
+                rel='stylesheet'>
         @endif
     </head>
 
@@ -71,7 +77,8 @@
                     </div>
                     <h1
                         class="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight">
-                        {{ $headings['hero_title'] }} <br /> <span class="text-primary-600 dark:text-primary-400">{{ $headings['hero_subtitle'] }}</span>
+                        {{ $headings['hero_title'] }} <br /> <span
+                            class="text-primary-600 dark:text-primary-400">{{ $headings['hero_subtitle'] }}</span>
                     </h1>
                     <p class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed max-w-xl">
                         Kelola jadwal kelas, daftar presensi, pengumpulan tugas, hingga materi belajar dalam satu
