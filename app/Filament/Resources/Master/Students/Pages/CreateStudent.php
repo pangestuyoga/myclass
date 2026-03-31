@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Master\Students\Pages;
 
+use App\Enums\RoleEnum;
 use App\Filament\Actions\BackAction;
 use App\Filament\Resources\Master\Students\StudentResource;
 use App\Filament\Support\SystemNotification;
@@ -54,6 +55,8 @@ class CreateStudent extends CreateRecord
                     'user_id' => $user->id,
                 ])
             );
+
+            $user->assignRole(RoleEnum::Student->value);
 
             return $student;
         });
