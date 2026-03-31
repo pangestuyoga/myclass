@@ -61,9 +61,9 @@
                     </div>
                 </div>
             @empty
-                <x-filament::empty-state icon="heroicon-o-presentation-chart-bar"
-                    heading="Tidak ada data yang ditemukan"
-                    description="Belum ada sesi perkuliahan yang dibuat untuk mata kuliah ini."
+                <x-filament::empty-state icon="heroicon-o-presentation-chart-bar" 
+                    heading="{{ \App\Filament\Support\SystemNotification::getMessage('Duh, Belum Ada Sesi Kelas! 🏢🛌', 'Tidak ada data yang ditemukan') }}"
+                    description="{{ \App\Filament\Support\SystemNotification::getMessage('Belum ada sesi perkuliahan yang dibuat buat mata kuliah ini. Waktunya istirahat mungkin? 😴✨', 'Belum ada sesi perkuliahan yang dibuat untuk mata kuliah ini.') }}"
                     iconColor="gray">
                 </x-filament::empty-state>
             @endforelse

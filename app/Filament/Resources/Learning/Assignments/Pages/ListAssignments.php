@@ -8,6 +8,7 @@ use App\Filament\Resources\Learning\Assignments\Actions\DeleteAssignmentAction;
 use App\Filament\Resources\Learning\Assignments\Actions\EditAssignmentAction;
 use App\Filament\Resources\Learning\Assignments\Actions\PinAction;
 use App\Filament\Resources\Learning\Assignments\AssignmentResource;
+use App\Filament\Support\SystemNotification;
 use App\Models\Assignment;
 use App\Models\AssignmentPin;
 use App\Settings\GeneralSettings;
@@ -32,6 +33,18 @@ class ListAssignments extends Page
         return [
             CreateAssignmentAction::make(),
         ];
+    }
+
+    #[Computed]
+    public function heading(): string
+    {
+        return SystemNotification::getMessage('Daftar Tugas Bikin Lemes! 🤣📒', 'Tugas Saya');
+    }
+
+    #[Computed]
+    public function description(): string
+    {
+        return SystemNotification::getMessage('Yuk, cek dan kumpulin tugasmu biar tenang hidupnya! Klik aja di tugasnya ya. 🚀👨‍💻', 'Klik pada tugas untuk melihat detail dan mengumpulkan file.');
     }
 
     public function pinAction(): Action

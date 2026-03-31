@@ -5,6 +5,7 @@ namespace App\Filament\Pages\Information\CourseSchedule;
 use App\Filament\Pages\Information\CourseSchedule\Actions\CreateScheduleAction;
 use App\Filament\Pages\Information\CourseSchedule\Actions\DeleteScheduleAction;
 use App\Filament\Pages\Information\CourseSchedule\Actions\EditScheduleAction;
+use App\Filament\Support\SystemNotification;
 use App\Models\Course;
 use App\Models\CourseSchedule;
 use App\Settings\GeneralSettings;
@@ -44,6 +45,24 @@ class Index extends Page implements HasActions, HasForms
     protected static ?string $slug = 'information/course-schedules';
 
     protected string $view = 'filament.pages.information.course-schedule.index';
+
+    #[Computed]
+    public function instructions(): string
+    {
+        return SystemNotification::getMessage('Geser ke samping buat intip hari lainnya ya! 📅✨', 'Geser ke samping untuk melihat hari lainnya.');
+    }
+
+    #[Computed]
+    public function emptyHeading(): string
+    {
+        return SystemNotification::getMessage('Yah, Belum Ada Jadwal Nih! 📄💤', 'Tidak ada data yang ditemukan');
+    }
+
+    #[Computed]
+    public function emptyDescription(): string
+    {
+        return SystemNotification::getMessage('Belum ada jadwal perkuliahan yang terdaftar. Mungkin hari ini kamu bisa istirahat dulu? 😉💤', 'Belum ada jadwal perkuliahan yang terdaftar untuk kriteria ini. Hubungi administrator jika jadwal Anda belum muncul.');
+    }
 
     public ?string $search = '';
 

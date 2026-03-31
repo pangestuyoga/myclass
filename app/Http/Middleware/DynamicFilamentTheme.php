@@ -75,6 +75,12 @@ class DynamicFilamentTheme
                         :root {
                             --font-family: '{$font}', sans-serif;
                             --c-border-radius: {$radius};
+
+                            /* Global Tailwind V4 Radius Overrides */
+                            --radius-md: {$radius} !important;
+                            --radius-lg: {$radius} !important;
+                            --radius-xl: {$radius} !important;
+                            --radius-2xl: {$radius} !important;
                         }
                         
                         body {
@@ -88,9 +94,32 @@ class DynamicFilamentTheme
                             margin-right: auto !important;
                         }
 
-                        /* Apply border radius to common elements */
-                        .fi-section, .fi-btn, .fi-input, .fi-card, .fi-modal-window {
-                            border-radius: {$radius} !important;
+                        /* Apply border radius to common elements and custom containers */
+                        .fi-section, .fi-btn, .fi-input, .fi-card, .fi-modal-window, 
+                        .rounded-lg, .rounded-md, .rounded-xl, .rounded-2xl {
+                            border-radius: var(--c-border-radius) !important;
+                        }
+
+                        /* Target specific buttons and areas in custom views */
+                        .fi-main input[type='file']::file-selector-button {
+                            border-radius: var(--c-border-radius) !important;
+                        }
+
+                        /* Ensure primary color for custom views (Tailwind Custom Colors mapping) */
+                        @media screen {
+                            :root {
+                                --color-primary-50: rgb(var(--primary-50)) !important;
+                                --color-primary-100: rgb(var(--primary-100)) !important;
+                                --color-primary-200: rgb(var(--primary-200)) !important;
+                                --color-primary-300: rgb(var(--primary-300)) !important;
+                                --color-primary-400: rgb(var(--primary-400)) !important;
+                                --color-primary-500: rgb(var(--primary-500)) !important;
+                                --color-primary-600: rgb(var(--primary-600)) !important;
+                                --color-primary-700: rgb(var(--primary-700)) !important;
+                                --color-primary-800: rgb(var(--primary-800)) !important;
+                                --color-primary-900: rgb(var(--primary-900)) !important;
+                                --color-primary-950: rgb(var(--primary-950)) !important;
+                            }
                         }
                     </style>
                 ")

@@ -6,6 +6,7 @@ use App\Filament\Pages\Learning\StudyGroup\Actions\CreateStudyGroupAction;
 use App\Filament\Pages\Learning\StudyGroup\Actions\DeleteStudyGroupAction;
 use App\Filament\Pages\Learning\StudyGroup\Actions\EditStudyGroupAction;
 use App\Filament\Pages\Learning\StudyGroup\Actions\SelectAllCoursesAction;
+use App\Filament\Support\SystemNotification;
 use App\Models\Course;
 use App\Models\Student;
 use App\Models\StudyGroup;
@@ -51,6 +52,30 @@ class Index extends Page implements HasActions, HasForms
     }
 
     protected string $view = 'filament.pages.learning.study-group.index';
+
+    #[Computed]
+    public function heading(): string
+    {
+        return SystemNotification::getMessage('Daftar Grup Seru! 💃🕺', 'Kelompok Belajar');
+    }
+
+    #[Computed]
+    public function description(): string
+    {
+        return SystemNotification::getMessage('Lihat semua kelompok belajarmu di sini. Makin kompak makin asik! 🤝📚', 'Daftar kelompok belajar Anda dan teman-teman sekelas.');
+    }
+
+    #[Computed]
+    public function emptyHeading(): string
+    {
+        return SystemNotification::getMessage('Wah, Belum Ada Grup! 👯‍♂️🌀', 'Tidak ada data yang ditemukan');
+    }
+
+    #[Computed]
+    public function emptyDescription(): string
+    {
+        return SystemNotification::getMessage('Belum ada kelompok belajar yang terdaftar. Ayo ajak teman-temanmu bikin kelompok biar makin seru belajarnya! 🤝📄', 'Belum ada kelompok belajar yang terdaftar untuk kriteria ini. Klik tombol tambah untuk memulai pembuatan kelompok.');
+    }
 
     public ?int $course_id = null;
 

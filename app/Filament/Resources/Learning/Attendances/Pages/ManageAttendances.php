@@ -35,6 +35,42 @@ class ManageAttendances extends Page implements HasForms, HasTable
 
     protected string $view = 'filament.resources.learning.attendances.index';
 
+    #[Computed]
+    public function heading(): string
+    {
+        return SystemNotification::getMessage('Ayo Presensi Dulu! 🙋‍♂️✨', 'Sesi Kuliah');
+    }
+
+    #[Computed]
+    public function description(): string
+    {
+        return SystemNotification::getMessage('Jangan lupa absen ya kalau kelasnya udah mulai! Biar tercatat hadir. 💪', 'Silakan melakukan presensi sesuai dengan waktu kelas.');
+    }
+
+    #[Computed]
+    public function historyHeading(): string
+    {
+        return SystemNotification::getMessage('Jejak Presensimu 🕰️📜', 'Riwayat Presensi');
+    }
+
+    #[Computed]
+    public function historyDescription(): string
+    {
+        return SystemNotification::getMessage('Di sini kamu bisa ngecek semua histori kehadiranmu sebelumnya. Rajin-rajin ya! 🎓', 'Berikut adalah riwayat kehadiran Anda pada sesi perkuliahan.');
+    }
+
+    #[Computed]
+    public function emptyHeading(): string
+    {
+        return SystemNotification::getMessage('Yah, Absensi Belum Muncul! 💁‍♂️🌀', 'Tidak ada data yang ditemukan');
+    }
+
+    #[Computed]
+    public function emptyDescription(): string
+    {
+        return SystemNotification::getMessage('Sabar ya, setelah jadwal perkuliahan kamu muncul baru bisa diabsen di sini. Pantau terus jam kuliahnya! 🕒💪', 'Setelah jadwal Anda muncul, Anda dapat melakukan presensi di sini. Pastikan Anda mengecek kembali pada jam perkuliahan.');
+    }
+
     public function getSchedules()
     {
         /** @var User|null $user */

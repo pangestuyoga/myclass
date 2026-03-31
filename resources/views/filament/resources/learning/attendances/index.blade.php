@@ -3,8 +3,8 @@
         icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-hand-raised' : 'heroicon-o-clipboard-document-check' }}" 
         icon-color="primary"
     >
-        <x-slot name="heading">{{ \App\Filament\Support\SystemNotification::getMessage('Ayo Presensi Dulu! 🙋‍♂️✨', 'Sesi Kuliah') }}</x-slot>
-        <x-slot name="description">{{ \App\Filament\Support\SystemNotification::getMessage('Jangan lupa absen ya kalau kelasnya udah mulai! Biar tercatat hadir. 💪', 'Silakan melakukan presensi sesuai dengan waktu kelas.') }}</x-slot>
+        <x-slot name="heading">{{ $this->heading }}</x-slot>
+        <x-slot name="description">{{ $this->description }}</x-slot>
 
         @if (count($this->scheduleCards))
             <div class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
@@ -102,8 +102,9 @@
                 @endforeach
             </div>
         @else
-            <x-filament::empty-state icon="heroicon-o-finger-print" heading="Tidak ada data yang ditemukan"
-                description="Setelah jadwal Anda muncul, Anda dapat melakukan presensi di sini. Pastikan Anda mengecek kembali pada jam perkuliahan."
+            <x-filament::empty-state icon="heroicon-o-finger-print" 
+                heading="{{ $this->emptyHeading }}"
+                description="{{ $this->emptyDescription }}"
                 iconColor="gray">
             </x-filament::empty-state>
         @endif
@@ -114,8 +115,8 @@
         icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-clock' : 'heroicon-o-archive-box' }}" 
         icon-color="gray"
     >
-        <x-slot name="heading">{{ \App\Filament\Support\SystemNotification::getMessage('Jejak Presensimu 🕰️📜', 'Riwayat Presensi') }}</x-slot>
-        <x-slot name="description">{{ \App\Filament\Support\SystemNotification::getMessage('Di sini kamu bisa ngecek semua histori kehadiranmu sebelumnya. Rajin-rajin ya! 🎓', 'Berikut adalah riwayat kehadiran Anda pada sesi perkuliahan.') }}</x-slot>
+        <x-slot name="heading">{{ $this->historyHeading }}</x-slot>
+        <x-slot name="description">{{ $this->historyDescription }}</x-slot>
 
         {{ $this->table }}
     </x-filament::section>

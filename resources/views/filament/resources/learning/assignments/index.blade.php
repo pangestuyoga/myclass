@@ -3,14 +3,13 @@
         icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-pencil-square' : 'heroicon-o-briefcase' }}" 
         icon-color="primary"
     >
-        <x-slot name="heading">{{ \App\Filament\Support\SystemNotification::getMessage('Daftar Tugas Bikin Lemes! 🤣📒', 'Tugas Saya') }}</x-slot>
-        <x-slot name="description">{{ \App\Filament\Support\SystemNotification::getMessage('Yuk, cek dan kumpulin tugasmu biar tenang hidupnya! Klik aja di tugasnya ya. 🚀👨‍💻', 'Klik pada tugas untuk melihat detail dan mengumpulkan file.') }}</x-slot>
+        <x-slot name="heading">{{ $this->heading }}</x-slot>
+        <x-slot name="description">{{ $this->description }}</x-slot>
 
         <div class="space-y-4">
             @forelse ($this->assignmentCards as $card)
 
                 <div class="{{ $card->card_classes }} flex-col sm:flex-row">
-
 
                     <a href="{{ \App\Filament\Resources\Learning\Assignments\AssignmentResource::getUrl('submit', ['record' => $card->id]) }}"
                         class="flex flex-1 items-start gap-3 p-4 sm:p-5 text-left min-w-0 hover:bg-primary-500/5 transition-colors cursor-pointer">
@@ -109,9 +108,9 @@
                     @endif
                 </div>
             @empty
-                <x-filament::empty-state icon="heroicon-o-clipboard-document-list"
-                    heading="Tidak ada data yang ditemukan"
-                    description="Belum ada tugas baru yang perlu dikerjakan untuk saat ini. Tetap semangat!"
+                <x-filament::empty-state icon="heroicon-o-clipboard-document-list" 
+                    heading="{{ \App\Filament\Support\SystemNotification::getMessage('Hore, Belum Ada Tugas! 🎊✨', 'Tidak ada data yang ditemukan') }}"
+                    description="{{ \App\Filament\Support\SystemNotification::getMessage('Belum ada tugas baru yang perlu dikerjakan. Hidup tenang tanpa beban tugas itu asik ya! 😊🌈', 'Belum ada tugas baru yang perlu dikerjakan untuk saat ini. Tetap semangat!') }}"
                     iconColor="gray">
                 </x-filament::empty-state>
             @endforelse

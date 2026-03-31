@@ -22,7 +22,7 @@
         padding: 0 0.75rem;
         padding-bottom: env(safe-area-inset-bottom, 0px);
 
-        border-radius: 1.75rem;
+        border-radius: {{ $userTheme->border_radius === '0px' ? '0px' : '1.75rem' }};
 
         backdrop-filter: blur(20px) saturate(180%);
         -webkit-backdrop-filter: blur(20px) saturate(180%);

@@ -147,8 +147,10 @@
                 @endforeach
             </div>
         @else
-            <x-filament::empty-state icon="heroicon-o-users" heading="Tidak ada data yang ditemukan"
-                description="Anda belum terdaftar dalam kelompok belajar apapun untuk saat ini." iconColor="gray">
+            <x-filament::empty-state icon="heroicon-o-users" 
+                heading="{{ $this->emptyHeading }}"
+                description="{{ $this->emptyDescription }}" 
+                iconColor="gray">
             </x-filament::empty-state>
         @endif
 

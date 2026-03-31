@@ -7,6 +7,26 @@
         <title>Tugas {{ $course->name }} - {{ config('app.name', 'MyClass') }}</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <style>
+            :root {
+                --font-family: '{{ $userTheme->font }}', sans-serif;
+                --c-border-radius: {{ $userTheme->border_radius }};
+
+                /* Global Tailwind V4 Radius Overrides */
+                --radius-md: {{ $userTheme->border_radius }} !important;
+                --radius-lg: {{ $userTheme->border_radius }} !important;
+                --radius-xl: {{ $userTheme->border_radius }} !important;
+                --radius-2xl: {{ $userTheme->border_radius }} !important;
+
+                /* Dynamic Primary Color Overrides */
+                @foreach($primaryColors as $shade => $rgb)
+                --color-primary-{{ $shade }}: rgb({{ $rgb }}) !important;
+                @endforeach
+            }
+
+            body {
+                font-family: var(--font-family) !important;
+            }
+
             .bg-grid {
                 background-size: 32px 32px;
                 background-image: linear-gradient(to right, rgba(230, 230, 230, 0.4) 1px, transparent 1px),
@@ -23,7 +43,17 @@
             [x-cloak] {
                 display: none !important;
             }
+
+            /* Apply border radius override to everything with standard rounded classes */
+            .rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl {
+                border-radius: var(--c-border-radius) !important;
+            }
         </style>
+        @if($userTheme->font !== 'Inter')
+            <link rel='preconnect' href='https://fonts.googleapis.com'>
+            <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
+            <link href='https://fonts.googleapis.com/css2?family={{ $userTheme->font }}:wght@400;500;600;700&display=swap' rel='stylesheet'>
+        @endif
     </head>
 
     <body class="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 flex flex-col relative font-sans">
@@ -62,8 +92,9 @@
                 <!-- Attendance -->
                 <div class="lg:col-span-8 flex flex-col gap-4">
                     <div class="flex items-center justify-between px-1">
-                        <h2 class="text-base font-bold text-gray-950 dark:text-white tracking-tight uppercase">Daftar
-                            Pengumpulan</h2>
+                    <h2 class="text-base font-bold text-gray-950 dark:text-white tracking-tight uppercase">
+                        {{ $headings['list'] }}
+                    </h2>
                     </div>
 
                     <div
@@ -180,7 +211,7 @@
                     <div class="flex flex-col gap-3">
                         <h3
                             class="text-[11px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest pl-1">
-                            Informasi Tugas</h3>
+                            {{ $headings['info'] }}</h3>
 
                         <div
                             class="fi-card rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm p-5 flex flex-col gap-5">

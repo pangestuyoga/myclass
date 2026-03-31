@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AssignmentType;
+use App\Filament\Support\SystemNotification;
 use App\Models\Assignment;
 use App\Models\AssignmentSubmission;
 use App\Models\Course;
@@ -62,6 +63,11 @@ class ShareAssignmentController extends Controller
             ? Carbon::parse($assignment->due_date)->translatedFormat('l, d F Y H:i')
             : '-';
 
+        $headings = [
+            'list' => SystemNotification::getMessage('Daftar Pengumpulan 🚀✨', 'Daftar Pengumpulan'),
+            'info' => SystemNotification::getMessage('Informasi Tugas 📚✨', 'Informasi Tugas'),
+        ];
+
         return view('pages.share-assignment', compact(
             'course',
             'assignment',
@@ -72,7 +78,8 @@ class ShareAssignmentController extends Controller
             'submittedCount',
             'submissionPercentage',
             'formattedDeadline',
-            'isGroup'
+            'isGroup',
+            'headings'
         ));
     }
 }

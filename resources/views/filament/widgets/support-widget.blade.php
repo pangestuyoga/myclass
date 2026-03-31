@@ -18,7 +18,7 @@
             <div>
                 <h2
                     class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 group-hover:from-primary-600 group-hover:to-primary-400 transition-all duration-300">
-                    Informasi & Bantuan</h2>
+                    {{ $this->getHeading() }}</h2>
                 <p
                     class="text-sm text-gray-600 dark:text-gray-400 mt-2 leading-relaxed group-hover:text-gray-900 dark:group-hover:text-gray-300 transition-colors duration-300">
                     Jika Anda menemukan masalah dalam penggunaan aplikasi, membutuhkan bantuan, atau memiliki ide

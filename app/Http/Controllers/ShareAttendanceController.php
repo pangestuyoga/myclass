@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Filament\Support\SystemNotification;
 use App\Models\Assignment;
 use App\Models\Attendance;
 use App\Models\ClassSession;
@@ -55,6 +56,11 @@ class ShareAttendanceController extends Controller
             ? Carbon::parse($sessionInfo->start_time)->format('H:i').' - '.Carbon::parse($sessionInfo->end_time)->format('H:i')
             : '-';
 
+        $headings = [
+            'list' => SystemNotification::getMessage('Daftar Kehadiran 📝✨', 'Daftar Kehadiran'),
+            'info' => SystemNotification::getMessage('Informasi Sesi 🏢✨', 'Informasi Sesi'),
+        ];
+
         return view('pages.share-attendance', compact(
             'course',
             'attendances',
@@ -65,7 +71,8 @@ class ShareAttendanceController extends Controller
             'totalStudents',
             'presentCount',
             'attendancePercentage',
-            'formattedTime'
+            'formattedTime',
+            'headings'
         ));
     }
 }

@@ -6,7 +6,7 @@
                 <x-heroicon-o-information-circle class="w-5 h-5 text-info-600 dark:text-info-400 mt-0.5" />
 
                 <div class="text-sm text-info-800 dark:text-info-200">
-                    Geser ke samping untuk melihat hari lainnya.
+                    {{ $this->instructions }}
                 </div>
             </div>
         </div>
@@ -108,8 +108,9 @@
                     </section>
                 @empty
                     <div class="w-full">
-                        <x-filament::empty-state icon="heroicon-o-calendar-days" heading="Tidak ada data yang ditemukan"
-                            description="Belum ada jadwal perkuliahan yang terdaftar untuk kriteria ini. Hubungi administrator jika jadwal Anda belum muncul."
+                        <x-filament::empty-state icon="heroicon-o-calendar-days" 
+                            heading="{{ $this->emptyHeading }}"
+                            description="{{ $this->emptyDescription }}"
                             iconColor="gray">
                         </x-filament::empty-state>
                     </div>

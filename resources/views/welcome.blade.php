@@ -7,6 +7,26 @@
         <title>{{ config('app.name', 'MyClass') }} - Sistem Informasi Manajemen</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <style>
+            :root {
+                --font-family: '{{ $userTheme->font }}', sans-serif;
+                --c-border-radius: {{ $userTheme->border_radius }};
+
+                /* Global Tailwind V4 Radius Overrides */
+                --radius-md: {{ $userTheme->border_radius }} !important;
+                --radius-lg: {{ $userTheme->border_radius }} !important;
+                --radius-xl: {{ $userTheme->border_radius }} !important;
+                --radius-2xl: {{ $userTheme->border_radius }} !important;
+
+                /* Dynamic Primary Color Overrides */
+                @foreach($primaryColors as $shade => $rgb)
+                --color-primary-{{ $shade }}: rgb({{ $rgb }}) !important;
+                @endforeach
+            }
+
+            body {
+                font-family: var(--font-family) !important;
+            }
+
             .bg-grid {
                 background-size: 32px 32px;
                 background-image: linear-gradient(to right, rgba(230, 230, 230, 0.4) 1px, transparent 1px),
@@ -19,7 +39,17 @@
                         linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
                 }
             }
+
+            /* Apply border radius override to everything with standard rounded classes */
+            .rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl {
+                border-radius: var(--c-border-radius) !important;
+            }
         </style>
+        @if($userTheme->font !== 'Inter')
+            <link rel='preconnect' href='https://fonts.googleapis.com'>
+            <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
+            <link href='https://fonts.googleapis.com/css2?family={{ $userTheme->font }}:wght@400;500;600;700&display=swap' rel='stylesheet'>
+        @endif
     </head>
 
     <body
@@ -41,8 +71,7 @@
                     </div>
                     <h1
                         class="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight">
-                        Sistem Manajemen <br /> <span class="text-primary-600 dark:text-primary-400">Kelas
-                            Sederhana.</span>
+                        {{ $headings['hero_title'] }} <br /> <span class="text-primary-600 dark:text-primary-400">{{ $headings['hero_subtitle'] }}</span>
                     </h1>
                     <p class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed max-w-xl">
                         Kelola jadwal kelas, daftar presensi, pengumpulan tugas, hingga materi belajar dalam satu
@@ -78,9 +107,10 @@
                                 </path>
                             </svg>
                         </div>
-                        <h3 class="font-bold text-gray-950 dark:text-white mb-2 leading-tight">Manajemen Sesi</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Pemantauan kelas dan penjadwalan terstruktur
-                            dan mudah dilihat.</p>
+                        <h3 class="font-bold text-gray-950 dark:text-white mb-2 leading-tight">
+                            {{ $headings['feature_session'] }}</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            {{ $headings['feature_session_desc'] }}</p>
                     </div>
                     <div
                         class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm hover:shadow-xl hover:border-primary-500/30 dark:hover:border-primary-500/30 transition-all duration-300 hover:-translate-y-1 group cursor-default translate-y-0 sm:translate-y-6">
@@ -92,9 +122,10 @@
                                 </path>
                             </svg>
                         </div>
-                        <h3 class="font-bold text-gray-950 dark:text-white mb-2 leading-tight">Tugas & Materi</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Pengelolaan repositori perkuliahan dan
-                            pengumpulan tugas.</p>
+                        <h3 class="font-bold text-gray-950 dark:text-white mb-2 leading-tight">
+                            {{ $headings['feature_task'] }}</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            {{ $headings['feature_task_desc'] }}</p>
                     </div>
                     <div
                         class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm hover:shadow-xl hover:border-primary-500/30 dark:hover:border-primary-500/30 transition-all duration-300 hover:-translate-y-1 group cursor-default">
@@ -105,9 +136,10 @@
                                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
-                        <h3 class="font-bold text-gray-950 dark:text-white mb-2 leading-tight">Presensi Digital</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Sistem pendataan kehadiran yang praktis,
-                            cepat, dan real-time.</p>
+                        <h3 class="font-bold text-gray-950 dark:text-white mb-2 leading-tight">
+                            {{ $headings['feature_attendance'] }}</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            {{ $headings['feature_attendance_desc'] }}</p>
                     </div>
                     <div
                         class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm hover:shadow-xl hover:border-primary-500/30 dark:hover:border-primary-500/30 transition-all duration-300 hover:-translate-y-1 group cursor-default translate-y-0 sm:translate-y-6">
@@ -119,9 +151,10 @@
                                 </path>
                             </svg>
                         </div>
-                        <h3 class="font-bold text-gray-950 dark:text-white mb-2 leading-tight">Grup Belajar</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Ruang kolaborasi, diskusi, dan obrolan untuk
-                            saling terhubung.</p>
+                        <h3 class="font-bold text-gray-950 dark:text-white mb-2 leading-tight">
+                            {{ $headings['feature_group'] }}</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            {{ $headings['feature_group_desc'] }}</p>
                     </div>
                 </div>
 

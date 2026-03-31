@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Support\SystemNotification;
 use Filament\Widgets\Widget;
 
 class SupportWidget extends Widget
@@ -11,4 +12,9 @@ class SupportWidget extends Widget
     protected int|string|array $columnSpan = 'full';
 
     protected string $view = 'filament.widgets.support-widget';
+
+    public function getHeading(): string
+    {
+        return SystemNotification::getMessage('Butuh Bantuan? Tanya Saja! 💬✨', 'Informasi & Bantuan');
+    }
 }
