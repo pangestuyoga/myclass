@@ -68,6 +68,15 @@ class ListAssignments extends Page
     public function assignments(): Collection
     {
         $studentProfile = auth()->user()->student;
+
+        if (! $studentProfile) {
+            return Assignment::with(['course', 'assignmentSubmissions', 'studyGroups.students'])
+                ->whereHas('course', function ($q) {
+                    $q->where('semester', app(GeneralSettings::class)->current_semester);
+                })
+                ->get();
+        }
+
         $pinnedIds = $this->pinnedIds;
 
         $assignments = Assignment::with(['course', 'assignmentSubmissions' => function ($q) use ($studentProfile) {
@@ -130,6 +139,11 @@ class ListAssignments extends Page
     public function assignmentCards()
     {
         $studentProfile = auth()->user()->student;
+
+        if (! $studentProfile) {
+            return collect();
+        }
+
         $pinnedIds = $this->pinnedIds;
 
         return $this->assignments()->map(function ($assignment) use ($studentProfile, $pinnedIds) {
@@ -223,6 +237,10 @@ class ListAssignments extends Page
     public function pinnedIds(): array
     {
         $studentProfile = auth()->user()->student;
+
+        if (! $studentProfile) {
+            return [];
+        }
 
         return AssignmentPin::where('student_id', $studentProfile->id)
             ->pluck('assignment_id')
