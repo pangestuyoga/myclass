@@ -20,11 +20,11 @@ class StudentFactory extends Factory
         return [
             'user_id' => User::factory(),
             'full_name' => fake()->name(),
-            'student_number' => fake()->unique()->numerify('##########'),
-            'phone_number' => fake()->phoneNumber(),
+            'student_number' => fake()->unique()->regexify('[1-9]{1}[0-9]{9}'),
+            'phone_number' => '0812'.fake()->numerify('########'),
             'sex' => fake()->randomElement(['male', 'female']),
             'address' => fake()->address(),
-            'date_of_birth' => fake()->date(),
+            'date_of_birth' => fake()->dateTimeBetween('-30 years', '-16 years')->format('Y-m-d'),
             'place_of_birth' => fake()->city(),
         ];
     }
