@@ -22,6 +22,7 @@ class GenerateSessionsAction extends Action
         parent::setUp();
 
         $this->label('Generate Sesi')
+            ->visible(fn () => auth()->user()->can('Create:ClassSession'))
             ->color(Color::Orange)
             ->requiresConfirmation()
             ->modalHeading('Generate Sesi Pembelajaran')
