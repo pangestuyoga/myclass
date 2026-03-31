@@ -7,6 +7,7 @@ use App\Models\ClassSession;
 use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\TextInput;
 use Filament\Support\Colors\Color;
 
 class GenerateSessionsAction extends Action
@@ -24,18 +25,45 @@ class GenerateSessionsAction extends Action
             ->color(Color::Orange)
             ->requiresConfirmation()
             ->modalHeading('Generate Sesi Pembelajaran')
-            ->modalDescription('Sistem akan men-generate atau memperbarui sesi 1 sampai 16 secara otomatis berdasarkan jadwal mata kuliah ini.')
-            ->schema([
-                DatePicker::make('start_date')
-                    ->label('Tanggal Pertemuan Ke-1')
-                    ->default(now())
-                    ->required()
-                    ->native(false)
-                    ->displayFormat('l, d F Y'),
-            ])
+            ->modalDescription('Sistem akan men-generate atau memperbarui sesi secara otomatis berdasarkan jadwal mata kuliah ini.')
+            ->schema(function ($livewire) {
+                $lastSession = $livewire->course->classSessions()->latest('session_number')->first();
+                $lastNumber = $lastSession?->session_number ?? 0;
+                $nextNumber = $lastNumber + 1;
+                $lastDate = $lastSession?->date ? Carbon::parse($lastSession->date) : now();
+
+                return [
+                    TextInput::make('total_sessions')
+                        ->label('Jumlah Sesi Baru')
+                        ->numeric()
+                        ->default(function () use ($lastNumber) {
+                            return $lastNumber === 0 ? 16 : 1;
+                        })
+                        ->minValue(1)
+                        ->maxValue(32)
+                        ->required()
+                        ->placeholder('Contoh: 14')
+                        ->helperText($lastNumber > 0
+                            ? "Sesi terakhir adalah No. {$lastNumber}. Sesi baru akan dimulai dari No. {$nextNumber}."
+                            : 'Belum ada sesi. Sesi akan dibuat mulai dari No. 1.'),
+
+                    DatePicker::make('start_date')
+                        ->label($lastNumber > 0
+                            ? "Tanggal Sesi Ke-{$nextNumber}"
+                            : 'Tanggal Pertemuan Ke-1')
+                        ->default(function () use ($lastNumber, $lastDate) {
+                            // Default to next week if sessions already exist
+                            return $lastNumber > 0 ? $lastDate->addWeek()->toDateString() : now()->toDateString();
+                        })
+                        ->required()
+                        ->native(false)
+                        ->displayFormat('l, d F Y'),
+                ];
+            })
             ->action(function (array $data, $livewire) {
                 $course = $livewire->course;
                 $schedule = $course->courseSchedules()->first();
+                $totalNewSessions = (int) ($data['total_sessions'] ?? 1);
 
                 if (! $schedule) {
                     SystemNotification::danger(
@@ -48,16 +76,21 @@ class GenerateSessionsAction extends Action
                     return;
                 }
 
+                $lastSession = $course->classSessions()->latest('session_number')->first();
+                $lastNumber = $lastSession?->session_number ?? 0;
+                $nextNumber = $lastNumber + 1;
+                $maxNumber = $lastNumber + $totalNewSessions;
+
                 $startDate = Carbon::parse($data['start_date']);
 
-                for ($i = 1; $i <= 16; $i++) {
+                for ($i = $nextNumber; $i <= $maxNumber; $i++) {
                     ClassSession::updateOrCreate(
                         [
                             'course_id' => $course->id,
                             'session_number' => $i,
                         ],
                         [
-                            'date' => $startDate->copy()->addWeeks($i - 1)->toDateString(),
+                            'date' => $startDate->copy()->addWeeks($i - $nextNumber)->toDateString(),
                             'start_time' => $schedule->start_time,
                             'end_time' => $schedule->end_time,
                         ]
@@ -66,9 +99,9 @@ class GenerateSessionsAction extends Action
 
                 SystemNotification::success(
                     'Hore! Sesi Siap ✨🚀',
-                    '16 Sesi berhasil digenerate dan diperbarui. Selamat mengajar! 🎉',
+                    $totalNewSessions.' Sesi baru (No. '.$nextNumber.' sampai '.$maxNumber.') berhasil digenerate. 🎉',
                     'Verifikasi Sesi Berhasil',
-                    'Seluruh 16 sesi pembelajaran telah berhasil dikonfigurasi secara otomatis ke dalam sistem.'
+                    'Seluruh '.$totalNewSessions.' sesi pembelajaran tambahan telah berhasil dikonfigurasi secara otomatis.'
                 )->send();
             });
     }
