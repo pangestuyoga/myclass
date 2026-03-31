@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Learning\ClassSessions\Pages;
 
 use App\Filament\Actions\BackAction;
-use App\Filament\Resources\Learning\ClassSessions\Actions\CreateSessionAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\DeleteSessionAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\EditSessionAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\GenerateSessionsAction;
@@ -134,8 +133,6 @@ class ListCourseSessions extends Page implements HasActions, HasForms
                 ->url(ManageClassSessions::getUrl()),
 
             GenerateSessionsAction::make(),
-
-            CreateSessionAction::make(),
         ];
     }
 
