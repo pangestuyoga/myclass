@@ -243,7 +243,7 @@ class SystemNotification
 
         return (object) [
             'font' => $settings->font ?? 'Inter',
-            'primary_color' => $settings->primary_color ?? 'amber',
+            'primary_color' => $settings->primary_color ?? 'emerald',
             'border_radius' => match ($settings->border_radius ?? 'md') {
                 'none' => '0px',
                 'md' => '0.375rem',
@@ -264,7 +264,7 @@ class SystemNotification
     {
         /** @var \App\Models\User|null $user */
         $user = Auth::user();
-        $colorName = $user?->settings?->primary_color ?? 'amber';
+        $colorName = $user?->settings?->primary_color ?? 'emerald';
 
         // Mapping from Filament base colors (these are standard Tailwind scale RGB values)
         return match ($colorName) {
@@ -329,9 +329,9 @@ class SystemNotification
                 800 => '55, 48, 163', 900 => '49, 46, 129', 950 => '30, 27, 75',
             ],
             default => [
-                50 => '255, 251, 235', 100 => '254, 243, 199', 200 => '253, 230, 138', 300 => '252, 211, 77',
-                400 => '251, 191, 36', 500 => '245, 158, 11', 600 => '217, 119, 6', 700 => '180, 83, 9',
-                800 => '146, 64, 14', 900 => '120, 53, 15', 950 => '69, 26, 3',
+                50 => '236, 253, 245', 100 => '209, 250, 229', 200 => '167, 243, 208', 300 => '110, 231, 183',
+                400 => '52, 211, 153', 500 => '16, 185, 129', 600 => '5, 150, 105', 700 => '4, 120, 87',
+                800 => '6, 95, 70', 900 => '6, 77, 58', 950 => '2, 44, 34',
             ],
         };
     }
