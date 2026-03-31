@@ -24,7 +24,7 @@
                             <td class="px-4 py-3 text-right">
                                 <span
                                     class="inline-flex items-center rounded-md bg-success-50 dark:bg-success-400/10 px-2 py-1 text-xs font-bold text-success-700 dark:text-success-400 ring-1 ring-inset ring-success-600/20 tabular-nums">
-                                    {{ $attendance->attended_at->format('H:i') }} WIB
+                                    {{ $attendance->attended_at?->format('H:i') }} 
                                 </span>
                             </td>
                         </tr>

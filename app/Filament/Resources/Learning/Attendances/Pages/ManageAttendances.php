@@ -244,7 +244,7 @@ class ManageAttendances extends Page implements HasForms, HasTable
                     ->label('Tanggal')
                     ->date('l, d F Y')
                     ->sortable()
-                    ->description(fn (Attendance $record): string => $record->attended_at->format('H:i').' WIB')
+                    ->description(fn (Attendance $record): string => $record->attended_at->format('H:i').' ')
                     ->color('gray'),
 
                 TextColumn::make('courseSchedule.course.name')
