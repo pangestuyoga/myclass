@@ -18,9 +18,12 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
+use Filament\Support\Exceptions\Halt;
+use Filament\Support\Facades\FilamentView;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Throwable;
 
 class Profile extends EditProfile
 {
@@ -230,6 +233,54 @@ class Profile extends EditProfile
                             ]),
                     ]),
             ]);
+    }
+
+    public function save(): void
+    {
+        try {
+            $this->beginDatabaseTransaction();
+
+            $this->callHook('beforeValidate');
+
+            $data = $this->form->getState();
+
+            $this->callHook('afterValidate');
+
+            $data = $this->mutateFormDataBeforeSave($data);
+
+            $this->callHook('beforeSave');
+
+            $this->handleRecordUpdate($this->getUser(), $data);
+
+            $this->callHook('afterSave');
+        } catch (Halt $exception) {
+            $exception->shouldRollbackDatabaseTransaction() ?
+                $this->rollBackDatabaseTransaction() :
+                $this->commitDatabaseTransaction();
+
+            return;
+        } catch (Throwable $exception) {
+            $this->rollBackDatabaseTransaction();
+
+            throw $exception;
+        }
+
+        $this->commitDatabaseTransaction();
+
+        if (request()->hasSession() && array_key_exists('password', $data)) {
+            request()->session()->put([
+                'password_hash_'.filament()->getAuthGuard() => $data['password'],
+            ]);
+        }
+
+        $this->data['password'] = null;
+        $this->data['passwordConfirmation'] = null;
+
+        $this->getSavedNotification()?->send();
+
+        if ($redirectUrl = $this->getRedirectUrl()) {
+            $this->redirect($redirectUrl, navigate: FilamentView::hasSpaMode($redirectUrl));
+        }
     }
 
     protected function mutateFormDataBeforeFill(array $data): array
