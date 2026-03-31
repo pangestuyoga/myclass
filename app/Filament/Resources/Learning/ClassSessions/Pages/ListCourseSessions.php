@@ -58,7 +58,7 @@ class ListCourseSessions extends Page implements HasActions, HasForms
 
         return $this->course->classSessions()
             ->withCount(['attendances', 'materials', 'assignments'])
-            ->orderBy('session_number', 'asc')
+            ->orderByDesc('session_number')
             ->get()
             ->map(fn ($session) => (object) [
                 'id' => $session->id,

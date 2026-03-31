@@ -38,7 +38,7 @@ class ShareAttendanceController extends Controller
         })
             ->select('date')
             ->distinct()
-            ->orderBy('date', 'desc')
+            ->orderByDesc('date')
             ->get()
             ->pluck('date');
 

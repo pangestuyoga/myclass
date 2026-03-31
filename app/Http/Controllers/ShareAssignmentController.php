@@ -19,7 +19,7 @@ class ShareAssignmentController extends Controller
 
         $availableAssignments = Assignment::where('course_id', $course->id)
             ->with('classSession')
-            ->orderBy('created_at', 'desc')
+            ->orderByDesc('created_at')
             ->get();
 
         $assignmentId = $request->query('assignment_id');
