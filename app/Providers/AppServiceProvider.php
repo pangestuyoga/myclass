@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Filament\Support\SystemNotification;
+use App\Filament\Support\ThemeSettings;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,8 +21,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         view()->composer('*', function ($view) {
-            $view->with('userTheme', SystemNotification::getThemeSettings());
-            $view->with('primaryColors', SystemNotification::getPrimaryColorValues());
+            $view->with('userTheme', ThemeSettings::getThemeSettings());
+            $view->with('primaryColors', ThemeSettings::getPrimaryColorValues());
         });
     }
 }
