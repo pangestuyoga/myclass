@@ -34,6 +34,7 @@ beforeEach(function () {
         'Create:Assignment',
         'Update:Assignment',
         'Delete:Assignment',
+        'View:CourseSchedule',
     ];
 
     foreach ($permissions as $permission) {
@@ -48,11 +49,11 @@ describe('Assignment Authorization', function () {
     it('restricts actions to Developer and Kosma, while allowing students to view and submit', function () {
         $developer = User::factory()->create();
         $developer->assignRole(RoleEnum::Developer);
-        $developer->givePermissionTo(['ViewAny:Assignment', 'Create:Assignment']);
+        $developer->givePermissionTo(['ViewAny:Assignment', 'Create:Assignment', 'View:CourseSchedule']);
 
         $studentUser = User::factory()->create();
         $studentUser->assignRole(RoleEnum::Student);
-        $studentUser->givePermissionTo(['ViewAny:Assignment']);
+        $studentUser->givePermissionTo(['ViewAny:Assignment', 'View:CourseSchedule']);
         $student = Student::factory()->create(['user_id' => $studentUser->id]);
 
         $this->actingAs($developer);
@@ -81,7 +82,7 @@ describe('Assignment CRUD and Rules', function () {
     beforeEach(function () {
         $user = User::factory()->create();
         $user->assignRole(RoleEnum::Developer);
-        $user->givePermissionTo(['ViewAny:Assignment', 'Create:Assignment', 'Update:Assignment', 'Delete:Assignment']);
+        $user->givePermissionTo(['ViewAny:Assignment', 'Create:Assignment', 'Update:Assignment', 'Delete:Assignment', 'View:CourseSchedule']);
         $this->actingAs($user);
     });
 
@@ -126,7 +127,7 @@ describe('Assignment Submission Logic', function () {
     it('allows individual submission', function () {
         $user = User::factory()->create();
         $user->assignRole(RoleEnum::Student);
-        $user->givePermissionTo(['ViewAny:Assignment']);
+        $user->givePermissionTo(['ViewAny:Assignment', 'View:CourseSchedule']);
         $student = Student::factory()->create(['user_id' => $user->id]);
 
         $assignment = Assignment::factory()->create([
@@ -156,12 +157,12 @@ describe('Assignment Submission Logic', function () {
 
         $leaderUser = User::factory()->create();
         $leaderUser->assignRole(RoleEnum::Student);
-        $leaderUser->givePermissionTo(['ViewAny:Assignment']);
+        $leaderUser->givePermissionTo(['ViewAny:Assignment', 'View:CourseSchedule']);
         $leader = Student::factory()->create(['user_id' => $leaderUser->id]);
 
         $memberUser = User::factory()->create();
         $memberUser->assignRole(RoleEnum::Student);
-        $memberUser->givePermissionTo(['ViewAny:Assignment']);
+        $memberUser->givePermissionTo(['ViewAny:Assignment', 'View:CourseSchedule']);
         $member = Student::factory()->create(['user_id' => $memberUser->id]);
 
         $group = StudyGroup::factory()->create([
@@ -195,7 +196,7 @@ describe('Assignment Pins and Interactions', function () {
     beforeEach(function () {
         $user = User::factory()->create();
         $user->assignRole(RoleEnum::Student);
-        $user->givePermissionTo(['ViewAny:Assignment']);
+        $user->givePermissionTo(['ViewAny:Assignment', 'View:CourseSchedule']);
         $this->studentProfile = Student::factory()->create(['user_id' => $user->id]);
         $this->actingAs($user);
         $this->currentSemester = app(GeneralSettings::class)->current_semester;
@@ -224,11 +225,86 @@ describe('Assignment Pins and Interactions', function () {
     });
 });
 
+describe('Assignment Search', function () {
+    beforeEach(function () {
+        $user = User::factory()->create();
+        $user->assignRole(RoleEnum::Student);
+        $user->givePermissionTo(['ViewAny:Assignment', 'View:CourseSchedule']);
+        $this->studentProfile = Student::factory()->create(['user_id' => $user->id]);
+        $this->actingAs($user);
+        $this->currentSemester = app(GeneralSettings::class)->current_semester;
+    });
+
+    it('can search assignments by title', function () {
+        $course = Course::factory()->create(['semester' => $this->currentSemester]);
+
+        $assignment1 = Assignment::factory()->create([
+            'title' => 'Tugas Matematika 1',
+            'course_id' => $course->id,
+            'due_date' => now()->addDays(1),
+        ]);
+        $assignment2 = Assignment::factory()->create([
+            'title' => 'Tugas Biologi 2',
+            'course_id' => $course->id,
+            'due_date' => now()->addDays(1),
+        ]);
+
+        $assignment1->students()->attach($this->studentProfile->id);
+        $assignment2->students()->attach($this->studentProfile->id);
+
+        Livewire::test(ListAssignments::class)
+            ->set('search', 'Matematika')
+            ->assertSee('Tugas Matematika 1')
+            ->assertDontSee('Tugas Biologi 2');
+    });
+
+    it('can search assignments by course name', function () {
+        $course1 = Course::factory()->create(['name' => 'Fisika Dasar', 'semester' => $this->currentSemester]);
+        $course2 = Course::factory()->create(['name' => 'Sejarah Indonesia', 'semester' => $this->currentSemester]);
+
+        $assignment1 = Assignment::factory()->create([
+            'title' => 'Laporan Praktikum',
+            'course_id' => $course1->id,
+            'due_date' => now()->addDays(1),
+        ]);
+        $assignment2 = Assignment::factory()->create([
+            'title' => 'Makalah',
+            'course_id' => $course2->id,
+            'due_date' => now()->addDays(1),
+        ]);
+
+        $assignment1->students()->attach($this->studentProfile->id);
+        $assignment2->students()->attach($this->studentProfile->id);
+
+        Livewire::test(ListAssignments::class)
+            ->set('search', 'Fisika')
+            ->assertSee('Laporan Praktikum')
+            ->assertSee('Fisika Dasar')
+            ->assertDontSee('Makalah')
+            ->assertDontSee('Sejarah Indonesia');
+    });
+
+    it('shows empty state when no assignments found with search', function () {
+        $course = Course::factory()->create(['semester' => $this->currentSemester]);
+        $assignment = Assignment::factory()->create([
+            'title' => 'Tugas Wajib',
+            'course_id' => $course->id,
+            'due_date' => now()->addDays(1),
+        ]);
+        $assignment->students()->attach($this->studentProfile->id);
+
+        Livewire::test(ListAssignments::class)
+            ->set('search', 'Random string yang ga ada')
+            ->assertDontSee('Tugas Wajib')
+            ->assertSee('Hore, Belum Ada Tugas!');
+    });
+});
+
 describe('Assignment Details and Preview', function () {
     beforeEach(function () {
         $user = User::factory()->create();
         $user->assignRole(RoleEnum::Developer);
-        $user->givePermissionTo(['ViewAny:Assignment', 'View:Assignment']);
+        $user->givePermissionTo(['ViewAny:Assignment', 'View:Assignment', 'View:CourseSchedule']);
         $this->actingAs($user);
         $this->currentSemester = app(GeneralSettings::class)->current_semester;
     });

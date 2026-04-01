@@ -6,6 +6,12 @@
         <x-slot name="heading">{{ $this->heading }}</x-slot>
         <x-slot name="description">{{ $this->description }}</x-slot>
 
+         <div class="flex items-center justify-between gap-4 mb-6">
+            <div class="w-full max-w-xl">
+                {{ $this->form }}
+            </div>
+        </div>
+
         <div class="space-y-4">
             @forelse ($this->assignmentCards as $card)
 
@@ -107,7 +113,7 @@
                         </div>
                     @endif
                 </div>
-            @empty
+           @empty
                 <x-filament::empty-state icon="heroicon-o-clipboard-document-list" 
                     heading="{{ \App\Filament\Support\SystemNotification::getMessage('Hore, Belum Ada Tugas! 🎊✨', 'Tidak ada data yang ditemukan') }}"
                     description="{{ \App\Filament\Support\SystemNotification::getMessage('Belum ada tugas baru yang perlu dikerjakan. Hidup tenang tanpa beban tugas itu asik ya! 😊🌈', 'Belum ada tugas baru yang perlu dikerjakan untuk saat ini. Tetap semangat!') }}"

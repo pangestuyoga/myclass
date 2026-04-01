@@ -13,13 +13,19 @@ use App\Models\Assignment;
 use App\Models\AssignmentPin;
 use App\Settings\GeneralSettings;
 use Filament\Actions\Action;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\Page;
+use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Url;
 
 class ListAssignments extends Page
 {
+    #[Url]
+    public ?string $search = '';
+
     protected static string $resource = AssignmentResource::class;
 
     protected string $view = 'filament.resources.learning.assignments.index';
@@ -27,6 +33,32 @@ class ListAssignments extends Page
     protected static ?string $title = 'Tugas';
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getPagePermission(): string
+    {
+        return 'View:CourseSchedule';
+    }
+
+    public function mount(): void
+    {
+        $this->form->fill();
+    }
+
+    public function form(Schema $schema): Schema
+    {
+        return $schema
+            ->schema([
+                TextInput::make('search')
+                    ->label('Cari')
+                    ->placeholder('Cari Judul Tugas atau Mata Kuliah...')
+                    ->autocomplete(false)
+                    ->live(debounce: 500)
+                    ->afterStateUpdated(fn ($state) => $this->search = $state),
+            ])
+            ->columns([
+                'sm' => 1,
+            ]);
+    }
 
     protected function getHeaderActions(): array
     {
@@ -89,6 +121,12 @@ class ListAssignments extends Page
             ->where(function ($query) use ($studentProfile) {
                 $query->whereHas('students', fn ($q) => $q->whereKey($studentProfile->id))
                     ->orWhereHas('studyGroups', fn ($q) => $q->where('leader_id', $studentProfile->id)->orWhereHas('students', fn ($sq) => $sq->whereKey($studentProfile->id)));
+            })
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->where('title', 'like', "%{$this->search}%")
+                        ->orWhereHas('course', fn ($cq) => $cq->where('name', 'like', "%{$this->search}%"));
+                });
             })
             ->get();
 
