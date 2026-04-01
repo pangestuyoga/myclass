@@ -33,6 +33,11 @@
             @endif
 
             @if ($this->record->hasMedia('assignments'))
+                @php
+                    $attachmentUrl = $this->record->getFirstMediaUrl('assignments');
+                    $googleViewerUrl =
+                        'https://docs.google.com/viewer?url=' . urlencode($attachmentUrl) . '&embedded=true';
+                @endphp
                 <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
                     <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Lampiran Tugas</p>
                     <div
@@ -45,12 +50,13 @@
         </x-filament::section>
 
         @if ($this->isOverdue)
-            <x-filament::section 
-                icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-exclamation-triangle' : 'heroicon-o-lock-closed' }}" 
-                icon-color="danger"
-            >
-                <x-slot name="heading">{{ \App\Filament\Support\SystemNotification::getMessage('Yah, Batas Waktu Udah Habis! 😭⏳', 'Batas Waktu Telah Berakhir') }}</x-slot>
-                <x-slot name="description">{{ \App\Filament\Support\SystemNotification::getMessage('Maaf ya, kamu udah nggak bisa kumpulin tugas ini lagi karena waktunya udah lewat. Tetap semangat buat tugas selanjutnya! 💪', 'Proses pengumpulan tugas ini telah ditutup karena melewati batas waktu.') }}</x-slot>
+            <x-filament::section
+                icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-exclamation-triangle' : 'heroicon-o-lock-closed' }}"
+                icon-color="danger">
+                <x-slot
+                    name="heading">{{ \App\Filament\Support\SystemNotification::getMessage('Yah, Batas Waktu Udah Habis! 😭⏳', 'Batas Waktu Telah Berakhir') }}</x-slot>
+                <x-slot
+                    name="description">{{ \App\Filament\Support\SystemNotification::getMessage('Maaf ya, kamu udah nggak bisa kumpulin tugas ini lagi karena waktunya udah lewat. Tetap semangat buat tugas selanjutnya! 💪', 'Proses pengumpulan tugas ini telah ditutup karena melewati batas waktu.') }}</x-slot>
 
                 <div class="flex items-center gap-3 mb-5">
                     <div
@@ -100,11 +106,11 @@
                 @endif
             </x-filament::section>
         @else
-            <x-filament::section 
-                icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-paper-airplane' : 'heroicon-o-document-arrow-up' }}" 
-                icon-color="primary"
-            >
-                <x-slot name="heading">{{ $this->isResubmit ? \App\Filament\Support\SystemNotification::getMessage('Kuy Perbarui Tugasmu! 🔄✨', 'Perbarui Pengumpulan') : \App\Filament\Support\SystemNotification::getMessage('Kumpulkan Tugas Sekarang! 🚀📚', 'Kumpulkan Tugas') }}</x-slot>
+            <x-filament::section
+                icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-paper-airplane' : 'heroicon-o-document-arrow-up' }}"
+                icon-color="primary">
+                <x-slot
+                    name="heading">{{ $this->isResubmit ? \App\Filament\Support\SystemNotification::getMessage('Kuy Perbarui Tugasmu! 🔄✨', 'Perbarui Pengumpulan') : \App\Filament\Support\SystemNotification::getMessage('Kumpulkan Tugas Sekarang! 🚀📚', 'Kumpulkan Tugas') }}</x-slot>
 
                 @if ($this->isResubmit && ($url = $this->getSubmissionFileUrl()))
                     <div class="mb-4">
@@ -196,7 +202,7 @@
             // Listen for the Livewire event after submission
             window.addEventListener('submission-completed', function() {
                 var input = document.getElementById('assignment-file');
-                if (input) input.value = ''; 
+                if (input) input.value = '';
                 resetPreview();
             });
         });
