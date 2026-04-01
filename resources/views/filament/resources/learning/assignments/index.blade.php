@@ -85,11 +85,6 @@
                                 @endif
                             </div>
                         </div>
-
-                        @if ($card->can_submit_actual)
-                            <x-filament::icon icon="heroicon-o-chevron-right"
-                                class="h-4 w-4 text-gray-400 group-hover:text-primary-500 mt-1 transition-colors shrink-0 hidden sm:block" />
-                        @endif
                     </a>
 
 
@@ -104,14 +99,7 @@
                     </div>
 
 
-                    @if ($card->is_group && !$card->is_submitted)
-                        <div class="absolute right-14 top-2 pointer-events-none hidden sm:block">
-                            <x-filament::icon
-                                icon="{{ $card->is_leader ? 'heroicon-m-sparkles' : 'heroicon-m-user-group' }}"
-                                class="{{ $card->indicator_icon_classes }}"
-                                title="{{ $card->is_leader ? 'Anda adalah Ketua Kelompok' : 'Anda adalah Anggota Kelompok' }}" />
-                        </div>
-                    @endif
+
                 </div>
            @empty
                 <x-filament::empty-state icon="heroicon-o-clipboard-document-list" 

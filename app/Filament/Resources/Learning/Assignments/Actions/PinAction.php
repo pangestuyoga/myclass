@@ -22,6 +22,7 @@ class PinAction extends Action
         $this->label(fn (array $arguments, $livewire) => in_array($arguments['record'], $livewire->pinnedIds) ? 'Lepas Pin' : 'Pin Tugas')
             ->color(fn (array $arguments, $livewire) => in_array($arguments['record'], $livewire->pinnedIds) ? 'primary' : 'gray')
             ->icon(fn (array $arguments, $livewire) => in_array($arguments['record'], $livewire->pinnedIds) ? 'heroicon-s-bookmark' : 'heroicon-o-bookmark')
+
             ->link()
             ->tooltip(fn (array $arguments, $livewire) => in_array($arguments['record'], $livewire->pinnedIds) ? 'Lepas pin' : 'Pin tugas ini')
             ->action(function (array $arguments, $livewire) {
