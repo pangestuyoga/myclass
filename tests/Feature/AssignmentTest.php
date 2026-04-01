@@ -300,6 +300,27 @@ describe('Assignment Search', function () {
     });
 });
 
+describe('Assignment Sharing', function () {
+    beforeEach(function () {
+        $user = User::factory()->create();
+        $user->assignRole(RoleEnum::Student);
+        $user->givePermissionTo(['ViewAny:Assignment', 'View:CourseSchedule']);
+        $this->studentProfile = Student::factory()->create(['user_id' => $user->id]);
+        $this->actingAs($user);
+        $this->currentSemester = app(GeneralSettings::class)->current_semester;
+    });
+
+    it('can share assignment information', function () {
+        $course = Course::factory()->create(['semester' => $this->currentSemester]);
+        $assignment = Assignment::factory()->create(['course_id' => $course->id]);
+        $assignment->students()->attach($this->studentProfile->id);
+
+        Livewire::test(ListAssignments::class)
+            ->callAction('shareAssignment', [], ['record' => $assignment->id])
+            ->assertHasNoActionErrors();
+    });
+});
+
 describe('Assignment Details and Preview', function () {
     beforeEach(function () {
         $user = User::factory()->create();

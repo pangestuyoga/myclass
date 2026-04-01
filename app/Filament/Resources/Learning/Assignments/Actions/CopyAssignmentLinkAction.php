@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\Learning\ClassSessions\Actions;
+namespace App\Filament\Resources\Learning\Assignments\Actions;
 
 use App\Filament\Support\SystemNotification;
-use App\Models\ClassSession;
+use App\Models\Assignment;
 use Filament\Actions\Action;
 use Illuminate\Support\Facades\URL;
 
@@ -22,12 +22,16 @@ class CopyAssignmentLinkAction extends Action
             ->color('gray')
             ->icon('heroicon-o-clipboard-document')
             ->action(function (array $arguments, $livewire) {
-                $course = $livewire->course;
-                $session = ClassSession::find($arguments['session'] ?? null);
+                $assignment = Assignment::find($arguments['record'] ?? null);
+                $course = $assignment ? $assignment->course : null;
+
+                if (! $course || ! $assignment) {
+                    return;
+                }
 
                 $url = URL::temporarySignedRoute('share.assignment', now()->addHour(), [
                     'course' => $course->id,
-                    'session_id' => $session ? $session->id : null,
+                    'assignment_id' => $assignment->id,
                 ]);
 
                 $livewire->js("if (navigator.clipboard) { navigator.clipboard.writeText('{$url}').catch(() => {}); }");

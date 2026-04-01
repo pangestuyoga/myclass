@@ -6,7 +6,6 @@ use App\Filament\Actions\BackAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\DeleteSessionAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\EditSessionAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\GenerateSessionsAction;
-use App\Filament\Resources\Learning\ClassSessions\Actions\ShareAssignmentAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\ShareAttendanceAction;
 use App\Filament\Resources\Learning\ClassSessions\ClassSessionResource;
 use App\Models\ClassSession;
@@ -140,7 +139,6 @@ class ListCourseSessions extends Page implements HasActions, HasForms
     {
         return [
             $this->shareAttendanceAction(),
-            $this->shareAssignmentAction(),
             $this->viewAttendanceAction(),
             $this->viewMaterialsAction(),
             $this->viewAssignmentsAction(),
@@ -153,11 +151,6 @@ class ListCourseSessions extends Page implements HasActions, HasForms
     public function shareAttendanceAction(): Action
     {
         return ShareAttendanceAction::make();
-    }
-
-    public function shareAssignmentAction(): Action
-    {
-        return ShareAssignmentAction::make();
     }
 
     public function viewAttendanceAction(): Action

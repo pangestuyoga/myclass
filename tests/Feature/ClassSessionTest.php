@@ -158,15 +158,6 @@ describe('Class Session Special Features', function () {
             ->assertHasNoActionErrors();
     });
 
-    it('can share assignment information', function () {
-        $course = Course::factory()->create(['semester' => $this->currentSemester]);
-        $session = ClassSession::factory()->create(['course_id' => $course->id]);
-
-        Livewire::test(ListCourseSessions::class, ['courseId' => $course->id])
-            ->callAction('shareAssignment', [], ['session' => $session->id])
-            ->assertHasNoActionErrors();
-    });
-
     it('can show modals for attendance, materials and assignments', function () {
         $course = Course::factory()->create(['semester' => $this->currentSemester]);
         $session = ClassSession::factory()->create(['course_id' => $course->id]);

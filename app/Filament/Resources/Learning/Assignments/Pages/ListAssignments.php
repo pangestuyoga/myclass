@@ -7,6 +7,7 @@ use App\Filament\Resources\Learning\Assignments\Actions\CreateAssignmentAction;
 use App\Filament\Resources\Learning\Assignments\Actions\DeleteAssignmentAction;
 use App\Filament\Resources\Learning\Assignments\Actions\EditAssignmentAction;
 use App\Filament\Resources\Learning\Assignments\Actions\PinAction;
+use App\Filament\Resources\Learning\Assignments\Actions\ShareAssignmentAction;
 use App\Filament\Resources\Learning\Assignments\AssignmentResource;
 use App\Filament\Support\SystemNotification;
 use App\Models\Assignment;
@@ -94,6 +95,11 @@ class ListAssignments extends Page
     {
         return DeleteAssignmentAction::make()
             ->visible(fn () => auth()->user()->can('Delete:Assignment'));
+    }
+
+    public function shareAssignmentAction(): Action
+    {
+        return ShareAssignmentAction::make();
     }
 
     #[Computed]
