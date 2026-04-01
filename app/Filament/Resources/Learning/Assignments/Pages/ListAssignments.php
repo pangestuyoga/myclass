@@ -93,13 +93,13 @@ class ListAssignments extends Page
     #[Computed]
     public function heading(): string
     {
-        return SystemNotification::getMessage('Daftar Tugas Bikin Lemes! 🤣📒', 'Tugas Saya');
+        return SystemNotification::getByKey('labels.assignment_list.title');
     }
 
     #[Computed]
     public function description(): string
     {
-        return SystemNotification::getMessage('Yuk, cek dan kumpulin tugasmu biar tenang hidupnya! Klik aja di tugasnya ya. 🚀👨‍💻', 'Klik pada tugas untuk melihat detail dan mengumpulkan file.');
+        return SystemNotification::getByKey('labels.assignment_list.description');
     }
 
     public function pinAction(): Action

@@ -93,12 +93,8 @@ class Login extends FilamentLogin
         }
 
         if ($user->is_active === IsActive::Inactive) {
-            SystemNotification::danger(
-                'Akses Ditangguhkan ⛔',
-                'Maaf, Anda tidak dapat masuk karena status akun saat ini sedang tidak aktif. Silakan hubungi Administrator untuk informasi lebih lanjut. 😴',
-                'Akses Akun Terbatas',
-                'Akun Anda saat ini dalam status tidak aktif. Mohon hubungi pihak Administrator untuk klarifikasi lebih lanjut.'
-            )->send();
+            SystemNotification::send('access_suspended', type: 'danger')
+                ->send();
 
             throw ValidationException::withMessages([
                 'login' => 'Akun Anda sedang dinonaktifkan.',
@@ -145,24 +141,16 @@ class Login extends FilamentLogin
 
         session()->regenerate();
 
-        SystemNotification::success(
-            'Berhasil Masuk ✨',
-            'Selamat datang kembali, '.$user->name.'. Sesi Anda telah berhasil diaktifkan dengan aman. 👋',
-            'Otentikasi Berhasil',
-            'Selamat datang, '.$user->name.'. Sesi autentikasi Anda telah berhasil dikonfirmasi oleh sistem.'
-        )->send();
+        SystemNotification::send('login_success', ['name' => $user->name])
+            ->send();
 
         return app(LoginResponse::class);
     }
 
     protected function throwFailureValidationException(): never
     {
-        SystemNotification::danger(
-            'Gagal Masuk 🚫',
-            'Terjadi kendala saat proses masuk. Mohon periksa kembali alamat surel atau kata sandi Anda. 😟',
-            'Otentikasi Gagal',
-            'Upaya masuk gagal dilakukan. Mohon lakukan verifikasi kembali pada kredensial yang Anda masukkan.'
-        )->send();
+        SystemNotification::send('login_failed', type: 'danger')
+            ->send();
 
         throw ValidationException::withMessages([]);
     }

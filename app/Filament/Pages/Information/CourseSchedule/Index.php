@@ -49,19 +49,19 @@ class Index extends Page implements HasActions, HasForms
     #[Computed]
     public function instructions(): string
     {
-        return SystemNotification::getMessage('Geser ke samping buat intip hari lainnya ya! 📅✨', 'Geser ke samping untuk melihat hari lainnya.');
+        return SystemNotification::getByKey('labels.course_schedule_hint');
     }
 
     #[Computed]
     public function emptyHeading(): string
     {
-        return SystemNotification::getMessage('Yah, Belum Ada Jadwal Nih! 📄💤', 'Tidak ada data yang ditemukan');
+        return SystemNotification::getByKey('labels.empty_course_schedule.title');
     }
 
     #[Computed]
     public function emptyDescription(): string
     {
-        return SystemNotification::getMessage('Belum ada jadwal perkuliahan yang terdaftar. Mungkin hari ini kamu bisa istirahat dulu? 😉💤', 'Belum ada jadwal perkuliahan yang terdaftar untuk kriteria ini. Hubungi administrator jika jadwal Anda belum muncul.');
+        return SystemNotification::getByKey('labels.empty_course_schedule.description');
     }
 
     public ?string $search = '';

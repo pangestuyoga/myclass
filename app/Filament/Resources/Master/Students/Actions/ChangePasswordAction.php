@@ -33,12 +33,8 @@ class ChangePasswordAction extends Action
                     'password' => Hash::make($data['password']),
                 ]);
 
-                SystemNotification::success(
-                    'Aha! Kata Sandi Baru Berhasil 🔑✨',
-                    "Kata sandi untuk {$record->full_name} sudah update nih. Jangan lupa ingatkan mereka ya! 😉",
-                    'Perubahan Kata Sandi Berhasil',
-                    "Kredensial keamanan untuk mahasiswa {$record->full_name} telah diperbarui sesuai dengan entri sistem."
-                )->send();
+                SystemNotification::send('password_changed', ['name' => $record->full_name])
+                    ->send();
             });
     }
 }

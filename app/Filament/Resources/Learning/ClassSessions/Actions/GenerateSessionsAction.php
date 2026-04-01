@@ -67,12 +67,8 @@ class GenerateSessionsAction extends Action
                 $totalNewSessions = (int) ($data['total_sessions'] ?? 1);
 
                 if (! $schedule) {
-                    SystemNotification::danger(
-                        'Oops! Gagal Generate 🚫',
-                        'Jadwal belum ditentukan untuk mata kuliah ini, jadi sistem bingung mau buat sesi kapan. 😟',
-                        'Eksekusi Dibatalkan',
-                        'Penjadwalan resmi belum dikonfigurasi untuk mata kuliah ini. Proses pembuatan sesi otomatis tidak dapat dilanjutkan.'
-                    )->send();
+                    SystemNotification::send('sessions_generated_failed', type: 'danger')
+                        ->send();
 
                     return;
                 }
@@ -98,12 +94,11 @@ class GenerateSessionsAction extends Action
                     );
                 }
 
-                SystemNotification::success(
-                    'Hore! Sesi Siap ✨🚀',
-                    $totalNewSessions.' Sesi baru (No. '.$nextNumber.' sampai '.$maxNumber.') berhasil digenerate. 🎉',
-                    'Verifikasi Sesi Berhasil',
-                    'Seluruh '.$totalNewSessions.' sesi pembelajaran tambahan telah berhasil dikonfigurasi secara otomatis.'
-                )->send();
+                SystemNotification::send('sessions_generated_success', [
+                    'count' => $totalNewSessions,
+                    'start' => $nextNumber,
+                    'end' => $maxNumber,
+                ])->send();
             });
     }
 }

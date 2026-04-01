@@ -38,37 +38,37 @@ class ManageAttendances extends Page implements HasForms, HasTable
     #[Computed]
     public function heading(): string
     {
-        return SystemNotification::getMessage('Ayo Presensi Dulu! 🙋‍♂️✨', 'Sesi Kuliah');
+        return SystemNotification::getByKey('labels.attendance_section.title');
     }
 
     #[Computed]
     public function description(): string
     {
-        return SystemNotification::getMessage('Jangan lupa absen ya kalau kelasnya udah mulai! Biar tercatat hadir. 💪', 'Silakan melakukan presensi sesuai dengan waktu kelas.');
+        return SystemNotification::getByKey('labels.attendance_section.description');
     }
 
     #[Computed]
     public function historyHeading(): string
     {
-        return SystemNotification::getMessage('Jejak Presensimu 🕰️📜', 'Riwayat Presensi');
+        return SystemNotification::getByKey('labels.attendance_history.title');
     }
 
     #[Computed]
     public function historyDescription(): string
     {
-        return SystemNotification::getMessage('Di sini kamu bisa ngecek semua histori kehadiranmu sebelumnya. Rajin-rajin ya! 🎓', 'Berikut adalah riwayat kehadiran Anda pada sesi perkuliahan.');
+        return SystemNotification::getByKey('labels.attendance_history.description');
     }
 
     #[Computed]
     public function emptyHeading(): string
     {
-        return SystemNotification::getMessage('Yah, Absensi Belum Muncul! 💁‍♂️🌀', 'Tidak ada data yang ditemukan');
+        return SystemNotification::getByKey('labels.empty_attendance.title');
     }
 
     #[Computed]
     public function emptyDescription(): string
     {
-        return SystemNotification::getMessage('Sabar ya, setelah jadwal perkuliahan kamu muncul baru bisa diabsen di sini. Pantau terus jam kuliahnya! 🕒💪', 'Setelah jadwal Anda muncul, Anda dapat melakukan presensi di sini. Pastikan Anda mengecek kembali pada jam perkuliahan.');
+        return SystemNotification::getByKey('labels.empty_attendance.description');
     }
 
     public function getSchedules()
@@ -187,12 +187,8 @@ class ManageAttendances extends Page implements HasForms, HasTable
             ->first();
 
         if ($existing) {
-            SystemNotification::warning(
-                'Presensi Sudah Tercatat ⚠️',
-                'Anda telah melakukan presensi untuk sesi perkuliahan ini. Jangan lupa belajar yang rajin ya! 📚✨',
-                'Pemberitahuan Presensi',
-                'Status kehadiran Anda untuk sesi perkuliahan ini telah tercatat sebelumnya dalam sistem.'
-            )->send();
+            SystemNotification::send('attendance_already_recorded', type: 'warning')
+                ->send();
 
             return;
         }
@@ -200,12 +196,8 @@ class ManageAttendances extends Page implements HasForms, HasTable
         // Check time
         $startTime = $session->start_time;
         if (now()->lessThan($startTime)) {
-            SystemNotification::warning(
-                'Sabar Yaa! Belum Dibuka ⏳',
-                'Waktu presensi untuk sesi perkuliahan ini belum dimulai nih. Tunggu sebentar lagi, ya! ☕😊',
-                'Sesi Presensi Belum Dimulai',
-                'Akses pengisian presensi untuk sesi ini belum diaktifkan sesuai dengan jadwal yang ditentukan.'
-            )->send();
+            SystemNotification::send('attendance_not_started', type: 'warning')
+                ->send();
 
             return;
         }
@@ -223,12 +215,8 @@ class ManageAttendances extends Page implements HasForms, HasTable
             'attended_at' => now(),
         ]);
 
-        SystemNotification::success(
-            'Mantap! Presensi Berhasil ✨🚀',
-            'Kehadiran Anda telah berhasil direkam. Semangat belajarnya hari ini! 💪✅',
-            'Konfirmasi Presensi Berhasil',
-            'Informasi kehadiran Anda telah berhasil diverifikasi dan disimpan secara resmi ke dalam sistem.'
-        )->send();
+        SystemNotification::send('attendance_success')
+            ->send();
     }
 
     public function table(Table $table): Table

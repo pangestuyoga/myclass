@@ -37,9 +37,9 @@ class Profile extends EditProfile
     {
         return $schema
             ->components([
-                Section::make(SystemNotification::getMessage('Akun Pengguna 👤✨', 'Akun'))
-                    ->description(SystemNotification::getMessage('Kelola informasi detail akun Anda di sini ya biar nggak kudet! 😉🚀', 'Kelola informasi detail akun Anda agar selalu terkini.'))
-                    ->icon(SystemNotification::getNotifStyle() === NotifStyle::Cheerful ? 'heroicon-o-face-smile' : 'heroicon-o-user')
+                Section::make(SystemNotification::getByKey('labels.user_account.title'))
+                    ->description(SystemNotification::getByKey('labels.user_account.description'))
+                    ->icon(SystemNotification::getByKey('icons.user_account'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
@@ -67,9 +67,9 @@ class Profile extends EditProfile
                             ]),
                     ]),
 
-                Section::make(SystemNotification::getMessage('Data Mahasiswa 🎓📚', 'Informasi Mahasiswa'))
-                    ->description(SystemNotification::getMessage('Pastikan data akademikmu sesuai dengan yang di sistem, jangan sampai salah loh! 🤓📝', 'Pastikan data akademik Anda sesuai dengan record sistem.'))
-                    ->icon(SystemNotification::getNotifStyle() === NotifStyle::Cheerful ? 'heroicon-o-academic-cap' : 'heroicon-o-identification')
+                Section::make(SystemNotification::getByKey('labels.student_data.title'))
+                    ->description(SystemNotification::getByKey('labels.student_data.description_profile'))
+                    ->icon(SystemNotification::getByKey('icons.student_data'))
                     ->statePath('student')
                     ->schema([
                         TextInput::make('full_name')
@@ -135,9 +135,9 @@ class Profile extends EditProfile
                     ->columns(2)
                     ->visible(fn () => auth()->user()?->student()->exists()),
 
-                Section::make(SystemNotification::getMessage('Keamanan Akun 🔐⚡', 'Keamanan Akun'))
-                    ->description(SystemNotification::getMessage('Rajin-rajin ganti password ya, biar akunmu aman dan nggak dibobol orang! 🕵️‍♂️🛡️', 'Perbarui kata sandi Anda secara berkala untuk menjaga keamanan akun.'))
-                    ->icon(SystemNotification::getNotifStyle() === NotifStyle::Cheerful ? 'heroicon-o-shield-check' : 'heroicon-o-lock-closed')
+                Section::make(SystemNotification::getByKey('labels.account_security.title'))
+                    ->description(SystemNotification::getByKey('labels.account_security.description'))
+                    ->icon(SystemNotification::getByKey('icons.account_security'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
@@ -164,9 +164,9 @@ class Profile extends EditProfile
                             ]),
                     ]),
 
-                Section::make(SystemNotification::getMessage('Pengaturan Tampilan & UX 🎨✨', 'Preferensi Tampilan'))
-                    ->description(SystemNotification::getMessage('Personalisasi pengalaman aplikasi Anda agar lebih nyaman dan sesuai selera! 🌈🚀', 'Sesuaikan gaya bahasa, warna tema, dan jenis huruf aplikasi Anda.'))
-                    ->icon(SystemNotification::getNotifStyle() === NotifStyle::Cheerful ? 'heroicon-o-swatch' : 'heroicon-o-paint-brush')
+                Section::make(SystemNotification::getByKey('labels.appearance_settings.title'))
+                    ->description(SystemNotification::getByKey('labels.appearance_settings.description'))
+                    ->icon(SystemNotification::getByKey('icons.appearance_settings'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
@@ -327,24 +327,16 @@ class Profile extends EditProfile
 
     protected function afterSave(): void
     {
-        SystemNotification::success(
-            'Profil Berhasil Diperbarui ✅✨',
-            'Data profil Anda telah berhasil disimpan dan diperbarui. Makin keren deh! 😎🌈',
-            'Pembaharuan Profil Berhasil',
-            'Seluruh data profil Anda telah berhasil sinkronisasi dan disimpan dalam database.'
-        )->send();
+        SystemNotification::send('profile_updated')
+            ->send();
 
         if (filled($this->form->getState()['password'] ?? null)) {
             filament()->auth()->logout();
             session()->invalidate();
             session()->regenerateToken();
 
-            SystemNotification::info(
-                'Keamanan Akun Diperbarui 🔐',
-                'Anda telah mengubah kata sandi. Demi keamanan, silakan masuk kembali ya! 🚪🔑',
-                'Pembaruan Kredensial',
-                'Kata sandi Anda telah berhasil diubah. Harap lakukan otentikasi ulang untuk melanjutkan sesi.'
-            )->send();
+            SystemNotification::send('account_security_updated', type: 'info')
+                ->send();
 
             $this->redirect(filament()->getLoginUrl());
         } else {

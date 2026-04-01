@@ -41,24 +41,16 @@ class PinAction extends Action
 
                 if ($existing) {
                     $existing->delete();
-                    SystemNotification::success(
-                        'Pin Dilepas! Bye 📌',
-                        'Pin pada tugas ini sukses dilepas dari daftar prioritas kamu. Semangat! 👋',
-                        'Pembatalan Prioritas Berhasil',
-                        'Penanda prioritas pada tugas ini telah berhasil dihapus dari daftar akun Anda.'
-                    )->send();
+                    SystemNotification::send('assignment_unpinned')
+                        ->send();
                 } else {
                     AssignmentPin::create([
                         'student_id' => $studentProfile->id,
                         'assignment_id' => $assignmentId,
                     ]);
 
-                    SystemNotification::success(
-                        'Keren! Tugas Jadi Utama 📍',
-                        'Tugas ini sekarang nangkring di posisi teratas daftar prioritas kamu. Sikat! 🚀',
-                        'Penandaan Prioritas Berhasil',
-                        'Tugas ini telah berhasil ditandai sebagai prioritas utama dalam daftar tugas Anda.'
-                    )->send();
+                    SystemNotification::send('assignment_pinned')
+                        ->send();
                 }
 
                 unset($livewire->assignments, $livewire->pinnedIds);

@@ -157,23 +157,15 @@ class SubmitAssignmentPage extends Page
         $assignment = $this->record;
 
         if ($assignment->type === AssignmentType::Group && ! $this->currentGroup) {
-            SystemNotification::danger(
-                'Gagal Mengumpulkan 🚫',
-                'Anda tidak terdaftar dalam kelompok manapun yang ditugaskan untuk tugas ini. 😟',
-                'Kesalahan Pengumpulan Tugas',
-                'Data akun Anda tidak ditemukan dalam daftar kelompok yang ditugaskan untuk tugas ini.'
-            )->send();
+            SystemNotification::send('submission_no_group', type: 'danger')
+                ->send();
 
             return;
         }
 
         if (! $this->canSubmit) {
-            SystemNotification::danger(
-                'Akses Ditolak 🚫',
-                'Hanya ketua kelompok yang diizinkan untuk mengumpulkan atau memperbarui tugas kelompok. 👑',
-                'Batasan Otoritas Pengumpulan',
-                'Hanya ketua kelompok yang memiliki otoritas untuk memperbarui atau mengumpulkan tugas kelompok.'
-            )->send();
+            SystemNotification::send('submission_not_leader', type: 'danger')
+                ->send();
 
             return;
         }
@@ -181,12 +173,8 @@ class SubmitAssignmentPage extends Page
         $existingSubmission = $this->existingSubmission;
 
         if (! $existingSubmission && ! $this->file) {
-            SystemNotification::warning(
-                'Pilih File Dulu Dong! 📁',
-                'Silakan pilih file untuk dikumpulkan agar sistem bisa menyimpannya ya! 😊',
-                'Kelengkapan Berkas Diperlukan',
-                'Mohon sertakan lampiran berkas sebelum melanjutkan proses pengumpulan tugas.'
-            )->send();
+            SystemNotification::send('submission_file_missing', type: 'warning')
+                ->send();
 
             return;
         }
@@ -216,12 +204,8 @@ class SubmitAssignmentPage extends Page
                 'submitted_at' => now(),
             ]);
 
-            SystemNotification::success(
-                'Keren! Tugas Sudah Update ✨',
-                'File tugas Anda telah berhasil diunggah ulang dan diperbarui di sistem. 📤',
-                'Pembaruan Berkas Berhasil',
-                'Berkas tugas telah berhasil diunggah ulang dan divalidasi oleh sistem.'
-            )->send();
+            SystemNotification::send('submission_updated')
+                ->send();
         } else {
             $submission = AssignmentSubmission::create([
                 'assignment_id' => $assignment->id,
@@ -235,12 +219,8 @@ class SubmitAssignmentPage extends Page
                 ->usingFileName($this->file->getClientOriginalName())
                 ->toMediaCollection('submission');
 
-            SystemNotification::success(
-                'Yeay! Tugas Terkumpul! 🎉',
-                'Berhasil! Tugas Anda telah tercatat dengan aman di sistem. Semangat! 🎈',
-                'Konfirmasi Pengumpulan Berhasil',
-                'Seluruh berkas tugas Anda telah berhasil diverifikasi dan disimpan oleh sistem.'
-            )->send();
+            SystemNotification::send('submission_success')
+                ->send();
         }
 
         $this->file = null;

@@ -56,25 +56,25 @@ class Index extends Page implements HasActions, HasForms
     #[Computed]
     public function heading(): string
     {
-        return SystemNotification::getMessage('Daftar Grup Seru! 💃🕺', 'Kelompok Belajar');
+        return SystemNotification::getByKey('labels.study_group_list.title');
     }
 
     #[Computed]
     public function description(): string
     {
-        return SystemNotification::getMessage('Lihat semua kelompok belajarmu di sini. Makin kompak makin asik! 🤝📚', 'Daftar kelompok belajar Anda dan teman-teman sekelas.');
+        return SystemNotification::getByKey('labels.study_group_list.description');
     }
 
     #[Computed]
     public function emptyHeading(): string
     {
-        return SystemNotification::getMessage('Wah, Belum Ada Grup! 👯‍♂️🌀', 'Tidak ada data yang ditemukan');
+        return SystemNotification::getByKey('labels.empty_study_group.title');
     }
 
     #[Computed]
     public function emptyDescription(): string
     {
-        return SystemNotification::getMessage('Belum ada kelompok belajar yang terdaftar. Ayo ajak teman-temanmu bikin kelompok biar makin seru belajarnya! 🤝📄', 'Belum ada kelompok belajar yang terdaftar untuk kriteria ini. Klik tombol tambah untuk memulai pembuatan kelompok.');
+        return SystemNotification::getByKey('labels.empty_study_group.description');
     }
 
     public ?int $course_id = null;

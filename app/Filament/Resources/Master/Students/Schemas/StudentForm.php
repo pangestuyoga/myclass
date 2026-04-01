@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Master\Students\Schemas;
 
-use App\Enums\NotifStyle;
 use App\Enums\Sex;
 use App\Filament\Support\SystemNotification;
 use Carbon\Carbon;
@@ -21,12 +20,9 @@ class StudentForm
     {
         return $schema
             ->components([
-                Section::make(SystemNotification::getMessage('Kredensial Akun 🔑✨', 'Akun'))
-                    ->description(new HtmlString(SystemNotification::getMessage(
-                        'Pake email dan username ini buat login ya. Oh iya, password awalnya <code class="text-sm bg-gray-100 text-red-400 px-1.5 py-0.5 rounded font-mono">Minimal8@</code> 🥳',
-                        'Alamat Surel dan Nama Pengguna akan digunakan untuk masuk ke dalam sistem. Kata sandi bawaan adalah <code class="text-sm bg-gray-100 text-red-400 px-1.5 py-0.5 rounded font-mono">Minimal8@</code>'
-                    )))
-                    ->icon(SystemNotification::getNotifStyle() === NotifStyle::Cheerful ? 'heroicon-o-key' : 'heroicon-o-user')
+                Section::make(SystemNotification::getByKey('labels.account_credentials.title'))
+                    ->description(new HtmlString(SystemNotification::getByKey('labels.account_credentials.description')))
+                    ->icon(SystemNotification::getByKey('icons.account_credentials'))
                     ->schema([
                         TextInput::make('email')
                             ->label('Alamat Surel')
@@ -50,9 +46,9 @@ class StudentForm
                     ->columns(2)
                     ->hiddenOn('edit'),
 
-                Section::make(SystemNotification::getMessage('Data Mahasiswa 🎓📚', 'Informasi Mahasiswa'))
-                    ->description(SystemNotification::getMessage('Lengkapi data mahasiswa di bawah ini dengan benar ya! 🤓📝', 'Masukkan seluruh informasi akademik dan personal mahasiswa dengan benar.'))
-                    ->icon(SystemNotification::getNotifStyle() === NotifStyle::Cheerful ? 'heroicon-o-academic-cap' : 'heroicon-o-identification')
+                Section::make(SystemNotification::getByKey('labels.student_data.title'))
+                    ->description(SystemNotification::getByKey('labels.student_data.description'))
+                    ->icon(SystemNotification::getByKey('icons.student_data'))
                     ->schema([
                         TextInput::make('full_name')
                             ->label('Nama Lengkap')

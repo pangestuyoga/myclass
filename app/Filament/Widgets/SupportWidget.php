@@ -15,6 +15,6 @@ class SupportWidget extends Widget
 
     public function getHeading(): string
     {
-        return SystemNotification::getMessage('Butuh Bantuan? Tanya Saja! 💬✨', 'Informasi & Bantuan');
+        return SystemNotification::getByKey('labels.help_center.title');
     }
 }
