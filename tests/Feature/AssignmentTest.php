@@ -13,6 +13,7 @@ use App\Models\Student;
 use App\Models\StudyGroup;
 use App\Models\User;
 use App\Settings\GeneralSettings;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
@@ -69,7 +70,7 @@ describe('Assignment Model', function () {
         $assignment = Assignment::factory()->create();
 
         expect($assignment->course)->toBeInstanceOf(Course::class);
-        expect($assignment->assignmentSubmissions())->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class);
+        expect($assignment->assignmentSubmissions())->toBeInstanceOf(HasMany::class);
 
         $assignment->delete();
         expect($assignment->refresh()->trashed())->toBeTrue();

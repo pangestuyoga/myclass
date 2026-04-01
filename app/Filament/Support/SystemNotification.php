@@ -3,6 +3,7 @@
 namespace App\Filament\Support;
 
 use App\Enums\NotifStyle;
+use App\Models\User;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 
@@ -215,7 +216,7 @@ class SystemNotification
     public static function getNotifStyle(): NotifStyle
     {
         try {
-            /** @var \App\Models\User|null $user */
+            /** @var User|null $user */
             $user = Auth::user();
 
             return $user?->settings?->notif_style ?? NotifStyle::Cheerful;
@@ -237,7 +238,7 @@ class SystemNotification
      */
     public static function getThemeSettings(): object
     {
-        /** @var \App\Models\User|null $user */
+        /** @var User|null $user */
         $user = Auth::user();
         $settings = $user?->settings;
 
@@ -262,7 +263,7 @@ class SystemNotification
      */
     public static function getPrimaryColorValues(): array
     {
-        /** @var \App\Models\User|null $user */
+        /** @var User|null $user */
         $user = Auth::user();
         $colorName = $user?->settings?->primary_color ?? 'emerald';
 

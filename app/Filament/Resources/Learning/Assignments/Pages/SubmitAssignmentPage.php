@@ -10,6 +10,7 @@ use App\Models\Assignment;
 use App\Models\AssignmentSubmission;
 use App\Models\Student;
 use App\Models\StudyGroup;
+use App\Models\User;
 use Filament\Resources\Pages\Page;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -64,7 +65,7 @@ class SubmitAssignmentPage extends Page
     #[Computed]
     public function student(): Student
     {
-        /** @var \App\Models\User|null $user */
+        /** @var User|null $user */
         $user = Auth::user();
 
         return $user?->student;

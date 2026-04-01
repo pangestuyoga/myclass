@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Learning\Assignments\Actions;
 
 use App\Filament\Support\SystemNotification;
 use App\Models\AssignmentPin;
+use App\Models\User;
 use Filament\Actions\Action;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,7 +26,7 @@ class PinAction extends Action
             ->tooltip(fn (array $arguments, $livewire) => in_array($arguments['record'], $livewire->pinnedIds) ? 'Lepas pin' : 'Pin tugas ini')
             ->action(function (array $arguments, $livewire) {
                 $assignmentId = $arguments['record'];
-                /** @var \App\Models\User|null $user */
+                /** @var User|null $user */
                 $user = Auth::user();
                 $studentProfile = $user?->student;
 

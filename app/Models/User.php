@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\IsActive;
 use App\Enums\NotifStyle;
+use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -19,7 +20,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFacehashAvatar, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     protected $guarded = ['id'];

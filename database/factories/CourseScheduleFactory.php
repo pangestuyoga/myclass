@@ -3,10 +3,11 @@
 namespace Database\Factories;
 
 use App\Models\Course;
+use App\Models\CourseSchedule;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CourseSchedule>
+ * @extends Factory<CourseSchedule>
  */
 class CourseScheduleFactory extends Factory
 {

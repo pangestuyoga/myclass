@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Enums\NotifStyle;
 use App\Enums\Sex;
 use App\Filament\Support\SystemNotification;
+use App\Models\User;
 use Carbon\Carbon;
 use Filament\Auth\Pages\EditProfile;
 use Filament\Forms\Components\DatePicker;
@@ -308,7 +309,7 @@ class Profile extends EditProfile
 
         $record->update($data);
 
-        /** @var \App\Models\User $record */
+        /** @var User $record */
         if ($studentData && $record->student()->exists()) {
             $record->student->update($studentData);
         } elseif ($studentData) {

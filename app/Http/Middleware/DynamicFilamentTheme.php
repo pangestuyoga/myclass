@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use Filament\Facades\Filament;
 use Filament\Support\Colors\Color;
@@ -21,7 +22,7 @@ class DynamicFilamentTheme
      */
     public function handle(Request $request, Closure $next): Response
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Filament::auth()->user();
 
         if ($user && $user->settings) {

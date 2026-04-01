@@ -7,6 +7,7 @@ use App\Models\Student;
 use App\Models\StudyGroup;
 use App\Models\User;
 use App\Settings\GeneralSettings;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Livewire\Livewire;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -67,7 +68,7 @@ describe('Study Group Model', function () {
 
         expect($group->leader)->toBeInstanceOf(Student::class);
         expect($group->courses()->count())->toBe(1);
-        expect($group->students())->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class);
+        expect($group->students())->toBeInstanceOf(BelongsToMany::class);
 
         $group->delete();
         expect($group->refresh()->trashed())->toBeTrue();
