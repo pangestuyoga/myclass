@@ -87,7 +87,7 @@ class SubmissionDetailPage extends Page
                     'secondary_info' => $student->student_number,
                     'submission_id' => $submission?->id,
                     'submitted' => $isSubmitted,
-                    'submitted_at_formatted' => $isSubmitted ? $submission->submitted_at?->translatedFormat('l, d F Y, H:i') : '-',
+                    'submitted_at_formatted' => $isSubmitted ? $submission->submitted_at?->translatedFormat('l, d F Y H:i') : '-',
                     'has_file' => $isSubmitted && $submission->hasMedia('submission'),
                     'status_classes' => Arr::toCssClasses([
                         'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium',
@@ -116,7 +116,7 @@ class SubmissionDetailPage extends Page
                     'secondary_info' => $isSubmitted ? $submission->student->full_name : '-',
                     'submission_id' => $submission?->id,
                     'submitted' => $isSubmitted,
-                    'submitted_at_formatted' => $isSubmitted ? $submission->submitted_at?->translatedFormat('l, d F Y, H:i') : '-',
+                    'submitted_at_formatted' => $isSubmitted ? $submission->submitted_at?->translatedFormat('l, d F Y H:i') : '-',
                     'has_file' => $isSubmitted && $submission->hasMedia('submission'),
                     'status_classes' => Arr::toCssClasses([
                         'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium',
@@ -161,7 +161,7 @@ class SubmissionDetailPage extends Page
         return [
             'title' => $this->record->title,
             'course' => $this->record->course?->name ?? '-',
-            'due_date' => $this->record->due_date?->translatedFormat('l, d F Y, H:i'),
+            'due_date' => $this->record->due_date?->translatedFormat('l, d F Y H:i'),
             'type' => $this->record->type->value,
             'is_overdue' => $this->isOverdue,
         ];

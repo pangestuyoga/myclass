@@ -37,7 +37,7 @@ class SubmitAssignmentPage extends Page
         return [
             [
                 'label' => 'Batas Waktu',
-                'value' => $this->record->due_date?->translatedFormat('l, d F Y, H:i'),
+                'value' => $this->record->due_date?->translatedFormat('l, d F Y H:i'),
                 'icon' => 'heroicon-o-clock',
                 'is_danger' => $this->isOverdue,
                 'badge' => $this->isOverdue ? '(Terlewat)' : null,
