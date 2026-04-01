@@ -3,9 +3,12 @@
 use App\Enums\RoleEnum;
 use App\Filament\Resources\Learning\ClassSessions\Pages\ListCourseSessions;
 use App\Filament\Resources\Learning\ClassSessions\Pages\ManageClassSessions;
+use App\Models\Assignment;
+use App\Models\AssignmentSubmission;
 use App\Models\ClassSession;
 use App\Models\Course;
 use App\Models\CourseSchedule;
+use App\Models\Student;
 use App\Models\User;
 use App\Settings\GeneralSettings;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -172,6 +175,28 @@ describe('Class Session Special Features', function () {
             ->assertActionVisible('viewAttendance')
             ->assertActionVisible('viewMaterials')
             ->assertActionVisible('viewAssignments');
+    });
+
+    it('shows student submissions in the assignment modal', function () {
+        $course = Course::factory()->create(['semester' => $this->currentSemester]);
+        $session = ClassSession::factory()->create(['course_id' => $course->id]);
+        $assignment = Assignment::factory()->create([
+            'title' => 'Test Assignment Label',
+            'class_session_id' => $session->id,
+            'course_id' => $course->id,
+        ]);
+
+        $student = Student::factory()->create(['full_name' => 'John Doe', 'student_number' => '1234567890']);
+        AssignmentSubmission::factory()->create([
+            'assignment_id' => $assignment->id,
+            'student_id' => $student->id,
+            'submitted_at' => now(),
+        ]);
+
+        Livewire::test(ListCourseSessions::class, ['courseId' => $course->id])
+            ->mountAction('viewAssignments', ['session' => $session->id])
+            ->assertActionMounted('viewAssignments')
+            ->assertSuccessful();
     });
 });
 

@@ -212,13 +212,20 @@ class ListCourseSessions extends Page implements HasActions, HasForms
             ->modalWidth(Width::TwoExtraLarge)
             ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.assignments-modal', [
                 'assignments' => ClassSession::find($arguments['session'] ?? null, ['*'])?->assignments()
+                    ->with(['assignmentSubmissions.student'])
                     ->latest()
                     ->get()
                     ->map(fn ($a) => (object) [
                         'id' => $a->id,
                         'title' => $a->title,
                         'type_label' => $a->type?->getLabel() ?? 'Tugas',
-                        'due_date_formatted' => $a->due_date?->translatedFormat('d F Y, H:i') ?? '-',
+                        'due_date_formatted' => $a->due_date?->translatedFormat('d F Y H:i') ?? '-',
+                        'submissions' => $a->assignmentSubmissions->map(fn ($s) => (object) [
+                            'student_name' => $s->student->full_name,
+                            'student_number' => $s->student->student_number,
+                            'submitted_at_formatted' => $s->submitted_at?->translatedFormat('d F Y H:i') ?? '-',
+                            'id' => $s->id,
+                        ]),
                     ]) ?? collect(),
             ]));
     }
