@@ -12,8 +12,10 @@ use App\Filament\Resources\Learning\Assignments\AssignmentResource;
 use App\Filament\Support\SystemNotification;
 use App\Models\Assignment;
 use App\Models\AssignmentPin;
+use App\Models\Course;
 use App\Settings\GeneralSettings;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\Page;
 use Filament\Schemas\Schema;
@@ -26,6 +28,9 @@ class ListAssignments extends Page
 {
     #[Url]
     public ?string $search = '';
+
+    #[Url]
+    public ?int $course_id = null;
 
     protected static string $resource = AssignmentResource::class;
 
@@ -42,7 +47,10 @@ class ListAssignments extends Page
 
     public function mount(): void
     {
-        $this->form->fill();
+        $this->form->fill([
+            'search' => $this->search,
+            'course_id' => $this->course_id,
+        ]);
     }
 
     public function form(Schema $schema): Schema
@@ -51,13 +59,27 @@ class ListAssignments extends Page
             ->schema([
                 TextInput::make('search')
                     ->label('Cari')
-                    ->placeholder('Cari Judul Tugas atau Mata Kuliah...')
+                    ->placeholder('Cari Judul Tugas...')
                     ->autocomplete(false)
                     ->live(debounce: 500)
                     ->afterStateUpdated(fn ($state) => $this->search = $state),
+
+                Select::make('course_id')
+                    ->label('Mata Kuliah')
+                    ->placeholder('Semua Mata Kuliah')
+                    ->options(function () {
+                        return Course::query()
+                            ->where('semester', app(GeneralSettings::class)->current_semester)
+                            ->whereHas('courseSchedules')
+                            ->pluck('name', 'id')
+                            ->toArray();
+                    })
+                    ->searchable()
+                    ->live()
+                    ->afterStateUpdated(fn ($state) => $this->course_id = $state),
             ])
             ->columns([
-                'sm' => 1,
+                'sm' => 2,
             ]);
     }
 
@@ -112,6 +134,15 @@ class ListAssignments extends Page
                 ->whereHas('course', function ($q) {
                     $q->where('semester', app(GeneralSettings::class)->current_semester);
                 })
+                ->when($this->search, function ($query) {
+                    $query->where(function ($q) {
+                        $q->where('title', 'like', "%{$this->search}%")
+                            ->orWhereHas('course', fn ($cq) => $cq->where('name', 'like', "%{$this->search}%"));
+                    });
+                })
+                ->when($this->course_id, function ($query) {
+                    $query->where('course_id', $this->course_id);
+                })
                 ->get();
         }
 
@@ -133,6 +164,9 @@ class ListAssignments extends Page
                     $q->where('title', 'like', "%{$this->search}%")
                         ->orWhereHas('course', fn ($cq) => $cq->where('name', 'like', "%{$this->search}%"));
                 });
+            })
+            ->when($this->course_id, function ($query) {
+                $query->where('course_id', $this->course_id);
             })
             ->get();
 

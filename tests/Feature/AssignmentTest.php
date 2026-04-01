@@ -298,6 +298,30 @@ describe('Assignment Search', function () {
             ->assertDontSee('Tugas Wajib')
             ->assertSee('Hore, Belum Ada Tugas!');
     });
+
+    it('can filter assignments by course', function () {
+        $course1 = Course::factory()->create(['name' => 'Matematika', 'semester' => $this->currentSemester]);
+        $course2 = Course::factory()->create(['name' => 'Fisika', 'semester' => $this->currentSemester]);
+
+        $assignment1 = Assignment::factory()->create([
+            'title' => 'Tugas Mat',
+            'course_id' => $course1->id,
+            'due_date' => now()->addDays(1),
+        ]);
+        $assignment2 = Assignment::factory()->create([
+            'title' => 'Tugas Fis',
+            'course_id' => $course2->id,
+            'due_date' => now()->addDays(1),
+        ]);
+
+        $assignment1->students()->attach($this->studentProfile->id);
+        $assignment2->students()->attach($this->studentProfile->id);
+
+        Livewire::test(ListAssignments::class)
+            ->set('course_id', $course1->id)
+            ->assertSee('Tugas Mat')
+            ->assertDontSee('Tugas Fis');
+    });
 });
 
 describe('Assignment Sharing', function () {

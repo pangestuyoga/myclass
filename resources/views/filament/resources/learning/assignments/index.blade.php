@@ -1,20 +1,18 @@
 <x-filament-panels::page>
-    <x-filament::section 
-        icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-clipboard-document-list' : 'heroicon-o-briefcase' }}" 
-        icon-color="primary"
-    >
+    <x-filament::section
+        icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-clipboard-document-list' : 'heroicon-o-briefcase' }}"
+        icon-color="primary">
         <x-slot name="heading">{{ $this->heading }}</x-slot>
         <x-slot name="description">{{ $this->description }}</x-slot>
 
-         <div class="flex items-center justify-between gap-4 mb-6">
-            <div class="w-full max-w-xl">
+        <div class="flex items-center justify-between gap-4 mb-6">
+            <div class="w-full">
                 {{ $this->form }}
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             @forelse ($this->assignmentCards as $card)
-
                 <div class="{{ $card->card_classes }} flex-col">
 
                     <a href="{{ \App\Filament\Resources\Learning\Assignments\AssignmentResource::getUrl('submit', ['record' => $card->id]) }}"
@@ -73,13 +71,14 @@
 
                             <div class="flex flex-wrap gap-x-4 gap-y-2 mt-4 text-xs text-gray-500 dark:text-gray-400">
                                 <span class="flex items-center gap-1.5">
-                                    <x-filament::icon icon="heroicon-o-clock" class="h-4 w-4 shrink-0 text-primary-500" />
+                                    <x-filament::icon icon="heroicon-o-clock"
+                                        class="h-4 w-4 shrink-0 text-primary-500" />
                                     <span class="font-medium">Batas: {{ $card->due_date_formatted }}</span>
                                 </span>
                                 @if ($card->submitted_at_formatted)
-                                    <span class="flex items-center gap-1.5 text-success-600 dark:text-success-400 font-bold bg-success-50 dark:bg-success-900/25 px-2 py-0.5 rounded-lg">
-                                        <x-filament::icon icon="heroicon-o-arrow-up-tray"
-                                            class="h-4 w-4 shrink-0" />
+                                    <span
+                                        class="flex items-center gap-1.5 text-success-600 dark:text-success-400 font-bold bg-success-50 dark:bg-success-900/25 px-2 py-0.5 rounded-lg">
+                                        <x-filament::icon icon="heroicon-o-arrow-up-tray" class="h-4 w-4 shrink-0" />
                                         <span>Dikumpulkan: {{ $card->submitted_at_formatted }}</span>
                                     </span>
                                 @endif
@@ -88,7 +87,8 @@
                     </a>
 
 
-                    <div class="flex flex-wrap items-center gap-3 px-5 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/20">
+                    <div
+                        class="flex flex-wrap items-center gap-3 px-5 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/20">
                         {{ ($this->pinAction)(['record' => $card->id]) }}
                         {{ ($this->shareAssignmentAction)(['record' => $card->id]) }}
 
@@ -101,9 +101,9 @@
 
 
                 </div>
-           @empty
+            @empty
                 <div class="col-span-full">
-                    <x-filament::empty-state icon="heroicon-o-clipboard-document-list" 
+                    <x-filament::empty-state icon="heroicon-o-clipboard-document-list"
                         heading="{{ \App\Filament\Support\SystemNotification::getMessage('Hore, Belum Ada Tugas! 🎊✨', 'Tidak ada data yang ditemukan') }}"
                         description="{{ \App\Filament\Support\SystemNotification::getMessage('Belum ada tugas baru yang perlu dikerjakan. Hidup tenang tanpa beban tugas itu asik ya! 😊🌈', 'Belum ada tugas baru yang perlu dikerjakan untuk saat ini. Tetap semangat!') }}"
                         iconColor="gray">
