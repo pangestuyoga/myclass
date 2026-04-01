@@ -45,7 +45,7 @@
 
                                 <div class="flex items-center gap-1.5 font-bold text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/10 px-2 py-0.5 rounded-lg transition-colors cursor-pointer"
                                     wire:click="mountAction('viewAssignments', { session: {{ $session->id }} })">
-                                    <x-heroicon-o-pencil-square class="w-4 h-4 shrink-0" />
+                                    <x-heroicon-o-clipboard-document-list class="w-4 h-4 shrink-0" />
                                     {{ $session->assignments_count }} Tugas
                                 </div>
                             </div>

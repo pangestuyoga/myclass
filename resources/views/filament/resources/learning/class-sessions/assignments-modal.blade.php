@@ -5,7 +5,7 @@
                 class="flex items-center justify-between p-3 rounded-lg border border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-white/5 shadow-sm">
                 <div class="flex items-center gap-3">
                     <div class="p-2 rounded-lg bg-primary-100 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400">
-                        <x-heroicon-o-pencil-square class="w-5 h-5" />
+                        <x-heroicon-o-clipboard-document-list class="w-5 h-5" />
                     </div>
                     <div class="flex flex-col">
                         <span

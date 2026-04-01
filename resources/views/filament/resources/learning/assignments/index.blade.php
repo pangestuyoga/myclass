@@ -1,6 +1,6 @@
 <x-filament-panels::page>
     <x-filament::section 
-        icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-pencil-square' : 'heroicon-o-briefcase' }}" 
+        icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-clipboard-document-list' : 'heroicon-o-briefcase' }}" 
         icon-color="primary"
     >
         <x-slot name="heading">{{ $this->heading }}</x-slot>
