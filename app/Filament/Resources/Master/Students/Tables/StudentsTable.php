@@ -67,11 +67,11 @@ class StudentsTable
                         $search = strtolower($search);
 
                         if (str_contains('laki-laki', $search)) {
-                            $query->orWhere('sex', 'male');
+                            $query->orWhere('sex', Sex::Male);
                         }
 
                         if (str_contains('perempuan', $search)) {
-                            $query->orWhere('sex', 'female');
+                            $query->orWhere('sex', Sex::Female);
                         }
                     }),
 
