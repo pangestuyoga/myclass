@@ -193,6 +193,14 @@ return [
                 'title' => 'Daftar Tugas Bikin Lemes! 🤣📒',
                 'description' => 'Yuk, cek dan kumpulin tugasmu biar tenang hidupnya! Klik aja di tugasnya ya. 🚀👨‍💻',
             ],
+            'changelog' => [
+                'title' => 'Catatan Rilis 📜✨',
+                'description' => 'Kepoin apa aja yang baru, fitur kece, dan perbaikan bug biar nggak kudet! 🚀🔥',
+            ],
+            'empty_changelog' => [
+                'title' => 'Belum Ada Catatan Rilis 📭',
+                'description' => 'Belum ada update yang tercatat nih. Buat mulai catat riwayat pembaruan pertama! 🚀',
+            ],
         ],
 
         // Icons
@@ -397,6 +405,14 @@ return [
             'assignment_list' => [
                 'title' => 'Tugas Saya',
                 'description' => 'Klik pada tugas untuk melihat detail dan mengumpulkan file.',
+            ],
+            'changelog' => [
+                'title' => 'Catatan Rilis',
+                'description' => 'Lihat riwayat perbaikan bug, pembaruan aplikasi, dan rilis fitur terbaru secara mendalam.',
+            ],
+            'empty_changelog' => [
+                'title' => 'Tidak Ada Riwayat Pembaruan',
+                'description' => 'Belum ada catatan rilis yang tersedia. Buat untuk mendokumentasikan pembaruan aplikasi.',
             ],
         ],
 
