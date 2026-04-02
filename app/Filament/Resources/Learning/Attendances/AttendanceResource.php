@@ -20,8 +20,6 @@ class AttendanceResource extends Resource
 
     protected static ?int $navigationSort = 20;
 
-    protected static ?string $recordTitleAttribute = 'date';
-
     protected static ?string $slug = 'learning/attendances';
 
     public static function getPages(): array

@@ -26,8 +26,6 @@ class StudentResource extends Resource
 
     protected static ?int $navigationSort = 5;
 
-    protected static ?string $recordTitleAttribute = 'full_name';
-
     protected static ?string $slug = 'master/students';
 
     public static function form(Schema $schema): Schema

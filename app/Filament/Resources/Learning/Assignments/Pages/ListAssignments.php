@@ -38,8 +38,6 @@ class ListAssignments extends Page
 
     protected static ?string $title = 'Tugas';
 
-    protected static ?string $recordTitleAttribute = 'title';
-
     public static function getPagePermission(): string
     {
         return 'View:CourseSchedule';

@@ -25,8 +25,6 @@ class ClassSessionResource extends Resource
 
     protected static ?int $navigationSort = 5;
 
-    protected static ?string $recordTitleAttribute = 'session_number';
-
     protected static ?string $slug = 'learning/class-sessions';
 
     public static function getRelations(): array

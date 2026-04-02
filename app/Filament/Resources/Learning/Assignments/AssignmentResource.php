@@ -58,8 +58,6 @@ class AssignmentResource extends Resource
 
     protected static ?int $navigationSort = 15;
 
-    protected static ?string $recordTitleAttribute = 'title';
-
     protected static ?string $slug = 'learning/assignments';
 
     public static function form(Schema $schema): Schema

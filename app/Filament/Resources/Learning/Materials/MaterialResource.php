@@ -48,8 +48,6 @@ class MaterialResource extends Resource
 
     protected static ?int $navigationSort = 10;
 
-    protected static ?string $recordTitleAttribute = 'title';
-
     protected static ?string $slug = 'learning/materials';
 
     public static function form(Schema $schema): Schema

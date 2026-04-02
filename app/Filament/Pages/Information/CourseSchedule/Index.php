@@ -40,8 +40,6 @@ class Index extends Page implements HasActions, HasForms
 
     protected static ?int $navigationSort = 5;
 
-    protected static ?string $recordTitleAttribute = 'day_of_week';
-
     protected static ?string $slug = 'information/course-schedules';
 
     protected string $view = 'filament.pages.information.course-schedule.index';

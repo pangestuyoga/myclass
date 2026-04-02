@@ -37,8 +37,6 @@ class CourseResource extends Resource
 
     protected static ?int $navigationSort = 10;
 
-    protected static ?string $recordTitleAttribute = 'name';
-
     protected static ?string $slug = 'master/courses';
 
     public static function form(Schema $schema): Schema
