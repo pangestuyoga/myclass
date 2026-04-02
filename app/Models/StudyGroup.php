@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,14 +12,27 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class StudyGroup extends Model
 {
+    // --- Traits ---
+
     use HasFactory, SoftDeletes;
+
+    // --- Properties ---
 
     protected $guarded = ['id'];
 
-    public function isLeader(Student $student): bool
+    // --- Accessors & Mutators ---
+
+    protected function formattedCreatedAt(): Attribute
     {
-        return $this->leader_id === $student->id;
+        return Attribute::get(fn () => $this->created_at->translatedFormat('l, d M Y H:i'));
     }
+
+    protected function formattedUpdatedAt(): Attribute
+    {
+        return Attribute::get(fn () => $this->updated_at?->translatedFormat('l, d M Y H:i'));
+    }
+
+    // --- Relations ---
 
     public function assignmentSubmissions(): HasMany
     {
@@ -58,6 +72,13 @@ class StudyGroup extends Model
     public function students(): BelongsToMany
     {
         return $this->belongsToMany(Student::class, 'study_group_members');
+    }
+
+    // --- Methods ---
+
+    public function isLeader(Student $student): bool
+    {
+        return $this->leader_id === $student->id;
     }
 
     public static function getBusyStudentIdsForCourses(array $courseIds, ?int $excludeGroupId = null): array

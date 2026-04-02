@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\AssignmentType;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,9 +15,15 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Assignment extends Model implements HasMedia
 {
+    // --- Traits ---
+
     use HasFactory, InteractsWithMedia, SoftDeletes;
 
+    // --- Properties ---
+
     protected $guarded = ['id'];
+
+    // --- Casts ---
 
     protected function casts(): array
     {
@@ -25,6 +32,25 @@ class Assignment extends Model implements HasMedia
             'type' => AssignmentType::class,
         ];
     }
+
+    // --- Accessors & Mutators ---
+
+    protected function formattedDueDate(): Attribute
+    {
+        return Attribute::get(fn () => $this->due_date?->translatedFormat('l, d M Y H:i'));
+    }
+
+    protected function formattedCreatedAt(): Attribute
+    {
+        return Attribute::get(fn () => $this->created_at->translatedFormat('l, d M Y H:i'));
+    }
+
+    protected function formattedUpdatedAt(): Attribute
+    {
+        return Attribute::get(fn () => $this->updated_at?->translatedFormat('l, d M Y H:i'));
+    }
+
+    // --- Relations ---
 
     public function assignmentPins(): HasMany
     {

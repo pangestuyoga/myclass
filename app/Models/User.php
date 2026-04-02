@@ -20,14 +20,20 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser
 {
+    // --- Traits ---
+
     /** @use HasFactory<UserFactory> */
     use HasFacehashAvatar, HasFactory, HasRoles, Notifiable, SoftDeletes;
+
+    // --- Properties ---
 
     protected $guarded = ['id'];
 
     protected $hidden = [
         'password',
     ];
+
+    // --- Casts ---
 
     protected function casts(): array
     {
@@ -36,6 +42,8 @@ class User extends Authenticatable implements FilamentUser
             'password' => 'hashed',
         ];
     }
+
+    // --- Scopes ---
 
     #[Scope]
     protected function active(Builder $query): void
@@ -49,10 +57,7 @@ class User extends Authenticatable implements FilamentUser
         $query->where('is_active', IsActive::Inactive);
     }
 
-    public function canAccessPanel(Panel $panel): bool
-    {
-        return $this->is_active === IsActive::Active;
-    }
+    // --- Accessors & Mutators ---
 
     protected function name(): Attribute
     {
@@ -61,20 +66,39 @@ class User extends Authenticatable implements FilamentUser
         );
     }
 
-    public function student(): HasOne
+    protected function formattedCreatedAt(): Attribute
     {
-        return $this->hasOne(Student::class);
+        return Attribute::get(fn () => $this->created_at->translatedFormat('l, d M Y H:i'));
     }
+
+    protected function formattedUpdatedAt(): Attribute
+    {
+        return Attribute::get(fn () => $this->updated_at?->translatedFormat('l, d M Y H:i'));
+    }
+
+    // --- Relations ---
 
     public function settings(): HasOne
     {
         return $this->hasOne(UserSetting::class)->withDefault([
             'notif_style' => NotifStyle::Cheerful,
-            'primary_color' => 'amber', // Cheerful yellow
+            'primary_color' => 'amber',
             'font' => 'Inter',
             'content_width' => 'full',
             'border_radius' => 'lg',
             'top_navigation' => false,
         ]);
+    }
+
+    public function student(): HasOne
+    {
+        return $this->hasOne(Student::class);
+    }
+
+    // --- Methods ---
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->is_active === IsActive::Active;
     }
 }

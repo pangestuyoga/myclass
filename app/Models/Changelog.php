@@ -10,7 +10,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Changelog extends Model
 {
+    // --- Traits ---
+
     use HasFactory, SoftDeletes;
+
+    // --- Properties ---
 
     protected $fillable = [
         'version',
@@ -21,24 +25,33 @@ class Changelog extends Model
         'description',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
+    // --- Casts ---
+
     protected $casts = [
-        'release_date' => 'date',
         'changes' => 'array',
+        'release_date' => 'date',
         'type' => ChangelogType::class,
     ];
 
-    public function formattedVersion(): Attribute
+    // --- Accessors & Mutators ---
+
+    protected function formattedVersion(): Attribute
     {
         return Attribute::get(fn () => strtoupper($this->version));
     }
 
-    public function formattedReleaseDate(): Attribute
+    protected function formattedReleaseDate(): Attribute
     {
         return Attribute::get(fn () => $this->release_date->translatedFormat('l, d M Y'));
+    }
+
+    protected function formattedCreatedAt(): Attribute
+    {
+        return Attribute::get(fn () => $this->created_at->translatedFormat('l, d M Y H:i'));
+    }
+
+    protected function formattedUpdatedAt(): Attribute
+    {
+        return Attribute::get(fn () => $this->updated_at?->translatedFormat('l, d M Y H:i'));
     }
 }

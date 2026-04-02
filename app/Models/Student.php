@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Sex;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,9 +15,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Student extends Model
 {
+    // --- Traits ---
+
     use HasFactory, SoftDeletes;
 
+    // --- Properties ---
+
     protected $guarded = ['id'];
+
+    // --- Casts ---
 
     protected function casts(): array
     {
@@ -25,6 +32,8 @@ class Student extends Model
             'sex' => Sex::class,
         ];
     }
+
+    // --- Scopes ---
 
     #[Scope]
     protected function male(Builder $query): void
@@ -37,6 +46,25 @@ class Student extends Model
     {
         $query->where('sex', Sex::Female);
     }
+
+    // --- Accessors & Mutators ---
+
+    protected function formattedDateOfBirth(): Attribute
+    {
+        return Attribute::get(fn () => $this->date_of_birth?->translatedFormat('l, d M Y'));
+    }
+
+    protected function formattedCreatedAt(): Attribute
+    {
+        return Attribute::get(fn () => $this->created_at->translatedFormat('l, d M Y H:i'));
+    }
+
+    protected function formattedUpdatedAt(): Attribute
+    {
+        return Attribute::get(fn () => $this->updated_at?->translatedFormat('l, d M Y H:i'));
+    }
+
+    // --- Relations ---
 
     public function assignmentPins(): HasMany
     {
