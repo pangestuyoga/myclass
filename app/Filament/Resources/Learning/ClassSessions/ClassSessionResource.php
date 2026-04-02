@@ -4,13 +4,11 @@ namespace App\Filament\Resources\Learning\ClassSessions;
 
 use App\Filament\Resources\Learning\ClassSessions\Pages\ListCourseSessions;
 use App\Filament\Resources\Learning\ClassSessions\Pages\ManageClassSessions;
-use App\Filament\Resources\Learning\ClassSessions\RelationManagers\AttendanceRelationManager;
 use App\Models\ClassSession;
 use App\Settings\GeneralSettings;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use UnitEnum;
 
 class ClassSessionResource extends Resource
@@ -27,13 +25,6 @@ class ClassSessionResource extends Resource
 
     protected static ?string $slug = 'learning/class-sessions';
 
-    public static function getRelations(): array
-    {
-        return [
-            AttendanceRelationManager::class,
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
@@ -48,13 +39,5 @@ class ClassSessionResource extends Resource
             ->whereHas('course', function (Builder $query) {
                 $query->where('semester', app(GeneralSettings::class)->current_semester);
             });
-    }
-
-    public static function getRecordRouteBindingEloquentQuery(): Builder
-    {
-        return parent::getRecordRouteBindingEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
     }
 }

@@ -33,7 +33,6 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use UnitEnum;
 
 class MaterialResource extends Resource
@@ -218,13 +217,5 @@ class MaterialResource extends Resource
             ->whereHas('course', function (Builder $query) {
                 $query->where('semester', app(GeneralSettings::class)->current_semester);
             });
-    }
-
-    public static function getRecordRouteBindingEloquentQuery(): Builder
-    {
-        return parent::getRecordRouteBindingEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
     }
 }
