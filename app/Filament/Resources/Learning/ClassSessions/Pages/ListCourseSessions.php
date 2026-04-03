@@ -7,23 +7,20 @@ use App\Filament\Resources\Learning\ClassSessions\Actions\DeleteSessionAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\EditSessionAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\GenerateSessionsAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\ShareAttendanceAction;
+use App\Filament\Resources\Learning\ClassSessions\Actions\ViewAssignmentsAction;
+use App\Filament\Resources\Learning\ClassSessions\Actions\ViewAttendanceAction;
+use App\Filament\Resources\Learning\ClassSessions\Actions\ViewMaterialsAction;
 use App\Filament\Resources\Learning\ClassSessions\ClassSessionResource;
-use App\Models\ClassSession;
+use App\Filament\Resources\Learning\ClassSessions\Schemas\SessionForm;
+use App\Filament\Support\SystemNotification;
 use App\Models\Course;
-use App\Models\Material;
 use App\Models\Student;
-use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Pages\Page;
-use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
-use Filament\Support\Enums\Width;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
 
@@ -35,17 +32,11 @@ class ListCourseSessions extends Page implements HasActions, HasForms
 
     protected string $view = 'filament.resources.learning.class-sessions.show';
 
-    public $courseId;
+    public Course $course;
 
-    public function mount($courseId): void
+    public function mount(Course $course): void
     {
-        $this->courseId = $courseId;
-    }
-
-    #[Computed]
-    public function course(): Course
-    {
-        return Course::findOrFail($this->courseId);
+        $this->course = $course;
     }
 
     #[Computed]
@@ -74,44 +65,7 @@ class ListCourseSessions extends Page implements HasActions, HasForms
 
     public function form(Schema $schema): Schema
     {
-        return $schema
-            ->schema([
-                Grid::make(['default' => 2])
-                    ->schema([
-                        TextInput::make('session_number')
-                            ->label('Pertemuan Ke-')
-                            ->placeholder('1')
-                            ->numeric()
-                            ->required()
-                            ->minValue(1)
-                            ->maxValue(16)
-                            ->autocomplete(false),
-
-                        DatePicker::make('date')
-                            ->label('Tanggal')
-                            ->placeholder('Pilih Tanggal')
-                            ->required()
-                            ->native(false)
-                            ->displayFormat('l, d F Y')
-                            ->default(now()->toDateString()),
-
-                        TimePicker::make('start_time')
-                            ->label('Waktu Mulai')
-                            ->placeholder('08:00')
-                            ->native(false)
-                            ->displayFormat('H:i')
-                            ->seconds(false)
-                            ->required(),
-
-                        TimePicker::make('end_time')
-                            ->label('Waktu Selesai')
-                            ->placeholder('10:00')
-                            ->native(false)
-                            ->displayFormat('H:i')
-                            ->seconds(false)
-                            ->required(),
-                    ]),
-            ]);
+        return SessionForm::configure($schema);
     }
 
     #[Computed]
@@ -135,114 +89,51 @@ class ListCourseSessions extends Page implements HasActions, HasForms
         ];
     }
 
-    protected function getActions(): array
+    public function viewAttendanceAction(): ViewAttendanceAction
     {
-        return [
-            $this->shareAttendanceAction(),
-            $this->viewAttendanceAction(),
-            $this->viewMaterialsAction(),
-            $this->viewAssignmentsAction(),
-            $this->editSessionAction(),
-            $this->deleteSessionAction(),
-            $this->viewMaterialDetailAction(),
-        ];
+        return ViewAttendanceAction::make();
     }
 
-    public function shareAttendanceAction(): Action
+    public function viewMaterialsAction(): ViewMaterialsAction
+    {
+        return ViewMaterialsAction::make();
+    }
+
+    public function viewAssignmentsAction(): ViewAssignmentsAction
+    {
+        return ViewAssignmentsAction::make();
+    }
+
+    public function shareAttendanceAction(): ShareAttendanceAction
     {
         return ShareAttendanceAction::make();
     }
 
-    public function viewAttendanceAction(): Action
-    {
-        return Action::make('viewAttendance')
-            ->label('Presensi')
-            ->color('success')
-            ->icon('heroicon-o-check-circle')
-            ->link()
-            ->modalHeading('Daftar Presensi')
-            ->modalSubmitAction(false)
-            ->modalCancelActionLabel('Tutup')
-            ->modalWidth(Width::TwoExtraLarge)
-            ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.attendance-modal', [
-                'attendances' => ClassSession::find($arguments['session'] ?? null, ['*'])?->attendances()->with('student')->latest('attended_at')->get() ?? collect(),
-            ]));
-    }
-
-    public function viewMaterialsAction(): Action
-    {
-        return Action::make('viewMaterials')
-            ->label('Materi')
-            ->color('purple')
-            ->icon('heroicon-o-book-open')
-            ->link()
-            ->modalHeading('Materi Sesi')
-            ->modalSubmitAction(false)
-            ->modalCancelActionLabel('Tutup')
-            ->modalWidth(Width::TwoExtraLarge)
-            ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.materials-modal', [
-                'materials' => ClassSession::find($arguments['session'] ?? null, ['*'])?->materials()
-                    ->latest()
-                    ->get()
-                    ->map(fn ($m) => (object) [
-                        'id' => $m->id,
-                        'title' => $m->title,
-                        'created_at_formatted' => $m->created_at?->translatedFormat('d F Y') ?? '-',
-                    ]) ?? collect(),
-            ]));
-    }
-
-    public function viewAssignmentsAction(): Action
-    {
-        return Action::make('viewAssignments')
-            ->label('Tugas')
-            ->color('sky')
-            ->icon('heroicon-o-clipboard-document-list')
-            ->link()
-            ->modalHeading('Tugas Sesi')
-            ->modalSubmitAction(false)
-            ->modalCancelActionLabel('Tutup')
-            ->modalWidth(Width::TwoExtraLarge)
-            ->modalContent(fn (array $arguments) => view('filament.resources.learning.class-sessions.assignments-modal', [
-                'assignments' => ClassSession::find($arguments['session'] ?? null, ['*'])?->assignments()
-                    ->with(['assignmentSubmissions.student'])
-                    ->latest()
-                    ->get()
-                    ->map(fn ($a) => (object) [
-                        'id' => $a->id,
-                        'title' => $a->title,
-                        'type_label' => $a->type?->getLabel() ?? 'Tugas',
-                        'due_date_formatted' => $a->due_date?->translatedFormat('d F Y H:i') ?? '-',
-                        'submissions' => $a->assignmentSubmissions->map(fn ($s) => (object) [
-                            'student_name' => $s->student->full_name,
-                            'student_number' => $s->student->student_number,
-                            'submitted_at_formatted' => $s->submitted_at?->translatedFormat('d F Y H:i') ?? '-',
-                            'id' => $s->id,
-                        ]),
-                    ]) ?? collect(),
-            ]));
-    }
-
-    public function editSessionAction(): Action
+    public function editSessionAction(): EditSessionAction
     {
         return EditSessionAction::make();
     }
 
-    public function deleteSessionAction(): Action
+    public function deleteSessionAction(): DeleteSessionAction
     {
         return DeleteSessionAction::make();
     }
 
-    public function viewMaterialDetailAction(): Action
+    #[Computed]
+    public function emptyStateHeading(): string
     {
-        return Action::make('viewMaterialDetail')
-            ->record(fn (array $arguments) => Material::find($arguments['record'] ?? null, ['*']))
-            ->modalHeading('Detail Materi')
-            ->modalSubmitAction(false)
-            ->modalCancelActionLabel('Tutup')
-            ->modalWidth(Width::FourExtraLarge)
-            ->modalContent(fn (?Material $record) => $record ? view('filament.resources.learning.class-sessions.material-detail-modal', [
-                'record' => $record,
-            ]) : null);
+        return SystemNotification::getByKey('labels.empty_course_sessions.title');
+    }
+
+    #[Computed]
+    public function emptyStateDescription(): string
+    {
+        return SystemNotification::getByKey('labels.empty_course_sessions.description');
+    }
+
+    #[Computed]
+    public function emptyStateIcon(): string
+    {
+        return SystemNotification::getByKey('icons.empty_course_sessions');
     }
 }

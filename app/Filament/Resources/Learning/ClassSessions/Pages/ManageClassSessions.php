@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Learning\ClassSessions\Pages;
 
 use App\Filament\Resources\Learning\ClassSessions\ClassSessionResource;
+use App\Filament\Support\SystemNotification;
 use App\Models\ClassSession;
 use App\Models\Course;
 use App\Models\Student;
@@ -84,7 +85,7 @@ class ManageClassSessions extends Page implements HasActions, HasForms
                     'attendance_percentage' => $percentage,
                     'materials_count' => $session->materials_count,
                     'assignments_count' => $session->assignments_count,
-                    'url' => ClassSessionResource::getUrl('course', ['courseId' => $session->course_id]),
+                    'url' => ClassSessionResource::getUrl('course', ['course' => $session->course]),
 
                     // Pre-calculated classes
                     'card_classes' => 'group flex w-full rounded-xl border border-primary-300 dark:border-primary-700 bg-primary-50/30 dark:bg-primary-900/10 shadow-sm overflow-hidden relative transition-all hover:shadow-md',
@@ -125,8 +126,80 @@ class ManageClassSessions extends Page implements HasActions, HasForms
                     'lecturer' => $course->lecturer ?? 'Dosen Belum Ditentukan',
                     'sessions_count' => $course->classSessions->count(),
                     'total_students' => $totalActiveStudents,
-                    'url' => ClassSessionResource::getUrl('course', ['courseId' => $course->id]),
+                    'url' => ClassSessionResource::getUrl('course', ['course' => $course]),
                 ];
             });
+    }
+
+    #[Computed]
+    public function sessionsHeading(): string
+    {
+        return SystemNotification::getByKey('labels.today_sessions.title');
+    }
+
+    #[Computed]
+    public function sessionsDescription(): string
+    {
+        return SystemNotification::getByKey('labels.today_sessions.description', ['date' => $this->todayDate]);
+    }
+
+    #[Computed]
+    public function coursesHeading(): string
+    {
+        return SystemNotification::getByKey('labels.semester_courses.title');
+    }
+
+    #[Computed]
+    public function coursesDescription(): string
+    {
+        return SystemNotification::getByKey('labels.semester_courses.description');
+    }
+
+    #[Computed]
+    public function sessionsIcon(): string
+    {
+        return SystemNotification::getByKey('icons.today_sessions');
+    }
+
+    #[Computed]
+    public function coursesIcon(): string
+    {
+        return SystemNotification::getByKey('icons.semester_courses');
+    }
+
+    #[Computed]
+    public function sessionsEmptyHeading(): string
+    {
+        return SystemNotification::getByKey('labels.empty_today_sessions.title');
+    }
+
+    #[Computed]
+    public function sessionsEmptyDescription(): string
+    {
+        return SystemNotification::getByKey('labels.empty_today_sessions.description');
+    }
+
+    #[Computed]
+    public function sessionsEmptyIcon(): string
+    {
+        return SystemNotification::getByKey('icons.empty_today_sessions');
+    }
+
+    #[Computed]
+    public function coursesEmptyHeading(): string
+    {
+        return SystemNotification::getByKey('labels.empty_semester_courses.title');
+    }
+
+    #[Computed]
+    public function coursesEmptyDescription(): string
+    {
+        return SystemNotification::getByKey('labels.empty_semester_courses.description');
+    }
+
+    #[Computed]
+    public function coursesEmptyIcon(): string
+    {
+        return SystemNotification::getByKey('icons.empty_semester_courses');
     }
 }

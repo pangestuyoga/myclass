@@ -3,6 +3,7 @@
 use App\Enums\RoleEnum;
 use App\Filament\Resources\Learning\ClassSessions\Pages\ListCourseSessions;
 use App\Filament\Resources\Learning\ClassSessions\Pages\ManageClassSessions;
+use App\Filament\Support\SystemNotification;
 use App\Models\Assignment;
 use App\Models\AssignmentSubmission;
 use App\Models\ClassSession;
@@ -65,15 +66,15 @@ describe('Class Session Authorization', function () {
 
         // Check actions on ListCourseSessions page
         $this->actingAs($developer);
-        Livewire::test(ListCourseSessions::class, ['courseId' => $course->id])
+        Livewire::test(ListCourseSessions::class, ['course' => $course])
             ->assertActionVisible('generateSessions');
 
         $this->actingAs($kosma);
-        Livewire::test(ListCourseSessions::class, ['courseId' => $course->id])
+        Livewire::test(ListCourseSessions::class, ['course' => $course])
             ->assertActionVisible('generateSessions');
 
         $this->actingAs($regularStudent);
-        Livewire::test(ListCourseSessions::class, ['courseId' => $course->id])
+        Livewire::test(ListCourseSessions::class, ['course' => $course])
             ->assertActionHidden('generateSessions');
     });
 });
@@ -116,7 +117,7 @@ describe('Class Session Special Features', function () {
             'end_time' => '10:00',
         ]);
 
-        Livewire::test(ListCourseSessions::class, ['courseId' => $course->id])
+        Livewire::test(ListCourseSessions::class, ['course' => $course])
             ->callAction('generateSessions', [
                 'total_sessions' => 2,
                 'start_date' => now()->toDateString(),
@@ -137,7 +138,7 @@ describe('Class Session Special Features', function () {
         $course = Course::factory()->create(['semester' => $this->currentSemester]);
         $session = ClassSession::factory()->create(['course_id' => $course->id, 'session_number' => 1]);
 
-        Livewire::test(ListCourseSessions::class, ['courseId' => $course->id])
+        Livewire::test(ListCourseSessions::class, ['course' => $course])
             ->callAction('editSession', [
                 'session_number' => 5,
                 'date' => now()->toDateString(),
@@ -153,7 +154,7 @@ describe('Class Session Special Features', function () {
         $course = Course::factory()->create(['semester' => $this->currentSemester]);
         $session = ClassSession::factory()->create(['course_id' => $course->id]);
 
-        Livewire::test(ListCourseSessions::class, ['courseId' => $course->id])
+        Livewire::test(ListCourseSessions::class, ['course' => $course])
             ->callAction('shareAttendance', [], ['session' => $session->id])
             ->assertHasNoActionErrors();
     });
@@ -162,7 +163,7 @@ describe('Class Session Special Features', function () {
         $course = Course::factory()->create(['semester' => $this->currentSemester]);
         $session = ClassSession::factory()->create(['course_id' => $course->id]);
 
-        Livewire::test(ListCourseSessions::class, ['courseId' => $course->id])
+        Livewire::test(ListCourseSessions::class, ['course' => $course])
             ->assertActionVisible('viewAttendance')
             ->assertActionVisible('viewMaterials')
             ->assertActionVisible('viewAssignments');
@@ -184,10 +185,45 @@ describe('Class Session Special Features', function () {
             'submitted_at' => now(),
         ]);
 
-        Livewire::test(ListCourseSessions::class, ['courseId' => $course->id])
+        Livewire::test(ListCourseSessions::class, ['course' => $course])
             ->mountAction('viewAssignments', ['session' => $session->id])
             ->assertActionMounted('viewAssignments')
             ->assertSuccessful();
+    });
+
+    it('can delete a session', function () {
+        $course = Course::factory()->create(['semester' => $this->currentSemester]);
+        $session = ClassSession::factory()->create(['course_id' => $course->id]);
+
+        Livewire::test(ListCourseSessions::class, ['course' => $course])
+            ->callAction('deleteSession', [], ['session' => $session->id])
+            ->assertHasNoActionErrors();
+
+        expect($session->refresh()->trashed())->toBeTrue();
+    });
+
+    it('shows attendance in the attendance modal', function () {
+        $course = Course::factory()->create(['semester' => $this->currentSemester]);
+        $session = ClassSession::factory()->create(['course_id' => $course->id]);
+
+        Livewire::test(ListCourseSessions::class, ['course' => $course])
+            ->mountAction('viewAttendance', ['session' => $session->id])
+            ->assertActionMounted('viewAttendance')
+            ->assertSuccessful();
+    });
+
+    it('displays dynamic empty states based on system notification style', function () {
+        $course = Course::factory()->create(['semester' => $this->currentSemester]);
+
+        // Test ManageClassSessions empty states
+        Livewire::test(ManageClassSessions::class)
+            ->assertSee(SystemNotification::getByKey('labels.empty_today_sessions.title'))
+            ->assertSee(SystemNotification::getByKey('labels.empty_today_sessions.description'));
+
+        // Test ListCourseSessions empty states
+        Livewire::test(ListCourseSessions::class, ['course' => $course])
+            ->assertSee(SystemNotification::getByKey('labels.empty_course_sessions.title'))
+            ->assertSee(SystemNotification::getByKey('labels.empty_course_sessions.description'));
     });
 });
 

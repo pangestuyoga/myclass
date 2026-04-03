@@ -6,11 +6,11 @@
     </x-filament::section>
 
     <x-filament::section 
-        icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-sparkles' : 'heroicon-o-bolt' }}" 
+        icon="{{ $this->sessionsIcon }}" 
         icon-color="primary"
     >
-        <x-slot name="heading">{{ \App\Filament\Support\SystemNotification::getMessage('Sesi Kelas Hari Ini ✨🚀', 'Sesi Hari Ini') }}</x-slot>
-        <x-slot name="description">{{ \App\Filament\Support\SystemNotification::getMessage('Daftar sesi seru yang udah dijadwalkan buat hari ini (' . $this->today_date . '). Semangat belajar! 💪', 'Sesi yang dijadwalkan pada ' . $this->today_date) }}</x-slot>
+        <x-slot name="heading">{{ $this->sessionsHeading }}</x-slot>
+        <x-slot name="description">{{ $this->sessionsDescription }}</x-slot>
 
         <div class="space-y-4">
             @forelse ($this->todaySessions as $session)
@@ -92,9 +92,9 @@
                     </div>
                 </a>
             @empty
-                <x-filament::empty-state icon="heroicon-o-calendar-days"
-                    heading="Tidak ada data yang ditemukan"
-                    description="Tidak ada sesi perkuliahan yang dijadwalkan untuk hari ini."
+                <x-filament::empty-state icon="{{ $this->sessionsEmptyIcon }}"
+                    heading="{{ $this->sessionsEmptyHeading }}"
+                    description="{{ $this->sessionsEmptyDescription }}"
                     iconColor="gray">
                 </x-filament::empty-state>
             @endforelse
@@ -102,11 +102,11 @@
     </x-filament::section>
 
     <x-filament::section 
-        icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-book-open' : 'heroicon-o-academic-cap' }}" 
+        icon="{{ $this->coursesIcon }}" 
         icon-color="gray"
     >
-        <x-slot name="heading">{{ \App\Filament\Support\SystemNotification::getMessage('Daftar Mata Kuliah Semester Ini 📚🎓', 'Daftar Mata Kuliah Semester Ini') }}</x-slot>
-        <x-slot name="description">{{ \App\Filament\Support\SystemNotification::getMessage('Pilih aja mata kuliahnya buat ngecek materi sama tugas-tugas seru lainnya! 🧐✨', 'Pilih mata kuliah untuk melihat dan mengelola semua riwayat sesi.') }}</x-slot>
+        <x-slot name="heading">{{ $this->coursesHeading }}</x-slot>
+        <x-slot name="description">{{ $this->coursesDescription }}</x-slot>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             @forelse ($this->courses as $course)
@@ -137,9 +137,9 @@
                 </a>
             @empty
                 <div class="col-span-full text-center">
-                    <x-filament::empty-state icon="heroicon-o-academic-cap"
-                        heading="Mata Kuliah Belum Terdaftar"
-                        description="Belum ada mata kuliah yang terdaftar untuk semester aktif ini."
+                    <x-filament::empty-state icon="{{ $this->coursesEmptyIcon }}"
+                        heading="{{ $this->coursesEmptyHeading }}"
+                        description="{{ $this->coursesEmptyDescription }}"
                         iconColor="gray">
                     </x-filament::empty-state>
                 </div>

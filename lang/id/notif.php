@@ -201,6 +201,26 @@ return [
                 'title' => 'Belum Ada Catatan Rilis 📭',
                 'description' => 'Belum ada update yang tercatat nih. Buat mulai catat riwayat pembaruan pertama! 🚀',
             ],
+            'today_sessions' => [
+                'title' => 'Sesi Kelas Hari Ini ✨🚀',
+                'description' => 'Daftar sesi seru yang udah dijadwalkan buat hari ini (:date). Semangat belajar! 💪',
+            ],
+            'semester_courses' => [
+                'title' => 'Daftar Mata Kuliah Semester Ini 📚🎓',
+                'description' => 'Pilih aja mata kuliahnya buat ngecek materi sama tugas-tugas seru lainnya! 🧐✨',
+            ],
+            'empty_course_sessions' => [
+                'title' => 'Duh, Belum Ada Sesi Kelas! 🏢🛌',
+                'description' => 'Belum ada sesi perkuliahan yang dibuat buat mata kuliah ini. Waktunya istirahat mungkin? 😴✨',
+            ],
+            'empty_today_sessions' => [
+                'title' => 'Yah, Gak Ada Kelas Hari Ini! 😴🏖️',
+                'description' => 'Hari ini kosong melompong. Kamu bisa rebahan sebentar atau kejar materi lain! ✨',
+            ],
+            'empty_semester_courses' => [
+                'title' => 'Belum Ada Mata Kuliah Nih! 📚😴',
+                'description' => 'Semester ini kayanya masih kosong. Coba hubungi admin kalau ada yang salah ya! ✨',
+            ],
         ],
 
         // Icons
@@ -212,6 +232,11 @@ return [
             'user_account' => 'heroicon-o-face-smile',
             'account_security' => 'heroicon-o-shield-check',
             'appearance_settings' => 'heroicon-o-swatch',
+            'today_sessions' => 'heroicon-o-sparkles',
+            'semester_courses' => 'heroicon-o-book-open',
+            'empty_course_sessions' => 'heroicon-o-presentation-chart-bar',
+            'empty_today_sessions' => 'heroicon-o-calendar-days',
+            'empty_semester_courses' => 'heroicon-o-academic-cap',
         ],
     ],
     'formal' => [
@@ -414,6 +439,26 @@ return [
                 'title' => 'Tidak Ada Riwayat Pembaruan',
                 'description' => 'Belum ada catatan rilis yang tersedia. Buat untuk mendokumentasikan pembaruan aplikasi.',
             ],
+            'today_sessions' => [
+                'title' => 'Sesi Hari Ini',
+                'description' => 'Sesi yang dijadwalkan pada :date',
+            ],
+            'semester_courses' => [
+                'title' => 'Daftar Mata Kuliah Semester Ini',
+                'description' => 'Pilih mata kuliah untuk melihat dan mengelola semua riwayat sesi.',
+            ],
+            'empty_course_sessions' => [
+                'title' => 'Tidak ada data yang ditemukan',
+                'description' => 'Belum ada sesi perkuliahan yang dibuat untuk mata kuliah ini.',
+            ],
+            'empty_today_sessions' => [
+                'title' => 'Tidak ada data yang ditemukan',
+                'description' => 'Tidak ada sesi perkuliahan yang dijadwalkan untuk hari ini.',
+            ],
+            'empty_semester_courses' => [
+                'title' => 'Mata Kuliah Belum Terdaftar',
+                'description' => 'Belum ada mata kuliah yang terdaftar untuk semester aktif ini.',
+            ],
         ],
 
         // Icons
@@ -425,6 +470,11 @@ return [
             'user_account' => 'heroicon-o-user',
             'account_security' => 'heroicon-o-lock-closed',
             'appearance_settings' => 'heroicon-o-paint-brush',
+            'today_sessions' => 'heroicon-o-bolt',
+            'semester_courses' => 'heroicon-o-academic-cap',
+            'empty_course_sessions' => 'heroicon-o-presentation-chart-bar',
+            'empty_today_sessions' => 'heroicon-o-calendar-days',
+            'empty_semester_courses' => 'heroicon-o-academic-cap',
         ],
     ],
 ];

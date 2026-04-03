@@ -29,7 +29,7 @@ class ClassSessionResource extends Resource
     {
         return [
             'index' => ManageClassSessions::route('/'),
-            'course' => ListCourseSessions::route('/course/{courseId}'),
+            'course' => ListCourseSessions::route('/course/{course}'),
         ];
     }
 
