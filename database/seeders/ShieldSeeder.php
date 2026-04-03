@@ -157,8 +157,6 @@ class ShieldSeeder extends Seeder
                 "name": "Mahasiswa",
                 "guard_name": "web",
                 "permissions" : [
-                    "View:Changelog",
-
                     "View:Assignment",
                     "ViewAny:Assignment",
 
@@ -182,8 +180,6 @@ class ShieldSeeder extends Seeder
                 "name": "Kosma",
                 "guard_name": "web",
                 "permissions" : [
-                    "View:Changelog",
-
                     "Create:Assignment",
                     "Delete:Assignment",
                     "ForceDelete:Assignment",
