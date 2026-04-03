@@ -1,6 +1,6 @@
 <x-filament-panels::page>
     <x-filament::section
-        icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-clipboard-document-list' : 'heroicon-o-briefcase' }}"
+        icon="{{ $this->icon }}"
         icon-color="primary">
         <x-slot name="heading">{{ $this->heading }}</x-slot>
         <x-slot name="description">{{ $this->description }}</x-slot>
@@ -15,9 +15,8 @@
             @forelse ($this->assignmentCards as $card)
                 <div class="{{ $card->card_classes }} flex-col">
 
-                    <a href="{{ \App\Filament\Resources\Learning\Assignments\AssignmentResource::getUrl('submit', ['record' => $card->id]) }}"
+                    <a href="{{ $card->url }}"
                         class="flex flex-1 items-start gap-4 p-5 text-left min-w-0 hover:bg-primary-500/5 transition-colors cursor-pointer">
-
 
                         <div class="{{ $card->icon_wrapper_classes }} h-12 w-12 mt-1 shrink-0">
                             <x-filament::icon :icon="$card->status_icon" class="h-6 w-6" />
@@ -31,7 +30,6 @@
                             <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mt-1 truncate">
                                 {{ $card->course_name }}
                             </p>
-
 
                             <div class="flex flex-wrap items-center gap-2 mt-3">
                                 @if ($card->is_pinned)
@@ -68,7 +66,6 @@
                                 @endif
                             </div>
 
-
                             <div class="flex flex-wrap gap-x-4 gap-y-2 mt-4 text-xs text-gray-500 dark:text-gray-400">
                                 <span class="flex items-center gap-1.5">
                                     <x-filament::icon icon="heroicon-o-clock"
@@ -86,7 +83,6 @@
                         </div>
                     </a>
 
-
                     <div
                         class="flex flex-wrap items-center gap-3 px-5 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/20">
                         {{ ($this->pinAction)(['record' => $card->id]) }}
@@ -98,14 +94,12 @@
                         @endcanAny
                     </div>
 
-
-
                 </div>
             @empty
                 <div class="col-span-full">
                     <x-filament::empty-state icon="heroicon-o-clipboard-document-list"
-                        heading="{{ \App\Filament\Support\SystemNotification::getMessage('Hore, Belum Ada Tugas! 🎊✨', 'Tidak ada data yang ditemukan') }}"
-                        description="{{ \App\Filament\Support\SystemNotification::getMessage('Belum ada tugas baru yang perlu dikerjakan. Hidup tenang tanpa beban tugas itu asik ya! 😊🌈', 'Belum ada tugas baru yang perlu dikerjakan untuk saat ini. Tetap semangat!') }}"
+                        heading="{{ $this->emptyStateHeading }}"
+                        description="{{ $this->emptyStateDescription }}"
                         iconColor="gray">
                     </x-filament::empty-state>
                 </div>

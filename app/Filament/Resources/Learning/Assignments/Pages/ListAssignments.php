@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Learning\Assignments\Pages;
 
 use App\Enums\AssignmentType;
+use App\Enums\NotifStyle;
 use App\Filament\Resources\Learning\Assignments\Actions\CreateAssignmentAction;
 use App\Filament\Resources\Learning\Assignments\Actions\DeleteAssignmentAction;
 use App\Filament\Resources\Learning\Assignments\Actions\EditAssignmentAction;
@@ -98,6 +99,26 @@ class ListAssignments extends Page
     public function description(): string
     {
         return SystemNotification::getByKey('labels.assignment_list.description');
+    }
+
+    #[Computed]
+    public function emptyStateHeading(): string
+    {
+        return SystemNotification::getByKey('labels.empty_assignment.title');
+    }
+
+    #[Computed]
+    public function emptyStateDescription(): string
+    {
+        return SystemNotification::getByKey('labels.empty_assignment.description');
+    }
+
+    #[Computed]
+    public function icon(): string
+    {
+        return SystemNotification::getNotifStyle() === NotifStyle::Cheerful
+            ? 'heroicon-o-clipboard-document-list'
+            : 'heroicon-o-briefcase';
     }
 
     public function pinAction(): Action
@@ -245,20 +266,20 @@ class ListAssignments extends Page
             $isNew = $assignment->created_at->diffInDays(now()) <= 3;
             $isPinned = in_array($assignment->id, $pinnedIds);
 
-            $statusLabel = 'Belum Dikumpulkan';
+            $statusLabel = SystemNotification::getByKey('labels.assignment_status.not_submitted');
             $statusColor = 'warning';
             $statusIcon = 'heroicon-o-arrow-up-tray';
 
             if ($isSubmitted) {
-                $statusLabel = '✓ Sudah Dikumpulkan';
+                $statusLabel = SystemNotification::getByKey('labels.assignment_status.submitted');
                 $statusColor = 'success';
                 $statusIcon = 'heroicon-o-check-circle';
             } elseif ($isOverdue) {
-                $statusLabel = '⏰ Waktu Habis';
+                $statusLabel = SystemNotification::getByKey('labels.assignment_status.overdue');
                 $statusColor = 'danger';
                 $statusIcon = 'heroicon-o-clock';
             } elseif ($isGroup && ! $isLeader && ! $isSubmitted) {
-                $statusLabel = 'Menunggu Ketua';
+                $statusLabel = SystemNotification::getByKey('labels.assignment_status.waiting_leader');
                 $statusColor = 'gray';
                 $statusIcon = 'heroicon-o-user-group';
             }
@@ -279,6 +300,7 @@ class ListAssignments extends Page
                 'is_pinned' => $isPinned,
                 'status_label' => $statusLabel,
                 'status_icon' => $statusIcon,
+                'url' => AssignmentResource::getUrl('submit', ['record' => $assignment->id]),
                 // Pre-calculated classes
                 'card_classes' => Arr::toCssClasses([
                     'group flex w-full rounded-xl border transition-all overflow-hidden relative',

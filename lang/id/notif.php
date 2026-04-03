@@ -121,6 +121,18 @@ return [
             'title' => 'Yeay! Tugas Terkumpul! 🎉',
             'body' => 'Berhasil! Tugas Anda telah tercatat dengan aman di sistem. Semangat! 🎈',
         ],
+        'submission_overdue' => [
+            'title' => 'Yah, Batas Waktu Udah Habis! 😭⏳',
+            'body' => 'Maaf ya, kamu udah nggak bisa kumpulin tugas ini lagi karena waktunya udah lewat. Tetap semangat buat tugas selanjutnya! 💪',
+        ],
+        'submission_update' => [
+            'title' => 'Kuy Perbarui Tugasmu! 🔄✨',
+            'body' => 'Ada yang mau dirubah? Tenang, kamu masih bisa update file tugasmu selama belum lewat deadline kok! 🚀✨',
+        ],
+        'submission_create' => [
+            'title' => 'Kumpulkan Tugas Sekarang! 🚀📚',
+            'body' => 'Ayo, jangan sampai telat ya! Segera upload file tugas terbaikmu biar tenang dan nilai maksimal! 💪🎨',
+        ],
         'user_activated' => [
             'title' => 'Pengguna Diaktifkan! ✅✨',
             'body' => 'Status akun pengguna berhasil diaktifkan kembali. Siap beraksi! 🚀',
@@ -193,6 +205,10 @@ return [
                 'title' => 'Daftar Tugas Bikin Lemes! 🤣📒',
                 'description' => 'Yuk, cek dan kumpulin tugasmu biar tenang hidupnya! Klik aja di tugasnya ya. 🚀👨‍💻',
             ],
+            'empty_assignment' => [
+                'title' => 'Hore, Belum Ada Tugas! 🎊✨',
+                'description' => 'Belum ada tugas baru yang perlu dikerjakan. Hidup tenang tanpa beban tugas itu asik ya! 😊🌈',
+            ],
             'changelog' => [
                 'title' => 'Catatan Rilis 📜✨',
                 'description' => 'Kepoin apa aja yang baru, fitur kece, dan perbaikan bug biar nggak kudet! 🚀🔥',
@@ -220,6 +236,16 @@ return [
             'empty_semester_courses' => [
                 'title' => 'Belum Ada Mata Kuliah Nih! 📚😴',
                 'description' => 'Semester ini kayanya masih kosong. Coba hubungi admin kalau ada yang salah ya! ✨',
+            ],
+            'assignment_status' => [
+                'not_submitted' => 'Belum Dikumpulkan',
+                'submitted' => '✓ Sudah Dikumpulkan',
+                'overdue' => '⏰ Waktu Habis',
+                'waiting_leader' => 'Menunggu Ketua',
+            ],
+            'group_submission_hint' => [
+                'title' => 'Tugas Kelompok',
+                'description' => 'Hanya <strong>Ketua Kelompok</strong> yang dapat mengumpulkan atau memperbarui tugas ini. Silakan hubungi ketua kelompok Anda.',
             ],
         ],
 
@@ -359,6 +385,18 @@ return [
             'title' => 'Konfirmasi Pengumpulan Berhasil',
             'body' => 'Seluruh berkas tugas Anda telah berhasil diverifikasi dan disimpan oleh sistem.',
         ],
+        'submission_overdue' => [
+            'title' => 'Batas Waktu Telah Berakhir',
+            'body' => 'Masa pengumpulan tugas ini telah berakhir. Sistem tidak lagi menerima unggahan baru maupun pembaruan untuk penugasan ini.',
+        ],
+        'submission_update' => [
+            'title' => 'Perbarui Pengumpulan',
+            'body' => 'Anda diperbolehkan untuk mengunggah ulang atau memperbarui berkas tugas selama masa pengumpulan masih aktif.',
+        ],
+        'submission_create' => [
+            'title' => 'Kumpulkan Tugas',
+            'body' => 'Gunakan formulir ini untuk mengunggah berkas tugas Anda sesuai dengan ketentuan yang berlaku.',
+        ],
         'user_activated' => [
             'title' => 'Aktivasi Akun Berhasil',
             'body' => 'Status akun pengguna terpilih telah diubah menjadi aktif.',
@@ -431,6 +469,10 @@ return [
                 'title' => 'Tugas Saya',
                 'description' => 'Klik pada tugas untuk melihat detail dan mengumpulkan file.',
             ],
+            'empty_assignment' => [
+                'title' => 'Tidak Ada Tugas Terdaftar',
+                'description' => 'Belum terdapat tugas baru yang perlu Anda kerjakan untuk saat ini.',
+            ],
             'changelog' => [
                 'title' => 'Catatan Rilis',
                 'description' => 'Lihat riwayat perbaikan bug, pembaruan aplikasi, dan rilis fitur terbaru secara mendalam.',
@@ -458,6 +500,16 @@ return [
             'empty_semester_courses' => [
                 'title' => 'Mata Kuliah Belum Terdaftar',
                 'description' => 'Belum ada mata kuliah yang terdaftar untuk semester aktif ini.',
+            ],
+            'assignment_status' => [
+                'not_submitted' => 'Belum Dikumpulkan',
+                'submitted' => 'Sudah Dikumpulkan',
+                'overdue' => 'Waktu Habis',
+                'waiting_leader' => 'Menunggu Ketua',
+            ],
+            'group_submission_hint' => [
+                'title' => 'Tugas Kelompok',
+                'description' => 'Hanya <strong>Ketua Kelompok</strong> yang memiliki otoritas untuk memperbarui atau mengumpulkan tugas kelompok.',
             ],
         ],
 

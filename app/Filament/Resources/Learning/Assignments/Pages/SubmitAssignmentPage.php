@@ -3,23 +3,28 @@
 namespace App\Filament\Resources\Learning\Assignments\Pages;
 
 use App\Enums\AssignmentType;
+use App\Enums\NotifStyle;
 use App\Filament\Actions\BackAction;
 use App\Filament\Resources\Learning\Assignments\AssignmentResource;
+use App\Filament\Resources\Learning\Assignments\Schemas\SubmitAssignmentForm;
 use App\Filament\Support\SystemNotification;
 use App\Models\Assignment;
 use App\Models\AssignmentSubmission;
 use App\Models\Student;
 use App\Models\StudyGroup;
 use App\Models\User;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Pages\Page;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\WithFileUploads;
 
-class SubmitAssignmentPage extends Page
+class SubmitAssignmentPage extends Page implements HasForms
 {
-    use WithFileUploads;
+    use InteractsWithForms, WithFileUploads;
 
     protected static string $resource = AssignmentResource::class;
 
@@ -29,7 +34,24 @@ class SubmitAssignmentPage extends Page
 
     public Assignment $record;
 
-    public $file = null;
+    public array $data = [];
+
+    public $file;
+
+    public function mount(Assignment $record): void
+    {
+        $this->record = $record;
+
+        $this->form->fill([
+            'is_resubmit' => $this->isResubmit,
+        ]);
+    }
+
+    public function form(Schema $schema): Schema
+    {
+        return SubmitAssignmentForm::configure($schema)
+            ->statePath('data');
+    }
 
     #[Computed]
     public function statusCards(): array
@@ -135,15 +157,73 @@ class SubmitAssignmentPage extends Page
             return (object) [
                 'type' => 'submitted',
                 'badge_color' => 'success',
-                'badge_label' => 'Sudah Dikumpulkan',
+                'badge_label' => SystemNotification::getByKey('assignment_status.submitted'),
             ];
         }
 
         return (object) [
             'type' => 'none',
             'badge_color' => 'danger',
-            'badge_label' => 'Tidak Mengumpulkan',
+            'badge_label' => SystemNotification::getByKey('assignment_status.not_submitted'),
         ];
+    }
+
+    #[Computed]
+    public function overdueHeading(): string
+    {
+        return SystemNotification::getByKey('submission_overdue.title');
+    }
+
+    #[Computed]
+    public function overdueDescription(): string
+    {
+        return SystemNotification::getByKey('submission_overdue.body');
+    }
+
+    #[Computed]
+    public function submissionHeading(): string
+    {
+        return $this->isResubmit
+            ? SystemNotification::getByKey('submission_update.title')
+            : SystemNotification::getByKey('submission_create.title');
+    }
+
+    #[Computed]
+    public function submissionDescription(): string
+    {
+        return $this->isResubmit
+            ? SystemNotification::getByKey('submission_update.body')
+            : SystemNotification::getByKey('submission_create.body');
+    }
+
+    #[Computed]
+    public function isCheerful(): bool
+    {
+        return SystemNotification::getNotifStyle() === NotifStyle::Cheerful;
+    }
+
+    #[Computed]
+    public function groupHintTitle(): string
+    {
+        return SystemNotification::getByKey('labels.group_submission_hint.title');
+    }
+
+    #[Computed]
+    public function groupHintDescription(): string
+    {
+        return SystemNotification::getByKey('labels.group_submission_hint.description');
+    }
+
+    #[Computed]
+    public function overdueIcon(): string
+    {
+        return $this->isCheerful ? 'heroicon-o-exclamation-triangle' : 'heroicon-o-lock-closed';
+    }
+
+    #[Computed]
+    public function submissionIcon(): string
+    {
+        return $this->isCheerful ? 'heroicon-o-paper-airplane' : 'heroicon-o-document-arrow-up';
     }
 
     public function getSubmissionFileUrl(): ?string
@@ -171,32 +251,19 @@ class SubmitAssignmentPage extends Page
         }
 
         $existingSubmission = $this->existingSubmission;
+        $state = $this->form->getState();
 
-        if (! $existingSubmission && ! $this->file) {
+        if (! $existingSubmission && empty($state['file'])) {
             SystemNotification::send('submission_file_missing', type: 'warning')
                 ->send();
 
             return;
         }
 
-        $this->validate([
-            'file' => [
-                'nullable',
-                'file',
-                'max:'.(1024 * 5),
-                'mimes:pdf',
-            ],
-        ], [
-            'file.max' => 'Ukuran file maksimal 5MB.',
-            'file.mimes' => 'Hanya file PDF yang diizinkan.',
-        ]);
-
         if ($existingSubmission) {
-            if ($this->file) {
+            if ($state['file']) {
                 $existingSubmission->clearMediaCollection('submission');
-                $existingSubmission->addMedia($this->file->getRealPath())
-                    ->usingName($this->file->getClientOriginalName())
-                    ->usingFileName($this->file->getClientOriginalName())
+                $existingSubmission->addMediaFromDisk($state['file'], config('filesystems.default'))
                     ->toMediaCollection('submission');
             }
 
@@ -214,16 +281,18 @@ class SubmitAssignmentPage extends Page
                 'submitted_at' => now(),
             ]);
 
-            $submission->addMedia($this->file->getRealPath())
-                ->usingName($this->file->getClientOriginalName())
-                ->usingFileName($this->file->getClientOriginalName())
-                ->toMediaCollection('submission');
+            if ($state['file']) {
+                $submission->addMediaFromDisk($state['file'], config('filesystems.default'))
+                    ->toMediaCollection('submission');
+            }
 
             SystemNotification::send('submission_success')
                 ->send();
         }
 
-        $this->file = null;
+        $this->form->fill([
+            'is_resubmit' => $this->isResubmit,
+        ]);
         unset($this->existingSubmission, $this->isResubmit);
 
         $this->dispatch('submission-completed');

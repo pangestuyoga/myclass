@@ -142,9 +142,11 @@ describe('Assignment Submission Logic', function () {
         $this->actingAs($user);
         Livewire::test(SubmitAssignmentPage::class, ['record' => $assignment])
             ->assertSuccessful()
-            ->set('file', $file)
+            ->fillForm([
+                'file' => $file,
+            ])
             ->call('submit')
-            ->assertHasNoErrors();
+            ->assertHasNoFormErrors();
 
         $this->assertDatabaseHas('assignment_submissions', [
             'assignment_id' => $assignment->id,

@@ -34,7 +34,9 @@ class CopyAssignmentLinkAction extends Action
                     'assignment_id' => $assignment->id,
                 ]);
 
-                $livewire->js("if (navigator.clipboard) { navigator.clipboard.writeText('{$url}').catch(() => {}); }");
+                $escapedUrl = json_encode($url);
+
+                $livewire->js("if (navigator.clipboard) { navigator.clipboard.writeText({$escapedUrl}).catch(() => {}); }");
 
                 SystemNotification::send('link_copied')
                     ->send();

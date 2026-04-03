@@ -28,8 +28,9 @@ class ShareAssignmentAction extends Action
             ->modalDescription('Pilih metode untuk membagikan tautan publik status pengumpulan tugas ini.')
             ->modalSubmitActionLabel('Ke WhatsApp')
             ->modalCancelAction(false)
-            ->extraModalFooterActions([
-                CopyAssignmentLinkAction::make(),
+            ->extraModalFooterActions(fn (Action $action): array => [
+                CopyAssignmentLinkAction::make()
+                    ->arguments($action->getArguments()),
             ])
             ->action(function (array $arguments, $livewire) {
                 $assignment = Assignment::with(['course'])->find($arguments['record'] ?? null);
