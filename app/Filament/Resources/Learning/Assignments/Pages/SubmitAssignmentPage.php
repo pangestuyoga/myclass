@@ -157,14 +157,14 @@ class SubmitAssignmentPage extends Page implements HasForms
             return (object) [
                 'type' => 'submitted',
                 'badge_color' => 'success',
-                'badge_label' => SystemNotification::getByKey('assignment_status.submitted'),
+                'badge_label' => SystemNotification::getByKey('labels.assignment_status.submitted'),
             ];
         }
 
         return (object) [
             'type' => 'none',
             'badge_color' => 'danger',
-            'badge_label' => SystemNotification::getByKey('assignment_status.not_submitted'),
+            'badge_label' => SystemNotification::getByKey('labels.assignment_status.not_submitted'),
         ];
     }
 
