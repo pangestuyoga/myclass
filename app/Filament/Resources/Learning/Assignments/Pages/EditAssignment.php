@@ -102,7 +102,6 @@ class EditAssignment extends EditRecord
 
                 if (! empty($filePath)) {
                     $record->addMediaFromDisk($filePath, config('filesystems.default'))
-                        ->preservingOriginal()
                         ->withCustomProperties([
                             'feature' => 'assignments',
                             'date' => now()->toDateString(),

@@ -264,6 +264,11 @@ class SubmitAssignmentPage extends Page implements HasForms
             if ($state['file']) {
                 $existingSubmission->clearMediaCollection('submission');
                 $existingSubmission->addMediaFromDisk($state['file'], config('filesystems.default'))
+                    ->withCustomProperties([
+                        'feature' => 'assignments',
+                        'date' => now()->toDateString(),
+                        'doc_type' => 'submission',
+                    ])
                     ->toMediaCollection('submission');
             }
 
@@ -283,6 +288,11 @@ class SubmitAssignmentPage extends Page implements HasForms
 
             if ($state['file']) {
                 $submission->addMediaFromDisk($state['file'], config('filesystems.default'))
+                    ->withCustomProperties([
+                        'feature' => 'assignments',
+                        'date' => now()->toDateString(),
+                        'doc_type' => 'submission',
+                    ])
                     ->toMediaCollection('submission');
             }
 

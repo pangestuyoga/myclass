@@ -121,7 +121,7 @@ class AssignmentForm
                             ->disk(config('filesystems.default'))
                             ->acceptedFileTypes(['application/pdf'])
                             ->maxSize(1024 * 5)
-                            ->directory('assignments/'.now()->toDateString())
+                            ->directory('assignments-tmp/'.now()->toDateString())
                             ->nullable()
                             ->columnSpanFull(),
                     ])

@@ -79,7 +79,6 @@ class CreateAssignment extends CreateRecord
                 $filePath = is_array($pdf) ? reset($pdf) : $pdf;
 
                 $assignment->addMediaFromDisk($filePath, config('filesystems.default'))
-                    ->preservingOriginal()
                     ->withCustomProperties([
                         'feature' => 'assignments',
                         'date' => now()->toDateString(),
