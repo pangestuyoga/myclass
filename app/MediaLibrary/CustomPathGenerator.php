@@ -10,7 +10,7 @@ class CustomPathGenerator implements PathGenerator
     public function getPath(Media $media): string
     {
         $feature = $media->getCustomProperty('feature', 'misc');
-        $date = $media->getCustomProperty('date', now()->toDateString());
+        $date = $media->getCustomProperty('date', $media->created_at?->toDateString() ?? now()->toDateString());
         $docType = $media->getCustomProperty('doc_type');
 
         $feature = str($feature)->slug();
