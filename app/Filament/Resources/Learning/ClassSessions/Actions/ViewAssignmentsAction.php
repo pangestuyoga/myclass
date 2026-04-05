@@ -37,7 +37,7 @@ class ViewAssignmentsAction extends Action
                     return ['assignment' => null];
                 }
 
-                $assignment = $session->assignments->first();
+                $assignment = $session->assignments?->first();
 
                 if (! $assignment) {
                     return ['assignment' => null];
@@ -48,7 +48,7 @@ class ViewAssignmentsAction extends Action
                     ->orderBy('full_name')
                     ->get();
 
-                $submissionMap = $assignment->assignmentSubmissions->keyBy('student_id');
+                $submissionMap = $assignment->assignmentSubmissions?->keyBy('student_id');
 
                 $data = (object) [
                     'id' => $assignment->id,

@@ -42,7 +42,7 @@ class SubmitAssignmentPage extends Page implements HasForms
     {
         $this->record = $record;
 
-        $this->form->fill([
+        $this->form?->fill([
             'is_resubmit' => $this->isResubmit,
         ]);
     }
@@ -59,7 +59,7 @@ class SubmitAssignmentPage extends Page implements HasForms
         return [
             [
                 'label' => 'Batas Waktu',
-                'value' => $this->record->due_date?->translatedFormat('l, d F Y H:i'),
+                'value' => $this->record?->due_date?->translatedFormat('l, d F Y H:i'),
                 'icon' => 'heroicon-o-clock',
                 'is_danger' => $this->isOverdue,
                 'badge' => $this->isOverdue ? '(Terlewat)' : null,
@@ -98,7 +98,7 @@ class SubmitAssignmentPage extends Page implements HasForms
     {
         $student = $this->student;
 
-        return $this->record->studyGroups()
+        return $this->record?->studyGroups()
             ->where(fn ($q) => $q->where('leader_id', $student->id)->orWhereHas('students', fn ($sq) => $sq->whereKey($student->id)))
             ->first();
     }
@@ -108,18 +108,18 @@ class SubmitAssignmentPage extends Page implements HasForms
     {
         $student = $this->student;
 
-        if ($this->record->type === AssignmentType::Group) {
+        if ($this->record?->type === AssignmentType::Group) {
             $group = $this->currentGroup;
             if (! $group) {
                 return null;
             }
 
-            return AssignmentSubmission::where('assignment_id', $this->record->id)
+            return AssignmentSubmission::where('assignment_id', $this->record?->id)
                 ->where('study_group_id', $group->id)
                 ->first();
         }
 
-        return AssignmentSubmission::where('assignment_id', $this->record->id)
+        return AssignmentSubmission::where('assignment_id', $this->record?->id)
             ->where('student_id', $student->id)
             ->first();
     }
@@ -133,19 +133,19 @@ class SubmitAssignmentPage extends Page implements HasForms
     #[Computed]
     public function isOverdue(): bool
     {
-        return now()->isAfter($this->record->due_date);
+        return now()->isAfter($this->record?->due_date);
     }
 
     #[Computed]
     public function canSubmit(): bool
     {
-        if ($this->record->type === AssignmentType::Individual) {
+        if ($this->record?->type === AssignmentType::Individual) {
             return true;
         }
 
         $group = $this->currentGroup;
 
-        return $group && $group->leader_id === $this->student->id;
+        return $group && $group->leader_id === $this->student?->id;
     }
 
     #[Computed]
@@ -251,7 +251,7 @@ class SubmitAssignmentPage extends Page implements HasForms
         }
 
         $existingSubmission = $this->existingSubmission;
-        $state = $this->form->getState();
+        $state = $this->form?->getState();
 
         if (! $existingSubmission && empty($state['file'])) {
             SystemNotification::send('submission_file_missing', type: 'warning')
@@ -300,7 +300,7 @@ class SubmitAssignmentPage extends Page implements HasForms
                 ->send();
         }
 
-        $this->form->fill([
+        $this->form?->fill([
             'is_resubmit' => $this->isResubmit,
         ]);
         unset($this->existingSubmission, $this->isResubmit);

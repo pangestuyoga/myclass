@@ -30,7 +30,7 @@ class SubmissionDetailPage extends Page
     {
         return [
             [
-                'label' => $this->record->type === AssignmentType::Individual ? 'Total Mahasiswa' : 'Total Kelompok',
+                'label' => $this->record?->type === AssignmentType::Individual ? 'Total Mahasiswa' : 'Total Kelompok',
                 'value' => $this->totalCount,
                 'icon' => 'heroicon-o-user-group',
                 'color_classes' => 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-900',
@@ -65,11 +65,11 @@ class SubmissionDetailPage extends Page
     #[Computed]
     public function submissionSummary(): Collection
     {
-        $assignment = $this->record->load(['students', 'studyGroups', 'course']);
+        $assignment = $this->record?->load(['students', 'studyGroups', 'course']);
         $isIndividual = $assignment->type === AssignmentType::Individual;
 
         if ($isIndividual) {
-            $targets = $assignment->students->keyBy('id');
+            $targets = $assignment->students?->keyBy('id') ?? collect();
 
             $submissions = AssignmentSubmission::with('student')
                 ->where('assignment_id', $assignment->id)
@@ -87,7 +87,7 @@ class SubmissionDetailPage extends Page
                     'secondary_info' => $student->student_number,
                     'submission_id' => $submission?->id,
                     'submitted' => $isSubmitted,
-                    'submitted_at_formatted' => $isSubmitted ? $submission->submitted_at?->translatedFormat('l, d F Y H:i') : '-',
+                    'submitted_at_formatted' => $isSubmitted ? $submission?->submitted_at?->translatedFormat('l, d F Y H:i') : '-',
                     'has_file' => $isSubmitted && $submission->hasMedia('submission'),
                     'status_classes' => Arr::toCssClasses([
                         'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium',
@@ -98,7 +98,7 @@ class SubmissionDetailPage extends Page
                 ];
             })->sortBy('secondary_info')->values();
         } else {
-            $targets = $assignment->studyGroups->keyBy('id');
+            $targets = $assignment->studyGroups?->keyBy('id') ?? collect();
 
             $submissions = AssignmentSubmission::with(['studyGroup', 'student'])
                 ->where('assignment_id', $assignment->id)
@@ -113,7 +113,7 @@ class SubmissionDetailPage extends Page
                     'id' => $group->id,
                     'is_individual' => false,
                     'primary_name' => $group->name,
-                    'secondary_info' => $isSubmitted ? $submission->student->full_name : '-',
+                    'secondary_info' => $isSubmitted ? $submission?->student?->full_name : '-',
                     'submission_id' => $submission?->id,
                     'submitted' => $isSubmitted,
                     'submitted_at_formatted' => $isSubmitted ? $submission->submitted_at?->translatedFormat('l, d F Y H:i') : '-',
@@ -132,13 +132,13 @@ class SubmissionDetailPage extends Page
     #[Computed]
     public function totalCount(): int
     {
-        return $this->submissionSummary->count();
+        return $this->submissionSummary?->count();
     }
 
     #[Computed]
     public function doneCount(): int
     {
-        return $this->submissionSummary->where('submitted', true)->count();
+        return $this->submissionSummary?->where('submitted', true)->count();
     }
 
     #[Computed]
@@ -152,17 +152,17 @@ class SubmissionDetailPage extends Page
     #[Computed]
     public function isOverdue(): bool
     {
-        return now()->isAfter($this->record->due_date);
+        return now()->isAfter($this->record?->due_date);
     }
 
     #[Computed]
     public function assignmentSummary(): array
     {
         return [
-            'title' => $this->record->title,
-            'course' => $this->record->course?->name ?? '-',
-            'due_date' => $this->record->due_date?->translatedFormat('l, d F Y H:i'),
-            'type' => $this->record->type->value,
+            'title' => $this->record?->title,
+            'course' => $this->record?->course?->name ?? '-',
+            'due_date' => $this->record?->due_date?->translatedFormat('l, d F Y H:i'),
+            'type' => $this->record?->type->value,
             'is_overdue' => $this->isOverdue,
         ];
     }

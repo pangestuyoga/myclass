@@ -36,7 +36,7 @@ class MaterialTable
                     ->label('Mata Kuliah')
                     ->searchable()
                     ->sortable()
-                    ->description(fn (Material $record) => $record->classSession?->session_number ? "Sesi Ke-{$record->classSession->session_number}" : ''),
+                    ->description(fn (Material $record) => $record->classSession?->session_number ? "Sesi Ke-{$record->classSession?->session_number}" : ''),
 
                 TextColumn::make('title')
                     ->label('Judul')

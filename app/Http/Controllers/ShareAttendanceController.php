@@ -23,7 +23,7 @@ class ShareAttendanceController extends Controller
             ->latest('date')
             ->first();
 
-        $defaultDate = $latestAttendance ? $latestAttendance->date->toDateString() : now()->toDateString();
+        $defaultDate = $latestAttendance ? $latestAttendance->date?->toDateString() : now()->toDateString();
         $date = $request->query('date', $defaultDate);
 
         $attendances = Attendance::with('student')

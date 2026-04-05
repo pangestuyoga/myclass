@@ -32,7 +32,7 @@ class ManageClassSessions extends Page implements HasActions, HasForms
 
     public function mount(): void
     {
-        $this->form->fill();
+        $this->form?->fill();
     }
 
     #[Computed]
@@ -76,10 +76,10 @@ class ManageClassSessions extends Page implements HasActions, HasForms
                     'id' => $session->id,
                     'is_pending' => false,
                     'session_number' => $session->session_number,
-                    'course_name' => $session->course->name,
-                    'course_code' => $session->course->code,
-                    'lecturer' => $session->course->lecturer ?? '-',
-                    'time_range' => $session->start_time->format('H:i').' - '.$session->end_time->format('H:i'),
+                    'course_name' => $session->course?->name,
+                    'course_code' => $session->course?->code,
+                    'lecturer' => $session->course?->lecturer ?? '-',
+                    'time_range' => $session->start_time?->format('H:i').' - '.$session->end_time?->format('H:i'),
                     'attendances_count' => $session->attendances_count,
                     'total_students' => $totalActiveStudents,
                     'attendance_percentage' => $percentage,
@@ -124,7 +124,7 @@ class ManageClassSessions extends Page implements HasActions, HasForms
                     'name' => $course->name,
                     'code' => $course->code,
                     'lecturer' => $course->lecturer ?? 'Dosen Belum Ditentukan',
-                    'sessions_count' => $course->classSessions->count(),
+                    'sessions_count' => $course->classSessions?->count(),
                     'total_students' => $totalActiveStudents,
                     'url' => ClassSessionResource::getUrl('course', ['course' => $course]),
                 ];

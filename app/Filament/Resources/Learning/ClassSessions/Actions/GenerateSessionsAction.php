@@ -28,7 +28,7 @@ class GenerateSessionsAction extends Action
             ->modalHeading('Generate Sesi Pembelajaran')
             ->modalDescription('Sistem akan men-generate atau memperbarui sesi secara otomatis berdasarkan jadwal mata kuliah ini.')
             ->schema(function ($livewire) {
-                $lastSession = $livewire->course->classSessions()->latest('session_number')->first();
+                $lastSession = $livewire->course?->classSessions()->latest('session_number')->first();
                 $lastNumber = $lastSession?->session_number ?? 0;
                 $nextNumber = $lastNumber + 1;
                 $lastDate = $lastSession?->date ? Carbon::parse($lastSession->date) : now();

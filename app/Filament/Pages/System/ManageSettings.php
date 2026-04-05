@@ -92,7 +92,7 @@ class ManageSettings extends SettingsPage
             $student = Student::find($kosmaId);
 
             if ($student?->user) {
-                $student->user->assignRole(RoleEnum::Kosma);
+                $student->user?->assignRole(RoleEnum::Kosma);
             }
         }
     }

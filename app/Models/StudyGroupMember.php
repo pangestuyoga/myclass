@@ -21,7 +21,7 @@ class StudyGroupMember extends Model
 
     protected function formattedCreatedAt(): Attribute
     {
-        return Attribute::get(fn () => $this->created_at->translatedFormat('l, d M Y H:i'));
+        return Attribute::get(fn () => $this->created_at?->translatedFormat('l, d M Y H:i'));
     }
 
     protected function formattedUpdatedAt(): Attribute

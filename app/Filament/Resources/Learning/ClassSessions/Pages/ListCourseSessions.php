@@ -46,15 +46,15 @@ class ListCourseSessions extends Page implements HasActions, HasForms
             ->whereHas('user', fn ($q) => $q->active())
             ->count();
 
-        return $this->course->classSessions()
+        return $this->course?->classSessions()
             ->withCount(['attendances', 'materials', 'assignments'])
             ->orderByDesc('session_number')
             ->get()
             ->map(fn ($session) => (object) [
                 'id' => $session->id,
                 'session_number' => $session->session_number,
-                'date_formatted' => $session->date->translatedFormat('l, d F Y'),
-                'time_range' => $session->start_time->format('H:i').' - '.$session->end_time->format('H:i'),
+                'date_formatted' => $session->date?->translatedFormat('l, d F Y'),
+                'time_range' => $session->start_time?->format('H:i').' - '.$session->end_time?->format('H:i'),
                 'attendances_count' => $session->attendances_count,
                 'total_students' => $totalActiveStudents,
                 'attendance_percentage' => $totalActiveStudents > 0 ? round(($session->attendances_count / $totalActiveStudents) * 100) : 0,
@@ -71,12 +71,12 @@ class ListCourseSessions extends Page implements HasActions, HasForms
     #[Computed]
     public function description(): string
     {
-        return 'Data sesi pembelajaran untuk mata kuliah '.$this->course->name;
+        return 'Data sesi pembelajaran untuk mata kuliah '.$this->course?->name;
     }
 
     public function getTitle(): string
     {
-        return 'Sesi Kelas - '.$this->course->name;
+        return 'Sesi Kelas - '.$this->course?->name;
     }
 
     protected function getHeaderActions(): array

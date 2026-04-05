@@ -243,7 +243,7 @@ class Profile extends EditProfile
 
             $this->callHook('beforeValidate');
 
-            $data = $this->form->getState();
+            $data = $this->form?->getState();
 
             $this->callHook('afterValidate');
 
@@ -311,13 +311,13 @@ class Profile extends EditProfile
 
         /** @var User $record */
         if ($studentData && $record->student()->exists()) {
-            $record->student->update($studentData);
+            $record->student?->update($studentData);
         } elseif ($studentData) {
             $record->student()->create($studentData);
         }
 
         if ($settingsData && $record->settings()->exists()) {
-            $record->settings->update($settingsData);
+            $record->settings?->update($settingsData);
         } elseif ($settingsData) {
             $record->settings()->create($settingsData);
         }
@@ -330,7 +330,7 @@ class Profile extends EditProfile
         SystemNotification::send('profile_updated')
             ->send();
 
-        if (filled($this->form->getState()['password'] ?? null)) {
+        if (filled($this->form?->getState()['password'] ?? null)) {
             filament()->auth()->logout();
             session()->invalidate();
             session()->regenerateToken();

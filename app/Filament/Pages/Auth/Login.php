@@ -75,7 +75,7 @@ class Login extends FilamentLogin
             return null;
         }
 
-        $data = $this->form->getState();
+        $data = $this->form?->getState();
 
         $authGuard = Filament::auth();
 
@@ -105,7 +105,7 @@ class Login extends FilamentLogin
             filled($this->userUndertakingMultiFactorAuthentication) &&
             (decrypt($this->userUndertakingMultiFactorAuthentication) === $user->getAuthIdentifier())
         ) {
-            $this->multiFactorChallengeForm->validate();
+            $this->multiFactorChallengeForm?->validate();
         } else {
             foreach (Filament::getMultiFactorAuthenticationProviders() as $multiFactorAuthenticationProvider) {
                 if (! $multiFactorAuthenticationProvider->isEnabled($user)) {
@@ -122,7 +122,7 @@ class Login extends FilamentLogin
             }
 
             if (filled($this->userUndertakingMultiFactorAuthentication)) {
-                $this->multiFactorChallengeForm->fill();
+                $this->multiFactorChallengeForm?->fill();
 
                 return null;
             }

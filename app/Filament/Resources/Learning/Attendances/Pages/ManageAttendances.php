@@ -95,7 +95,7 @@ class ManageAttendances extends Page implements HasForms, HasTable
     {
         return $this->getSchedules()
             ->map(function ($schedule) {
-                $attendance = $schedule->attendances->first();
+                $attendance = $schedule->attendances?->first();
                 $isAttended = $attendance !== null;
 
                 $now = now();
@@ -118,15 +118,15 @@ class ManageAttendances extends Page implements HasForms, HasTable
 
                 return (object) [
                     'id' => $schedule->id,
-                    'course_name' => $schedule->course->name,
-                    'lecturer_name' => $schedule->course->lecturer ?? 'Belum Ditentukan',
-                    'time_range' => $schedule->start_time->format('H:i').' - '.$schedule->end_time->format('H:i'),
+                    'course_name' => $schedule->course?->name,
+                    'lecturer_name' => $schedule->course?->lecturer ?? 'Belum Ditentukan',
+                    'time_range' => $schedule->start_time?->format('H:i').' - '.$schedule->end_time?->format('H:i'),
                     'is_attended' => $isAttended,
                     'can_attend' => $canAttend && ! $isAttended,
                     'status_label' => $statusLabel,
                     'status_color' => $statusColor,
                     'status_icon' => $statusIcon,
-                    'attended_at' => $isAttended ? $attendance->attended_at->format('H:i') : null,
+                    'attended_at' => $isAttended ? $attendance?->attended_at?->format('H:i') : null,
                     // Pre-calculated classes
                     'card_classes' => Arr::toCssClasses([
                         'fi-card flex flex-col justify-between rounded-xl border transition duration-200 group relative',
@@ -204,14 +204,14 @@ class ManageAttendances extends Page implements HasForms, HasTable
 
         // Find schedule for compatibility
         $schedule = CourseSchedule::where('course_id', $session->course_id)
-            ->where('day_of_week', $session->date->dayOfWeekIso)
+            ->where('day_of_week', $session->date?->dayOfWeekIso)
             ->first();
 
         Attendance::create([
             'student_id' => $student->id,
             'class_session_id' => $sessionId,
             'course_schedule_id' => $schedule?->id,
-            'date' => $session->date->toDateString(),
+            'date' => $session->date?->toDateString(),
             'attended_at' => now(),
         ]);
 
@@ -232,7 +232,7 @@ class ManageAttendances extends Page implements HasForms, HasTable
                     ->label('Tanggal')
                     ->date('l, d F Y')
                     ->sortable()
-                    ->description(fn (Attendance $record): string => $record->attended_at->format('H:i').' ')
+                    ->description(fn (Attendance $record): string => $record->attended_at?->format('H:i').' ')
                     ->color('gray'),
 
                 TextColumn::make('courseSchedule.course.name')
@@ -240,7 +240,7 @@ class ManageAttendances extends Page implements HasForms, HasTable
                     ->searchable()
                     ->sortable()
                     ->wrap()
-                    ->description(fn (Attendance $record): string => $record->courseSchedule->course->lecturer ?? 'Belum Ditentukan'),
+                    ->description(fn (Attendance $record): string => $record->courseSchedule?->course?->lecturer ?? 'Belum Ditentukan'),
             ])
             ->defaultSort('date', 'desc')
             ->filters([

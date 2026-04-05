@@ -28,7 +28,7 @@ class DynamicFilamentTheme
         if ($user && $user->settings) {
             // Register Colors
             FilamentColor::register([
-                'primary' => match ($user->settings->primary_color) {
+                'primary' => match ($user->settings?->primary_color) {
                     'blue' => Color::Blue,
                     'sky' => Color::Sky,
                     'cyan' => Color::Cyan,
@@ -48,12 +48,12 @@ class DynamicFilamentTheme
             // Register Top Navigation
             $panel = Filament::getCurrentOrDefaultPanel();
             if ($panel && method_exists($panel, 'topNavigation')) {
-                $panel->topNavigation((bool) $user->settings->top_navigation);
+                $panel->topNavigation((bool) $user->settings?->top_navigation);
             }
 
             // Register Font & UI Styles
-            $font = $user->settings->font ?? 'Inter';
-            $radius = match ($user->settings->border_radius ?? 'md') {
+            $font = $user->settings?->font ?? 'Inter';
+            $radius = match ($user->settings?->border_radius ?? 'md') {
                 'none' => '0px',
                 'md' => '0.375rem',
                 'lg' => '0.5rem',
@@ -61,7 +61,7 @@ class DynamicFilamentTheme
                 '2xl' => '1rem',
                 default => '0.5rem',
             };
-            $maxWidth = match ($user->settings->content_width ?? 'full') {
+            $maxWidth = match ($user->settings?->content_width ?? 'full') {
                 'centered' => '80rem',
                 default => 'none',
             };

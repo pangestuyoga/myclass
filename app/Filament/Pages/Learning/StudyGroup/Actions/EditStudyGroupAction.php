@@ -33,8 +33,8 @@ class EditStudyGroupAction extends EditAction
                 return [
                     'name' => $record->name,
                     'leader_id' => $record->leader_id,
-                    'course_id' => $record->courses->pluck('id')->toArray(),
-                    'students' => $record->students->pluck('id')->toArray(),
+                    'course_id' => $record->courses?->pluck('id')->toArray(),
+                    'students' => $record->students?->pluck('id')->toArray(),
                 ];
             })
             ->after(function (StudyGroup $record, array $data) {

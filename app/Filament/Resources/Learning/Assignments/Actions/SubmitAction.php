@@ -30,7 +30,7 @@ class SubmitAction extends Action
 
                 if ($record->type === AssignmentType::Group) {
                     return $record->studyGroups()
-                        ->where('leader_id', auth()->user()->student->id)
+                        ->where('leader_id', auth()->user()?->student?->id)
                         ->exists();
                 }
 

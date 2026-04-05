@@ -71,7 +71,7 @@ class Index extends Page implements HasActions, HasForms
 
     public function mount(): void
     {
-        $this->form->fill();
+        $this->form?->fill();
     }
 
     public function form(Schema $schema): Schema
@@ -132,15 +132,15 @@ class Index extends Page implements HasActions, HasForms
             ->map(function ($daySchedules) {
                 return $daySchedules->map(fn ($schedule) => (object) [
                     'id' => $schedule->id,
-                    'course_code' => $schedule->course->code ?? 'MATKUL',
-                    'course_name' => $schedule->course->name ?? 'Mata Kuliah Tidak Diketahui',
-                    'lecturer' => $schedule->course->lecturer ?? 'Dosen Belum Ditentukan',
-                    'semester' => $schedule->course->semester,
-                    'credit' => $schedule->course->credit ?? '-',
+                    'course_code' => $schedule->course?->code ?? 'MATKUL',
+                    'course_name' => $schedule->course?->name ?? 'Mata Kuliah Tidak Diketahui',
+                    'lecturer' => $schedule->course?->lecturer ?? 'Dosen Belum Ditentukan',
+                    'semester' => $schedule->course?->semester,
+                    'credit' => $schedule->course?->credit ?? '-',
                     'room' => $schedule->room,
                     'mode_label' => $schedule->mode?->getLabel(),
                     'mode_color' => $schedule->mode?->getColor(),
-                    'time_range' => $schedule->start_time->format('H:i').' – '.$schedule->end_time->format('H:i'),
+                    'time_range' => $schedule->start_time?->format('H:i').' – '.$schedule->end_time?->format('H:i'),
                 ]);
             });
     }

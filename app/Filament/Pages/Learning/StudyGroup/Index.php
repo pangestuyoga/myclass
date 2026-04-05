@@ -81,7 +81,7 @@ class Index extends Page implements HasActions, HasForms
 
     public function mount(): void
     {
-        $this->form->fill([
+        $this->form?->fill([
             'course_id' => $this->course_id,
         ]);
     }
@@ -141,20 +141,20 @@ class Index extends Page implements HasActions, HasForms
         $studentId = auth()->user()?->student?->id;
 
         return $query->orderBy('name', 'asc')->get()->map(function ($record) use ($studentId) {
-            $isMyGroup = ($studentId && ($record->leader_id === $studentId || $record->students->contains($studentId)));
+            $isMyGroup = ($studentId && ($record->leader_id === $studentId || $record->students?->contains($studentId)));
 
             return (object) [
                 'id' => $record->id,
                 'name' => $record->name,
                 'is_my_group' => $isMyGroup,
                 'leader_avatar' => $record->leader?->user?->facehash_avatar_url,
-                'leader_name' => $record->leader->full_name ?? 'Belum Ditentukan',
+                'leader_name' => $record->leader?->full_name ?? 'Belum Ditentukan',
                 'is_leader' => $studentId && $record->leader_id === $studentId,
-                'courses' => $record->courses->map(fn ($c) => (object) [
+                'courses' => $record->courses?->map(fn ($c) => (object) [
                     'name' => $c->name,
                 ]),
-                'students_count' => $record->students->count(),
-                'students' => $record->students->map(fn ($s) => (object) [
+                'students_count' => $record->students?->count() ?? 0,
+                'students' => $record->students?->map(fn ($s) => (object) [
                     'id' => $s->id,
                     'full_name' => $s->full_name,
                     'is_me' => $studentId && $s->id === $studentId,
@@ -177,7 +177,7 @@ class Index extends Page implements HasActions, HasForms
             return false;
         }
 
-        return $record->leader_id === $studentId || $record->students->contains($studentId);
+        return $record->leader_id === $studentId || $record->students?->contains($studentId);
     }
 
     public function studyGroupFormSchema(): array

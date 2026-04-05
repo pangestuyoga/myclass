@@ -42,12 +42,12 @@ class Changelog extends Model
 
     protected function formattedReleaseDate(): Attribute
     {
-        return Attribute::get(fn () => $this->release_date->translatedFormat('l, d M Y'));
+        return Attribute::get(fn () => $this->release_date?->translatedFormat('l, d M Y'));
     }
 
     protected function formattedCreatedAt(): Attribute
     {
-        return Attribute::get(fn () => $this->created_at->translatedFormat('l, d M Y H:i'));
+        return Attribute::get(fn () => $this->created_at?->translatedFormat('l, d M Y H:i'));
     }
 
     protected function formattedUpdatedAt(): Attribute

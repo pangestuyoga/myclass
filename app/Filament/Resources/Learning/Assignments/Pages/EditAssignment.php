@@ -41,17 +41,17 @@ class EditAssignment extends EditRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        $data['student_ids'] = $this->record->assignmentTargets()
+        $data['student_ids'] = $this->record?->assignmentTargets()
             ->whereNotNull('student_id')
             ->pluck('student_id')
             ->toArray();
 
-        $data['study_group_ids'] = $this->record->assignmentTargets()
+        $data['study_group_ids'] = $this->record?->assignmentTargets()
             ->whereNotNull('study_group_id')
             ->pluck('study_group_id')
             ->toArray();
 
-        $media = $this->record->getMedia('assignments')->last();
+        $media = $this->record?->getMedia('assignments')->last();
         $relativePath = $media ? $media->getPathRelativeToRoot() : null;
 
         $data['pdf'] = $relativePath ? [$relativePath] : [];

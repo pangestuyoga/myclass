@@ -46,7 +46,7 @@ class ListAssignments extends Page
 
     public function mount(): void
     {
-        $this->form->fill([
+        $this->form?->fill([
             'search' => $this->search,
             'course_id' => $this->course_id,
         ]);
@@ -221,7 +221,7 @@ class ListAssignments extends Page
 
     private function getAssignmentPriority($assignment): int
     {
-        $isSubmitted = $assignment->assignmentSubmissions->isNotEmpty();
+        $isSubmitted = $assignment->assignmentSubmissions?->isNotEmpty();
         $isOverdue = now()->isAfter($assignment->due_date);
 
         if (! $isOverdue) {
@@ -244,14 +244,14 @@ class ListAssignments extends Page
         $pinnedIds = $this->pinnedIds;
 
         return $this->assignments()->map(function ($assignment) use ($studentProfile, $pinnedIds) {
-            $submission = $assignment->assignmentSubmissions->first();
+            $submission = $assignment->assignmentSubmissions?->first();
             $isSubmitted = $submission !== null;
             $isGroup = $assignment->type === AssignmentType::Group;
 
             $isLeader = false;
             if ($isGroup) {
-                $userGroup = $assignment->studyGroups->first(function ($g) use ($studentProfile) {
-                    return $g->leader_id === $studentProfile->id || $g->students->contains($studentProfile->id);
+                $userGroup = $assignment->studyGroups?->first(function ($g) use ($studentProfile) {
+                    return $g->leader_id === $studentProfile->id || $g->students?->contains($studentProfile->id);
                 });
                 $isLeader = $userGroup && $userGroup->leader_id === $studentProfile->id;
             }
@@ -263,7 +263,7 @@ class ListAssignments extends Page
             $canSubmitActual = $canSubmit && $canSubmitByRole;
 
             $isUrgent = ! $isSubmitted && $canSubmitActual && now()->diffInHours($assignment->due_date) <= 48;
-            $isNew = $assignment->created_at->diffInDays(now()) <= 3;
+            $isNew = $assignment->created_at?->diffInDays(now()) <= 3;
             $isPinned = in_array($assignment->id, $pinnedIds);
 
             $statusLabel = SystemNotification::getByKey('labels.assignment_status.not_submitted');
@@ -288,8 +288,8 @@ class ListAssignments extends Page
                 'id' => $assignment->id,
                 'title' => $assignment->title,
                 'course_name' => $assignment->course?->name ?? '-',
-                'due_date_formatted' => $assignment->due_date->translatedFormat('l, d F Y H:i'),
-                'submitted_at_formatted' => ($isSubmitted && $submission->submitted_at) ? $submission->submitted_at->translatedFormat('l, d F Y H:i') : null,
+                'due_date_formatted' => $assignment->due_date?->translatedFormat('l, d F Y H:i'),
+                'submitted_at_formatted' => ($isSubmitted && $submission->submitted_at) ? $submission->submitted_at?->translatedFormat('l, d F Y H:i') : null,
                 'is_submitted' => $isSubmitted,
                 'is_group' => $isGroup,
                 'is_leader' => $isLeader,

@@ -40,7 +40,7 @@ class ViewAttendanceAction extends Action
                     ->orderBy('full_name')
                     ->get();
 
-                $attendanceMap = $session->attendances->keyBy('student_id');
+                $attendanceMap = $session->attendances?->keyBy('student_id');
 
                 $students = $activeStudents->map(fn ($student) => (object) [
                     'student' => $student,
