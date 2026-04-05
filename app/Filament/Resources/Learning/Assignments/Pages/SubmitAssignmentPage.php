@@ -310,9 +310,10 @@ class SubmitAssignmentPage extends Page implements HasForms
 
     protected function getHeaderActions(): array
     {
+
         return [
             BackAction::make()
-                ->url(AssignmentResource::getUrl()),
+                ->url(url()->previous() ?? AssignmentResource::getUrl('index')),
         ];
     }
 }
