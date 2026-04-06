@@ -16,6 +16,7 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Hammadzafar05\MobileBottomNav\MobileBottomNav;
 use Hammadzafar05\MobileBottomNav\MobileBottomNavItem;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -23,6 +24,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Saade\Facehash\Enums\Variant;
 use Saade\FilamentFacehash\FacehashPlugin;
@@ -138,6 +140,17 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(fn () => asset('images/logo.png'))
             ->brandLogoHeight(function () {
                 return request()->is('admin/login') ? '120px' : '40px';
-            });
+            })
+            ->spa()
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
+                fn (): HtmlString => new HtmlString(<<<'HTML'
+                    <script>
+                        document.addEventListener('livewire:navigated', () => {
+                            setTimeout(() => Alpine.initTree(document.body), 0)
+                        })
+                    </script>
+                HTML)
+            );
     }
 }
