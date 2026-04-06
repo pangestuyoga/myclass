@@ -26,16 +26,24 @@ class ShareAttendanceController extends Controller
         $defaultDate = $latestAttendance ? $latestAttendance->date?->toDateString() : now()->toDateString();
         $date = $request->query('date', $defaultDate);
 
-        $attendances = Attendance::with('student')
-            ->whereHas('courseSchedule', function ($query) use ($course) {
-                $query->where('course_id', $course->id);
-            })
-            ->whereDate('date', $date)
+        $activeStudents = Student::whereHas('user', fn ($q) => $q->active())
+            ->orderBy('full_name')
             ->get();
 
-        $availableDates = Attendance::whereHas('courseSchedule', function ($query) use ($course) {
+        $attendanceRecords = Attendance::whereHas('courseSchedule', function ($query) use ($course) {
             $query->where('course_id', $course->id);
         })
+            ->whereDate('date', $date)
+            ->get()
+            ->keyBy('student_id');
+
+        $attendances = $activeStudents->map(fn ($student) => (object) [
+            'student' => $student,
+            'attended_at' => $attendanceRecords->get($student->id)?->attended_at,
+            'has_attended' => $attendanceRecords->has($student->id),
+        ]);
+
+        $availableDates = ClassSession::where('course_id', $course->id)
             ->select('date')
             ->distinct()
             ->orderByDesc('date')
@@ -48,17 +56,17 @@ class ShareAttendanceController extends Controller
             ->get();
 
         $sessionInfo = ClassSession::where('course_id', $course->id)->whereDate('date', $date)->first();
-        $totalStudents = Student::whereHas('user', fn ($q) => $q->active())->count();
-        $presentCount = $attendances->count();
+        $totalStudents = $activeStudents->count();
+        $presentCount = $attendanceRecords->count();
         $attendancePercentage = $totalStudents > 0 ? round(($presentCount / $totalStudents) * 100) : 0;
 
         $formattedTime = $sessionInfo
-            ? Carbon::parse($sessionInfo->start_time)->format('H:i').' - '.Carbon::parse($sessionInfo->end_time)->format('H:i')
+            ? Carbon::parse($sessionInfo->start_time)->translatedFormat('H:i').' - '.Carbon::parse($sessionInfo->end_time)->format('H:i')
             : '-';
 
         $headings = [
-            'list' => SystemNotification::getMessage('Daftar Kehadiran 📝✨', 'Daftar Kehadiran'),
-            'info' => SystemNotification::getMessage('Informasi Sesi 🏢✨', 'Informasi Sesi'),
+            'list' => SystemNotification::getByKey('labels.attendance_list.title'),
+            'info' => SystemNotification::getByKey('labels.session_info.title'),
         ];
 
         return view('pages.share-attendance', compact(

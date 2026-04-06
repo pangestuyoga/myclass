@@ -247,6 +247,30 @@ return [
                 'title' => 'Tugas Kelompok',
                 'description' => 'Hanya <strong>Ketua Kelompok</strong> yang dapat mengumpulkan atau memperbarui tugas ini. Silakan hubungi ketua kelompok Anda.',
             ],
+            'attendance_list' => [
+                'title' => 'Daftar Kehadiran 📝✨',
+            ],
+            'session_info' => [
+                'title' => 'Informasi Sesi 🏢✨',
+            ],
+            'submission_list' => [
+                'title' => 'Daftar Pengumpulan 🚀✨',
+            ],
+            'assignment_info_heading' => [
+                'title' => 'Informasi Tugas 📚✨',
+            ],
+            'home' => [
+                'hero_title' => 'Kuliah Jadi Makin Simpel! 🚀📚',
+                'hero_subtitle' => 'Gak Ribet Lagi.',
+                'feature_session' => 'Info Sesi Kuliah 🏢📅',
+                'feature_session_desc' => 'Pantau jadwal kelasmu biar nggak ketinggalan info penting ya! 🕒✨',
+                'feature_task' => 'Tugas & Materi 📝📚',
+                'feature_task_desc' => 'Ambil materi dan kumpulin tugas dalam satu tempat, praktis banget! 🚀📂',
+                'feature_attendance' => 'Presensi Digital 🙋‍♂️✅',
+                'feature_attendance_desc' => 'Absen makin gampang, tinggal klik langsung tercatat hadir. Gapake lama! 🔥⚡',
+                'feature_group' => 'Grup Belajar 👯‍♀️💬',
+                'feature_group_desc' => 'Bikin kelompok biar belajar bareng temen makin asik dan seru! 🌈✨',
+            ],
         ],
 
         // Icons
@@ -510,6 +534,30 @@ return [
             'group_submission_hint' => [
                 'title' => 'Tugas Kelompok',
                 'description' => 'Hanya <strong>Ketua Kelompok</strong> yang memiliki otoritas untuk memperbarui atau mengumpulkan tugas kelompok.',
+            ],
+            'attendance_list' => [
+                'title' => 'Daftar Kehadiran',
+            ],
+            'session_info' => [
+                'title' => 'Informasi Sesi',
+            ],
+            'submission_list' => [
+                'title' => 'Daftar Pengumpulan',
+            ],
+            'assignment_info_heading' => [
+                'title' => 'Informasi Tugas',
+            ],
+            'home' => [
+                'hero_title' => 'Sistem Manajemen Kelas',
+                'hero_subtitle' => 'Sederhana & Terintegrasi.',
+                'feature_session' => 'Manajemen Sesi',
+                'feature_session_desc' => 'Pemantauan kelas dan penjadwalan terstruktur dan mudah dilihat.',
+                'feature_task' => 'Tugas & Materi',
+                'feature_task_desc' => 'Pengelolaan repositori perkuliahan dan pengumpulan tugas.',
+                'feature_attendance' => 'Presensi Digital',
+                'feature_attendance_desc' => 'Sistem pendataan kehadiran yang praktis, cepat, dan real-time.',
+                'feature_group' => 'Grup Belajar',
+                'feature_group_desc' => 'Ruang kolaborasi, diskusi, dan obrolan untuk saling terhubung.',
             ],
         ],
 

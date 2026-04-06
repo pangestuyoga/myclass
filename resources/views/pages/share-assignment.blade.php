@@ -105,8 +105,8 @@
                                     class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
                                     <tr>
                                         <th class="px-5 py-4 font-semibold text-gray-950 dark:text-white">{{ $isGroup ? 'Kelompok' : 'Mahasiswa' }}</th>
-                                        <th class="px-5 py-4 font-semibold text-gray-950 dark:text-white">{{ $isGroup ? 'Anggota' : 'Nomor Induk' }}
-                                        </th>
+                                        <th class="px-5 py-4 font-semibold text-gray-950 dark:text-white">{{ $isGroup ? 'Anggota' : 'NIM' }}</th>
+                                        <th class="px-5 py-4 font-semibold text-gray-950 dark:text-white text-center">Status</th>
                                         <th class="px-5 py-4 font-semibold text-gray-950 dark:text-white">Hasil Tugas
                                         </th>
                                         <th class="px-5 py-4 font-semibold text-gray-950 dark:text-white text-right">
@@ -114,24 +114,26 @@
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-                                    @forelse($submissions as $submission)
+                                    @forelse($submissions as $item)
                                         <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors">
                                             <td class="px-5 py-4">
                                                 <div class="flex items-center gap-3">
                                                     <div class="flex flex-col gap-0.5">
-                                                        @if($isGroup && $submission->studyGroup)
-                                                            <span class="font-bold text-gray-950 dark:text-white text-sm">{{ $submission->studyGroup->name }}</span>
-                                                            <span class="text-[10px] text-gray-500 dark:text-gray-400">Pengumpul: {{ $submission->student->full_name }}</span>
+                                                        @if($isGroup && $item->studyGroup)
+                                                            <span class="font-bold text-gray-950 dark:text-white text-sm">{{ $item->studyGroup->name }}</span>
+                                                            @if($item->has_submitted)
+                                                                <span class="text-[10px] text-gray-500 dark:text-gray-400">Pengumpul: {{ $item->student->full_name }}</span>
+                                                            @endif
                                                         @else
-                                                            <span class="font-bold text-gray-950 dark:text-white text-sm">{{ $submission->student->full_name }}</span>
+                                                            <span class="font-bold text-gray-950 dark:text-white text-sm">{{ $item->student->full_name }}</span>
                                                         @endif
                                                     </div>
                                                 </div>
                                             </td>
                                             <td class="px-5 py-4">
-                                                @if($isGroup && $submission->studyGroup)
+                                                @if($isGroup && $item->studyGroup)
                                                     <div class="flex flex-wrap gap-1 max-w-[200px]">
-                                                        @foreach($submission->studyGroup->students as $member)
+                                                        @foreach($item->studyGroup->students as $member)
                                                             <span class="inline-flex items-center rounded-md bg-gray-50 dark:bg-gray-800/50 px-1.5 py-0.5 text-[10px] font-medium text-gray-600 dark:text-gray-400 ring-1 ring-inset ring-gray-500/10 whitespace-nowrap">
                                                                 {{ $member->full_name }}
                                                             </span>
@@ -139,17 +141,30 @@
                                                     </div>
                                                 @else
                                                     <span class="text-gray-500 dark:text-gray-400 font-medium text-sm">
-                                                        {{ $submission->student->student_number }}
+                                                        {{ $item->student->student_number }}
+                                                    </span>
+                                                @endif
+                                            </td>
+                                            <td class="px-5 py-4 text-center">
+                                                @if ($item->has_submitted)
+                                                    <span
+                                                        class="inline-flex items-center rounded-md bg-emerald-50 dark:bg-emerald-500/10 px-2 py-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-400 ring-1 ring-inset ring-emerald-600/20 uppercase tracking-widest">
+                                                        Sudah Mengumpulkan
+                                                    </span>
+                                                @else
+                                                    <span
+                                                        class="inline-flex items-center rounded-md bg-rose-50 dark:bg-rose-500/10 px-2 py-1 text-[10px] font-bold text-rose-700 dark:text-rose-400 ring-1 ring-inset ring-rose-600/20 uppercase tracking-widest">
+                                                        Belum Mengumpulkan
                                                     </span>
                                                 @endif
                                             </td>
                                             <td class="px-5 py-4">
                                                 <div class="flex flex-col gap-2 max-w-sm">
 
-                                                    @if ($submission->getMedia('submission')->count() > 0)
+                                                    @if ($item->has_submitted && $item->submission && $item->submission->getMedia('submission')->count() > 0)
                                                         <div class="flex flex-wrap gap-1.5 mt-1">
-                                                            @foreach ($submission->getMedia('submission') as $media)
-                                                                <button type="button" onclick="openPdfModal('{{ $media->getUrl() }}', '{{ addslashes($submission->student->full_name) }}')"
+                                                            @foreach ($item->submission->getMedia('submission') as $media)
+                                                                <button type="button" onclick="openPdfModal('{{ $media->getUrl() }}', '{{ addslashes($item->student->full_name ?? ($isGroup ? $item->studyGroup->name : 'Mahasiswa')) }}')"
                                                                     class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-50 dark:bg-primary-500/10 hover:bg-primary-100 dark:hover:bg-primary-500/20 text-primary-600 dark:text-primary-400 border border-primary-200 dark:border-primary-500/20 text-[10px] font-bold uppercase tracking-widest transition-colors decoration-transparent shrink-0 focus:outline-none">
                                                                     <x-heroicon-m-document-arrow-down
                                                                         class="w-4 h-4 shrink-0" />
@@ -160,8 +175,8 @@
                                                         </div>
                                                     @else
                                                         <span
-                                                            class="text-[10px] text-danger-500 uppercase tracking-widest font-bold italic mt-1">File
-                                                            tidak ditemukan</span>
+                                                            class="text-[10px] text-gray-400 uppercase tracking-widest font-bold italic mt-1">Tidak
+                                                            ada file</span>
                                                     @endif
                                                 </div>
                                             </td>
@@ -170,14 +185,18 @@
                                                     $isLate =
                                                         $assignment &&
                                                         $assignment->due_date &&
-                                                        $submission->submitted_at > $assignment->due_date;
+                                                        $item->submitted_at > $assignment->due_date;
                                                 @endphp
-                                                <div
-                                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg {{ $isLate ? 'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400' : 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' }} font-bold text-[10px] uppercase tracking-widest">
-                                                    <span
-                                                        class="w-1.5 h-1.5 rounded-full {{ $isLate ? 'bg-amber-500' : 'bg-emerald-500' }}"></span>
-                                                    {{ $submission->submitted_at ? $submission->submitted_at->format('d M Y H:i') : '-' }}
-                                                </div>
+                                                @if($item->has_submitted)
+                                                    <div
+                                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg {{ $isLate ? 'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400' : 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' }} font-bold text-[10px] uppercase tracking-widest">
+                                                        <span
+                                                            class="w-1.5 h-1.5 rounded-full {{ $isLate ? 'bg-amber-500' : 'bg-emerald-500' }}"></span>
+                                                        {{ $item->submitted_at ? $item->submitted_at->format('d M Y H:i') : '-' }}
+                                                    </div>
+                                                @else
+                                                    <span class="text-gray-400 dark:text-gray-600 font-bold text-[10px] uppercase tracking-widest">-</span>
+                                                @endif
                                             </td>
                                         </tr>
                                     @empty
@@ -278,7 +297,7 @@
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto pointer-events-none">
             <div class="flex min-h-full items-center justify-center p-4 sm:p-6">
                 <div class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-2xl w-full max-w-5xl h-[85vh] flex flex-col pointer-events-auto">
-                    
+
                     <div class="flex items-center justify-between px-5 py-3 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50">
                         <h3 class="text-sm font-bold text-gray-900 dark:text-white truncate pr-4" id="modal-title">Title</h3>
                         <button type="button" onclick="closePdfModal()" class="rounded-full bg-white dark:bg-gray-800 p-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 ring-1 ring-inset ring-gray-200 dark:ring-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition focus:outline-none">
@@ -286,7 +305,7 @@
                             <x-heroicon-m-x-mark class="w-4 h-4" />
                         </button>
                     </div>
-                    
+
                     <div class="flex-1 bg-gray-100 dark:bg-gray-950 p-2 sm:p-4">
                         <iframe id="pdf-iframe" src="" class="w-full h-full rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-inner" frameborder="0" allowfullscreen></iframe>
                     </div>

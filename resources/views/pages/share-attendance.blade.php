@@ -96,9 +96,6 @@
                         <h2 class="text-base font-bold text-gray-950 dark:text-white tracking-tight uppercase">
                             {{ $headings['list'] }}
                         </h2>
-                        <span class="text-[11px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">
-                            {{ $attendances->count() }} Terdata
-                        </span>
                     </div>
 
                     <div
@@ -111,6 +108,7 @@
                                         <th class="px-5 py-4 font-semibold text-gray-950 dark:text-white">Mahasiswa</th>
                                         <th class="px-5 py-4 font-semibold text-gray-950 dark:text-white">NIM
                                         </th>
+                                        <th class="px-5 py-4 font-semibold text-gray-950 dark:text-white text-center">Status</th>
                                         <th class="px-5 py-4 font-semibold text-gray-950 dark:text-white text-right">
                                             Waktu Presensi</th>
                                     </tr>
@@ -131,12 +129,29 @@
                                                     {{ $attendance->student->student_number }}
                                                 </span>
                                             </td>
+                                            <td class="px-5 py-4 text-center">
+                                                @if ($attendance->has_attended)
+                                                    <span
+                                                        class="inline-flex items-center rounded-md bg-emerald-50 dark:bg-emerald-500/10 px-2 py-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-400 ring-1 ring-inset ring-emerald-600/20 uppercase tracking-widest">
+                                                        Hadir
+                                                    </span>
+                                                @else
+                                                    <span
+                                                        class="inline-flex items-center rounded-md bg-rose-50 dark:bg-rose-500/10 px-2 py-1 text-[10px] font-bold text-rose-700 dark:text-rose-400 ring-1 ring-inset ring-rose-600/20 uppercase tracking-widest">
+                                                        Alpa
+                                                    </span>
+                                                @endif
+                                            </td>
                                             <td class="px-5 py-4 text-right">
-                                                <div
-                                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-[10px] uppercase tracking-widest">
-                                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                                    {{ $attendance->attended_at ? $attendance->attended_at->format('H:i') : '-' }}
-                                                </div>
+                                                @if ($attendance->has_attended)
+                                                    <div
+                                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-[10px] uppercase tracking-widest">
+                                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                        {{ $attendance->attended_at ? $attendance->attended_at->translatedFormat('d F Y H:i') : '-' }}
+                                                    </div>
+                                                @else
+                                                    <span class="text-gray-400 dark:text-gray-600 font-bold text-[10px] uppercase tracking-widest">-</span>
+                                                @endif
                                             </td>
                                         </tr>
                                     @empty

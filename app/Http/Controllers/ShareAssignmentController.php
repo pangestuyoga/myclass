@@ -42,21 +42,40 @@ class ShareAssignmentController extends Controller
 
         if ($assignment) {
             $isGroup = $assignment->type === AssignmentType::Group;
-            $submissions = AssignmentSubmission::with(['student', 'media', 'studyGroup.students'])
+            $allSubmissions = AssignmentSubmission::with(['student', 'media', 'studyGroup.students'])
                 ->where('assignment_id', $assignment->id)
                 ->get();
 
             if ($isGroup) {
-                $totalTargets = $assignment->studyGroups()->count();
+                $targets = $assignment->studyGroups()->with('students')->get();
+                $submissionMap = $allSubmissions->keyBy('study_group_id');
+
+                $submissions = $targets->map(fn ($group) => (object) [
+                    'studyGroup' => $group,
+                    'student' => $submissionMap->get($group->id)?->student,
+                    'submitted_at' => $submissionMap->get($group->id)?->submitted_at,
+                    'has_submitted' => $submissionMap->has($group->id),
+                    'submission' => $submissionMap->get($group->id),
+                ]);
+                $totalTargets = $targets->count();
             } else {
-                $totalTargets = $assignment->students()->count();
-                if ($totalTargets === 0) {
-                    $totalTargets = Student::whereHas('user', fn ($q) => $q->active())->count();
+                $targets = $assignment->students()->orderBy('full_name')->get();
+                if ($targets->isEmpty()) {
+                    $targets = Student::whereHas('user', fn ($q) => $q->active())->orderBy('full_name')->get();
                 }
+                $submissionMap = $allSubmissions->keyBy('student_id');
+
+                $submissions = $targets->map(fn ($student) => (object) [
+                    'student' => $student,
+                    'submitted_at' => $submissionMap->get($student->id)?->submitted_at,
+                    'has_submitted' => $submissionMap->has($student->id),
+                    'submission' => $submissionMap->get($student->id),
+                ]);
+                $totalTargets = $targets->count();
             }
         }
 
-        $submittedCount = $submissions->count();
+        $submittedCount = $allSubmissions ? $allSubmissions->unique($isGroup ? 'study_group_id' : 'student_id')->count() : 0;
         $submissionPercentage = $totalTargets > 0 ? round(($submittedCount / $totalTargets) * 100) : 0;
 
         $formattedDeadline = $assignment && $assignment->due_date
@@ -64,8 +83,8 @@ class ShareAssignmentController extends Controller
             : '-';
 
         $headings = [
-            'list' => SystemNotification::getMessage('Daftar Pengumpulan 🚀✨', 'Daftar Pengumpulan'),
-            'info' => SystemNotification::getMessage('Informasi Tugas 📚✨', 'Informasi Tugas'),
+            'list' => SystemNotification::getByKey('labels.submission_list.title'),
+            'info' => SystemNotification::getByKey('labels.assignment_info_heading.title'),
         ];
 
         return view('pages.share-assignment', compact(
