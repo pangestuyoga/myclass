@@ -99,7 +99,14 @@ class ManageAttendances extends Page implements HasForms, HasTable
         }
 
         return ClassSession::query()
-            ->whereDate('date', now())
+            ->where(function ($query) use ($student) {
+                $query->whereDate('date', now())
+                    ->orWhere(function ($q) use ($student) {
+                        $q->whereDate('date', '<', now())
+                            ->where('is_sent_to_lecturer', false)
+                            ->whereDoesntHave('attendances', fn ($aq) => $aq->where('student_id', $student->id));
+                    });
+            })
             ->with(['course', 'attendances' => function ($q) use ($student) {
                 $q->where('student_id', $student->id);
             }])
@@ -114,10 +121,11 @@ class ManageAttendances extends Page implements HasForms, HasTable
             ->map(function ($schedule) {
                 $attendance = $schedule->attendances?->first();
                 $isAttended = $attendance !== null;
+                $isSent = $schedule->is_sent_to_lecturer;
 
                 $now = now();
                 $startTime = now()->setTimeFrom($schedule->start_time);
-                $canAttend = $now->greaterThanOrEqualTo($startTime);
+                $canAttend = $now->greaterThanOrEqualTo($startTime) && ! $isSent;
 
                 $statusLabel = 'Belum Presensi';
                 $statusColor = 'warning';
@@ -127,6 +135,10 @@ class ManageAttendances extends Page implements HasForms, HasTable
                     $statusLabel = 'Hadir';
                     $statusColor = 'success';
                     $statusIcon = 'heroicon-o-check-circle';
+                } elseif ($isSent) {
+                    $statusLabel = 'Terkirim';
+                    $statusColor = 'danger';
+                    $statusIcon = 'heroicon-o-paper-airplane';
                 } elseif (! $canAttend) {
                     $statusLabel = 'Belum Dimulai';
                     $statusColor = 'gray';
@@ -139,6 +151,7 @@ class ManageAttendances extends Page implements HasForms, HasTable
                     'lecturer_name' => $schedule->course?->lecturer ?? 'Belum Ditentukan',
                     'time_range' => $schedule->start_time?->format('H:i').' - '.$schedule->end_time?->format('H:i'),
                     'is_attended' => $isAttended,
+                    'is_sent_to_lecturer' => $isSent,
                     'can_attend' => $canAttend && ! $isAttended,
                     'status_label' => $statusLabel,
                     'status_color' => $statusColor,
@@ -205,6 +218,14 @@ class ManageAttendances extends Page implements HasForms, HasTable
 
         if ($existing) {
             SystemNotification::send('attendance_already_recorded', type: 'warning')
+                ->send();
+
+            return;
+        }
+
+        // Check session status
+        if ($session->is_sent_to_lecturer) {
+            SystemNotification::send('attendance_closed', type: 'danger')
                 ->send();
 
             return;

@@ -6,6 +6,7 @@ use App\Filament\Actions\BackAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\DeleteSessionAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\EditSessionAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\GenerateSessionsAction;
+use App\Filament\Resources\Learning\ClassSessions\Actions\MarkAsSentAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\ShareAttendanceAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\ViewAssignmentsAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\ViewAttendanceAction;
@@ -60,6 +61,7 @@ class ListCourseSessions extends Page implements HasActions, HasForms
                 'attendance_percentage' => $totalActiveStudents > 0 ? round(($session->attendances_count / $totalActiveStudents) * 100) : 0,
                 'materials_count' => $session->materials_count,
                 'assignments_count' => $session->assignments_count,
+                'is_sent_to_lecturer' => $session->is_sent_to_lecturer,
             ]);
     }
 
@@ -112,6 +114,11 @@ class ListCourseSessions extends Page implements HasActions, HasForms
     public function editSessionAction(): EditSessionAction
     {
         return EditSessionAction::make();
+    }
+
+    public function markAsSentAction(): MarkAsSentAction
+    {
+        return MarkAsSentAction::make();
     }
 
     public function deleteSessionAction(): DeleteSessionAction

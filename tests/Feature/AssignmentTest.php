@@ -433,4 +433,3 @@ describe('Assignment Delivery Status', function () {
             ->assertDontSeeHtml('type="file"');
     });
 });
-

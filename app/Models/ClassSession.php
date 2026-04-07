@@ -28,6 +28,7 @@ class ClassSession extends Model
             'end_time' => 'datetime',
             'session_number' => 'integer',
             'start_time' => 'datetime',
+            'is_sent_to_lecturer' => 'boolean',
         ];
     }
 

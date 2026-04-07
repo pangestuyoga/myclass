@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Learning\Assignments\Pages;
 
 use App\Enums\AssignmentType;
+use App\Enums\NotifStyle;
 use App\Filament\Actions\BackAction;
 use App\Filament\Resources\Learning\Assignments\Actions\MarkAsSentAction;
 use App\Filament\Resources\Learning\Assignments\AssignmentResource;
@@ -181,7 +182,7 @@ class SubmissionDetailPage extends Page
     #[Computed]
     public function sectionIcon(): string
     {
-        return SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful
+        return SystemNotification::getNotifStyle() === NotifStyle::Cheerful
             ? 'heroicon-o-document-magnifying-glass'
             : 'heroicon-o-document-text';
     }

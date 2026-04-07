@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (! Schema::hasColumn('assignments', 'is_sent_to_lecturer')) {
-            Schema::table('assignments', function (Blueprint $table) {
-                $table->boolean('is_sent_to_lecturer')->default(false)->after('due_date');
+        if (! Schema::hasColumn('class_sessions', 'is_sent_to_lecturer')) {
+            Schema::table('class_sessions', function (Blueprint $table) {
+                $table->boolean('is_sent_to_lecturer')->default(false)->after('end_time');
             });
         }
     }
@@ -23,7 +23,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('assignments', function (Blueprint $table) {
+        Schema::table('class_sessions', function (Blueprint $table) {
             $table->dropColumn('is_sent_to_lecturer');
         });
     }

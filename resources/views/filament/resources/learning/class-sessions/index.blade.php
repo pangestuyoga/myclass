@@ -34,8 +34,8 @@
                                 </div>
 
                                 <div class="{{ $session->status_badge_classes }} shrink-0 self-start">
-                                    <x-heroicon-s-clock class="w-3.5 h-3.5" />
-                                    {{ $session->time_range }}
+                                    <x-filament::icon :icon="$session->status_icon" class="w-3.5 h-3.5" />
+                                    {{ $session->status_label }}
                                 </div>
                             </div>
 

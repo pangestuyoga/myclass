@@ -89,6 +89,13 @@
                                             Selesai
                                         </span>
                                     </div>
+                                @elseif ($card->is_sent_to_lecturer)
+                                    <div class="px-2 py-1 flex items-center gap-1.5">
+                                        <x-heroicon-m-paper-airplane class="w-3 h-3 text-danger-500" />
+                                        <span
+                                            class="text-[10px] font-bold text-danger-500 uppercase tracking-widest leading-none italic">Sesi
+                                            Terkirim</span>
+                                    </div>
                                 @else
                                     <div class="px-2 py-1">
                                         <span

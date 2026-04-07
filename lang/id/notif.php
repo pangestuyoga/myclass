@@ -157,6 +157,18 @@ return [
             'title' => 'Tugas Terkunci! 🔒',
             'body' => 'Mohon maaf, tugas ini sudah ditandai terkirim ke dosen oleh Kosma dan tidak dapat diubah lagi. 🚫',
         ],
+        'session_sent' => [
+            'title' => 'Sesi Terkirim! 🚀✨',
+            'body' => 'Laporan presensi untuk sesi ini telah resmi ditandai terkirim ke dosen. Data aman tersimpan! ✅',
+        ],
+        'session_unlocked' => [
+            'title' => 'Kunci Presensi Dibuka! 🔓✨',
+            'body' => 'Mahasiswa sekarang bisa melakukan presensi kembali untuk sesi ini. 📝',
+        ],
+        'attendance_closed' => [
+            'title' => 'Yah, Presensi Sudah Tutup! 😭⌛',
+            'body' => 'Maaf ya, sesi presensi ini sudah ditutup oleh Kosma. Lain kali jangan sampai terlambat ya! 💪',
+        ],
 
         // UI Labels & Descriptions
         'labels' => [
@@ -460,6 +472,18 @@ return [
         'submission_locked' => [
             'title' => 'Akses Pengumpulan Ditutup',
             'body' => 'Tugas ini telah dalam status final (terkirim ke dosen). Perubahan data tidak lagi dimungkinkan.',
+        ],
+        'session_sent' => [
+            'title' => 'Konfirmasi Pengiriman Laporan',
+            'body' => 'Laporan presensi sesi perkuliahan telah berhasil ditandai sebagai terkirim ke dosen pengampu.',
+        ],
+        'session_unlocked' => [
+            'title' => 'Kunci Akses Presensi Dibuka',
+            'body' => 'Otoritas presensi telah diaktifkan kembali. Seluruh mahasiswa terkait dapat melakukan pengisian data kehadiran.',
+        ],
+        'attendance_closed' => [
+            'title' => 'Akses Presensi Ditutup',
+            'body' => 'Sesi presensi untuk mata kuliah ini telah ditutup secara resmi. Anda tidak dapat melakukan pengisian data kehadiran lagi.',
         ],
 
         // UI Labels & Descriptions

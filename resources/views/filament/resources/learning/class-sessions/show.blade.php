@@ -27,7 +27,7 @@
                                     </div>
                                 </div>
 
-                                <div class="flex items-center gap-2">
+                                 <div class="flex items-center gap-2">
                                     <div
                                         class="flex items-center gap-1.5 text-xs font-bold text-success-600 dark:text-success-400">
                                         <x-heroicon-o-user-group class="w-4 h-4 shrink-0" />
@@ -40,6 +40,12 @@
                                     </div>
                                     <span
                                         class="text-[10px] font-bold text-gray-500">{{ $session->attendance_percentage }}%</span>
+                                    
+                                    @if ($session->is_sent_to_lecturer)
+                                        <span class="inline-flex items-center rounded-md bg-danger-50 dark:bg-danger-500/10 px-1.5 py-0.5 text-[10px] font-bold text-danger-700 dark:text-danger-400 ring-1 ring-inset ring-danger-600/20">
+                                            Terkirim
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
 
@@ -60,6 +66,7 @@
                         class="flex flex-wrap items-center gap-3 px-4 py-3 border-t border-gray-100 dark:border-gray-700">
                         {{ ($this->viewAttendanceAction)(['session' => $session->id]) }}
                         {{ ($this->shareAttendanceAction)(['session' => $session->id]) }}
+                        {{ ($this->markAsSentAction)(['record' => $session->id]) }}
                         {{ ($this->editSessionAction)(['session' => $session->id]) }}
                         {{ ($this->deleteSessionAction)(['session' => $session->id]) }}
                     </div>
