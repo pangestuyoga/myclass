@@ -134,7 +134,8 @@ class Index extends Page implements HasActions, HasForms
                         ->label('Versi')
                         ->placeholder('v1.0.0')
                         ->required()
-                        ->unique(ignoreRecord: true),
+                        ->unique(ignoreRecord: true)
+                        ->autocomplete(false),
 
                     DatePicker::make('release_date')
                         ->label('Tanggal Rilis')
