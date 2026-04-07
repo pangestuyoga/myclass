@@ -25,7 +25,7 @@ class MarkAsSentAction extends Action
             ->icon(function (array $arguments, ?ClassSession $record) {
                 $session = $record ?? ClassSession::find($arguments['record'] ?? null);
 
-                return $session?->is_sent_to_lecturer ? 'heroicon-o-lock-open' : 'heroicon-o-paper-airplane';
+                return $session?->is_sent_to_lecturer ? 'heroicon-o-lock-open' : 'heroicon-o-check-circle';
             })
             ->color(function (array $arguments, ?ClassSession $record) {
                 $session = $record ?? ClassSession::find($arguments['record'] ?? null);

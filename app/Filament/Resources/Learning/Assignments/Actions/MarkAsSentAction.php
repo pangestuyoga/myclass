@@ -25,7 +25,7 @@ class MarkAsSentAction extends Action
             ->icon(function (array $arguments, ?Assignment $record) {
                 $assignment = $record ?? Assignment::find($arguments['record'] ?? null);
 
-                return $assignment?->is_sent_to_lecturer ? 'heroicon-o-lock-open' : 'heroicon-o-paper-airplane';
+                return $assignment?->is_sent_to_lecturer ? 'heroicon-o-lock-open' : 'heroicon-o-check-circle';
             })
             ->color(function (array $arguments, ?Assignment $record) {
                 $assignment = $record ?? Assignment::find($arguments['record'] ?? null);
