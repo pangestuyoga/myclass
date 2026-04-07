@@ -7,6 +7,7 @@ use App\Enums\NotifStyle;
 use App\Filament\Resources\Learning\Assignments\Actions\CreateAssignmentAction;
 use App\Filament\Resources\Learning\Assignments\Actions\DeleteAssignmentAction;
 use App\Filament\Resources\Learning\Assignments\Actions\EditAssignmentAction;
+use App\Filament\Resources\Learning\Assignments\Actions\MarkAsSentAction;
 use App\Filament\Resources\Learning\Assignments\Actions\PinAction;
 use App\Filament\Resources\Learning\Assignments\Actions\ShareAssignmentAction;
 use App\Filament\Resources\Learning\Assignments\AssignmentResource;
@@ -156,6 +157,11 @@ class ListAssignments extends Page
         return ShareAssignmentAction::make();
     }
 
+    public function markAsSentAction(): Action
+    {
+        return MarkAsSentAction::make();
+    }
+
     #[Computed]
     public function assignments(): Collection
     {
@@ -234,15 +240,20 @@ class ListAssignments extends Page
 
     private function getAssignmentPriority($assignment): int
     {
+        $isSent = $assignment->is_sent_to_lecturer;
+        if ($isSent) {
+            return 5; // Closed
+        }
+
         $isSubmitted = $assignment->assignmentSubmissions?->isNotEmpty();
         $isOverdue = now()->isAfter($assignment->due_date);
 
         if (! $isOverdue) {
-            return $isSubmitted ? 2 : 1;
+            return $isSubmitted ? 3 : 1; // 1: Active, 3: Completed Active
         }
 
-        // Overdue
-        return $isSubmitted ? 3 : 4;
+        // Overdue but not sent
+        return $isSubmitted ? 4 : 2; // 2: Actionable Overdue, 4: Completed Overdue
     }
 
     #[Computed]
@@ -269,8 +280,10 @@ class ListAssignments extends Page
                 $isLeader = $userGroup && $userGroup->leader_id === $studentProfile->id;
             }
 
+            $isSentToLecturer = $assignment->is_sent_to_lecturer;
             $isOverdue = now()->isAfter($assignment->due_date);
-            $canSubmit = ! $isOverdue;
+
+            $canSubmit = ! $isSentToLecturer;
 
             $canSubmitByRole = ! $isGroup || $isLeader;
             $canSubmitActual = $canSubmit && $canSubmitByRole;
@@ -279,23 +292,27 @@ class ListAssignments extends Page
             $isNew = $assignment->created_at?->diffInDays(now()) <= 3;
             $isPinned = in_array($assignment->id, $pinnedIds);
 
-            $statusLabel = SystemNotification::getByKey('labels.assignment_status.not_submitted');
-            $statusColor = 'warning';
-            $statusIcon = 'heroicon-o-arrow-up-tray';
-
             if ($isSubmitted) {
-                $statusLabel = SystemNotification::getByKey('labels.assignment_status.submitted');
-                $statusColor = 'success';
-                $statusIcon = 'heroicon-o-check-circle';
+                $submissionLabel = SystemNotification::getByKey('labels.assignment_status.submitted');
+                $submissionColor = 'success';
+                $submissionIcon = 'heroicon-o-check-circle';
             } elseif ($isOverdue) {
-                $statusLabel = SystemNotification::getByKey('labels.assignment_status.overdue');
-                $statusColor = 'danger';
-                $statusIcon = 'heroicon-o-clock';
+                $submissionLabel = SystemNotification::getByKey('labels.assignment_status.overdue');
+                $submissionColor = 'danger';
+                $submissionIcon = 'heroicon-o-clock';
             } elseif ($isGroup && ! $isLeader && ! $isSubmitted) {
-                $statusLabel = SystemNotification::getByKey('labels.assignment_status.waiting_leader');
-                $statusColor = 'gray';
-                $statusIcon = 'heroicon-o-user-group';
+                $submissionLabel = SystemNotification::getByKey('labels.assignment_status.waiting_leader');
+                $submissionColor = 'gray';
+                $submissionIcon = 'heroicon-o-user-group';
+            } else {
+                $submissionLabel = SystemNotification::getByKey('labels.assignment_status.not_submitted');
+                $submissionColor = 'warning';
+                $submissionIcon = 'heroicon-o-arrow-up-tray';
             }
+
+            $deliveryLabel = $isSentToLecturer ? 'Telah Dikirim' : 'Belum Dikirim';
+            $deliveryColor = $isSentToLecturer ? 'success' : 'amber';
+            $deliveryIcon = $isSentToLecturer ? 'heroicon-o-check-badge' : 'heroicon-o-clock';
 
             return (object) [
                 'id' => $assignment->id,
@@ -303,6 +320,7 @@ class ListAssignments extends Page
                 'course_name' => $assignment->course?->name ?? '-',
                 'due_date_formatted' => $assignment->due_date?->translatedFormat('l, d F Y H:i'),
                 'submitted_at_formatted' => ($isSubmitted && $submission->submitted_at) ? $submission->submitted_at?->translatedFormat('l, d F Y H:i') : null,
+                'is_sent_to_lecturer' => $isSentToLecturer,
                 'is_submitted' => $isSubmitted,
                 'is_group' => $isGroup,
                 'is_leader' => $isLeader,
@@ -311,8 +329,28 @@ class ListAssignments extends Page
                 'is_urgent' => $isUrgent,
                 'is_new' => $isNew,
                 'is_pinned' => $isPinned,
-                'status_label' => $statusLabel,
-                'status_icon' => $statusIcon,
+                'submission_status' => (object) [
+                    'label' => $submissionLabel,
+                    'color' => $submissionColor,
+                    'icon' => $submissionIcon,
+                    'classes' => Arr::toCssClasses([
+                        'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold', // font-semibold for clarity
+                        'bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-400' => $submissionColor === 'success',
+                        'bg-danger-100 text-danger-700 dark:bg-danger-900/30 dark:text-danger-400' => $submissionColor === 'danger',
+                        'bg-warning-100 text-warning-700 dark:bg-warning-900/30 dark:text-warning-400' => $submissionColor === 'warning',
+                        'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400' => $submissionColor === 'gray',
+                    ]),
+                ],
+                'delivery_status' => (object) [
+                    'label' => $deliveryLabel,
+                    'color' => $deliveryColor,
+                    'icon' => $deliveryIcon,
+                    'classes' => Arr::toCssClasses([
+                        'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold ring-1 ring-inset', // font-bold and ring for "delivery" status to make it pop
+                        'bg-success-50 text-success-700 ring-success-600/20 dark:bg-success-900/10 dark:text-success-400 dark:ring-success-500/20' => $deliveryColor === 'success',
+                        'bg-amber-50 text-amber-700 ring-amber-600/20 dark:bg-amber-900/10 dark:text-amber-400 dark:ring-amber-500/20' => $deliveryColor === 'amber',
+                    ]),
+                ],
                 'url' => AssignmentResource::getUrl('submit', ['record' => $assignment->id]),
                 // Pre-calculated classes
                 'card_classes' => Arr::toCssClasses([
@@ -326,14 +364,6 @@ class ListAssignments extends Page
                     'bg-success-50 dark:bg-success-900/20 text-success-600 dark:text-success-400' => $isSubmitted,
                     'bg-danger-50 dark:bg-danger-900/20 text-danger-600 dark:text-danger-400' => ! $isSubmitted && $isOverdue,
                     'bg-warning-50 dark:bg-warning-900/20 text-warning-600 dark:text-warning-400' => ! $isSubmitted && ! $isOverdue,
-                ]),
-                'status_badge_classes' => Arr::toCssClasses([
-                    'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium',
-                    'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' => $statusColor === 'amber',
-                    'bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-400' => $statusColor === 'success',
-                    'bg-danger-100 text-danger-700 dark:bg-danger-900/30 dark:text-danger-400' => $statusColor === 'danger',
-                    'bg-warning-100 text-warning-700 dark:bg-warning-900/30 dark:text-warning-400' => $statusColor === 'warning',
-                    'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400' => $statusColor === 'gray',
                 ]),
                 'indicator_icon_classes' => Arr::toCssClasses([
                     'h-5 w-5 opacity-20',

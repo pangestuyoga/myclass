@@ -1,6 +1,6 @@
 <x-filament-panels::page>
-    <x-filament::section 
-        icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-hand-raised' : 'heroicon-o-clipboard-document-check' }}" 
+    <x-filament::section
+        icon="{{ $this->sectionIcon }}"
         icon-color="primary"
     >
         <x-slot name="heading">{{ $this->heading }}</x-slot>
@@ -102,7 +102,7 @@
                 @endforeach
             </div>
         @else
-            <x-filament::empty-state icon="heroicon-o-finger-print" 
+            <x-filament::empty-state icon="heroicon-o-finger-print"
                 heading="{{ $this->emptyHeading }}"
                 description="{{ $this->emptyDescription }}"
                 iconColor="gray">
@@ -111,8 +111,8 @@
 
     </x-filament::section>
 
-    <x-filament::section 
-        icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-clock' : 'heroicon-o-archive-box' }}" 
+    <x-filament::section
+        icon="{{ $this->historyIcon }}"
         icon-color="gray"
     >
         <x-slot name="heading">{{ $this->historyHeading }}</x-slot>

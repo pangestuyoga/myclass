@@ -4,7 +4,9 @@ namespace App\Filament\Resources\Learning\Assignments\Pages;
 
 use App\Enums\AssignmentType;
 use App\Filament\Actions\BackAction;
+use App\Filament\Resources\Learning\Assignments\Actions\MarkAsSentAction;
 use App\Filament\Resources\Learning\Assignments\AssignmentResource;
+use App\Filament\Support\SystemNotification;
 use App\Models\Assignment;
 use App\Models\AssignmentSubmission;
 use Filament\Actions\Action;
@@ -52,6 +54,14 @@ class SubmissionDetailPage extends Page
                 'value' => $this->percentage.'%',
                 'icon' => 'heroicon-o-chart-bar',
                 'color_classes' => 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400',
+            ],
+            [
+                'label' => 'Status Dosen',
+                'value' => $this->record?->is_sent_to_lecturer ? 'SUDAH TERKIRIM' : 'BELUM TERKIRIM',
+                'icon' => $this->record?->is_sent_to_lecturer ? 'heroicon-o-check-badge' : 'heroicon-o-clock',
+                'color_classes' => $this->record?->is_sent_to_lecturer
+                    ? 'bg-success-500 text-white shadow-lg shadow-success-200 dark:shadow-none'
+                    : 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400',
             ],
         ];
     }
@@ -164,7 +174,16 @@ class SubmissionDetailPage extends Page
             'due_date' => $this->record?->due_date?->translatedFormat('l, d F Y H:i'),
             'type' => $this->record?->type->value,
             'is_overdue' => $this->isOverdue,
+            'is_sent_to_lecturer' => $this->record?->is_sent_to_lecturer,
         ];
+    }
+
+    #[Computed]
+    public function sectionIcon(): string
+    {
+        return SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful
+            ? 'heroicon-o-document-magnifying-glass'
+            : 'heroicon-o-document-text';
     }
 
     public function previewSubmissionAction(): Action
@@ -186,6 +205,8 @@ class SubmissionDetailPage extends Page
     protected function getHeaderActions(): array
     {
         return [
+            MarkAsSentAction::make()
+                ->record($this->record),
 
             BackAction::make()
                 ->url(AssignmentResource::getUrl()),

@@ -30,6 +30,7 @@ class Assignment extends Model implements HasMedia
         return [
             'due_date' => 'datetime',
             'type' => AssignmentType::class,
+            'is_sent_to_lecturer' => 'boolean',
         ];
     }
 

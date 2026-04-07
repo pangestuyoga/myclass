@@ -366,3 +366,71 @@ describe('Assignment Details and Preview', function () {
             ->assertSee($assignment->title);
     });
 });
+
+describe('Assignment Delivery Status', function () {
+    beforeEach(function () {
+        $this->kosmaUser = User::factory()->create();
+        $this->kosmaUser->assignRole(RoleEnum::Kosma);
+        $this->kosmaUser->givePermissionTo(['ViewAny:Assignment', 'View:Assignment', 'View:CourseSchedule']);
+
+        $this->studentUser = User::factory()->create();
+        $this->studentUser->assignRole(RoleEnum::Student);
+        $this->studentUser->givePermissionTo(['ViewAny:Assignment', 'View:CourseSchedule']);
+        $this->student = Student::factory()->create(['user_id' => $this->studentUser->id]);
+
+        $this->currentSemester = app(GeneralSettings::class)->current_semester;
+    });
+
+    it('can toggle assignment delivery status (Mark as Sent)', function () {
+        $assignment = Assignment::factory()->create([
+            'is_sent_to_lecturer' => false,
+        ]);
+
+        $this->actingAs($this->kosmaUser);
+
+        Livewire::test(ListAssignments::class)
+            ->callAction('markAsSentAction', [], ['record' => $assignment->id]);
+
+        expect($assignment->refresh()->is_sent_to_lecturer)->toBeTrue();
+
+        Livewire::test(ListAssignments::class)
+            ->callAction('markAsSentAction', [], ['record' => $assignment->id]);
+
+        expect($assignment->refresh()->is_sent_to_lecturer)->toBeFalse();
+    });
+
+    it('allows students to submit overdue assignments if not yet sent to lecturer', function () {
+        $assignment = Assignment::factory()->create([
+            'due_date' => now()->subDays(2)->toDateTimeString(), // Far enough in the past
+            'is_sent_to_lecturer' => false,
+            'type' => AssignmentType::Individual,
+        ]);
+        $assignment->students()->attach($this->student->id);
+        $assignment->course->update(['semester' => $this->currentSemester]);
+
+        $this->actingAs($this->studentUser);
+
+        Livewire::test(SubmitAssignmentPage::class, ['record' => $assignment])
+            ->assertSuccessful()
+            ->assertSet('isOverdue', true)
+            ->assertSet('canSubmit', true)
+            ->assertSee('Tenggat Waktu Sudah Terlewat');
+    });
+
+    it('prevents students from submitting if assignment is marked as sent to lecturer', function () {
+        $assignment = Assignment::factory()->create([
+            'due_date' => now()->addDay(),
+            'is_sent_to_lecturer' => true,
+        ]);
+        $assignment->students()->attach($this->student->id);
+        $assignment->course->update(['semester' => $this->currentSemester]);
+
+        $this->actingAs($this->studentUser);
+
+        Livewire::test(SubmitAssignmentPage::class, ['record' => $assignment])
+            ->assertSuccessful()
+            ->assertSee('Penerimaan Tugas Ditutup')
+            ->assertDontSeeHtml('type="file"');
+    });
+});
+

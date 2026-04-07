@@ -26,11 +26,18 @@
             style="width: {{ $this->percentage }}%"></div>
     </div>
 
-    <x-filament::section 
-        icon="{{ \App\Filament\Support\SystemNotification::getNotifStyle() === \App\Enums\NotifStyle::Cheerful ? 'heroicon-o-document-magnifying-glass' : 'heroicon-o-document-text' }}" 
+    <x-filament::section
+        icon="{{ $this->sectionIcon }}"
         icon-color="primary"
     >
-        <x-slot name="heading">{{ $this->assignmentSummary['title'] }}</x-slot>
+        <x-slot name="heading">
+            <div class="flex items-center gap-3">
+                {{ $this->assignmentSummary['title'] }}
+                @if ($this->assignmentSummary['is_sent_to_lecturer'])
+                    <x-filament::badge color="success" icon="heroicon-m-check-badge" size="sm">Sudah Dikirim ke Dosen</x-filament::badge>
+                @endif
+            </div>
+        </x-slot>
         <x-slot name="description">
             {{ $this->assignmentSummary['course'] }}
             &nbsp;·&nbsp;

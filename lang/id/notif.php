@@ -145,6 +145,18 @@ return [
             'title' => 'Mantap! Sudah Dibaca ✅✨',
             'body' => 'Pembaruan ":title" sudah ditandai. Makin update makin jago! 🚀🔥',
         ],
+        'assignment_sent' => [
+            'title' => 'Tugas Berhasil Dikirim! 🚀✨',
+            'body' => 'Tugas kolektif sudah berhasil ditandai terkirim ke dosen. Status pengumpulan resmi ditutup! 🔒',
+        ],
+        'assignment_unlocked' => [
+            'title' => 'Kunci Tugas Dibuka! 🔓✨',
+            'body' => 'Mahasiswa sekarang diperbolehkan kembali untuk mengumpulkan atau memperbarui tugas mereka. 📝',
+        ],
+        'submission_locked' => [
+            'title' => 'Tugas Terkunci! 🔒',
+            'body' => 'Mohon maaf, tugas ini sudah ditandai terkirim ke dosen oleh Kosma dan tidak dapat diubah lagi. 🚫',
+        ],
 
         // UI Labels & Descriptions
         'labels' => [
@@ -436,6 +448,18 @@ return [
         'changelog_read' => [
             'title' => 'Pembaruan Berhasil Ditandai',
             'body' => 'Catatan rilis ":title" telah berhasil ditandai sebagai sudah dibaca.',
+        ],
+        'assignment_sent' => [
+            'title' => 'Konfirmasi Pengiriman Berhasil',
+            'body' => 'Seluruh berkas tugas kolektif telah berhasil ditandai sebagai terkirim ke dosen pengampu.',
+        ],
+        'assignment_unlocked' => [
+            'title' => 'Kunci Akses Dibuka',
+            'body' => 'Otoritas pengumpulan tugas telah diaktifkan kembali untuk seluruh mahasiswa terkait.',
+        ],
+        'submission_locked' => [
+            'title' => 'Akses Pengumpulan Ditutup',
+            'body' => 'Tugas ini telah dalam status final (terkirim ke dosen). Perubahan data tidak lagi dimungkinkan.',
         ],
 
         // UI Labels & Descriptions

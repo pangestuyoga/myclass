@@ -5,7 +5,7 @@
             <x-slot name="heading">{{ $this->record->title }}</x-slot>
             <x-slot name="description">{{ $this->record->course?->name ?? '-' }}</x-slot>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
                 @foreach ($this->statusCards as $card)
                     <div class="flex items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-700 p-3">
                         <div class="{{ $card['icon_classes'] }}">
@@ -44,29 +44,28 @@
             @endif
         </x-filament::section>
 
-        @if ($this->isOverdue)
+        {{-- Kondisi Form: Muncul jika BELUM dikirim ke dosen --}}
+        @if ($this->record->is_sent_to_lecturer)
             <x-filament::section :icon="$this->overdueIcon" icon-color="danger">
-                <x-slot name="heading">{{ $this->overdueHeading }}</x-slot>
-                <x-slot name="description">{{ $this->overdueDescription }}</x-slot>
+                <x-slot name="heading">Penerimaan Tugas Ditutup</x-slot>
+                <x-slot name="description">Tugas ini sudah dikirim ke dosen oleh Kosma dan tidak dapat diubah lagi.</x-slot>
 
                 <div class="flex items-center gap-3 mb-5">
                     <div
                         class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-danger-50 dark:bg-danger-900/20 text-danger-600">
                         <x-filament::icon icon="heroicon-o-lock-closed" class="h-5 w-5" />
                     </div>
-                    <div class="flex flex-wrap items-center gap-2">
-                        <x-filament::badge :color="$this->submissionStatus->badge_color" size="lg">
-                            {{ $this->submissionStatus->badge_label }}
-                        </x-filament::badge>
+                    <div class="flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        Tugas sudah dikirim ke dosen pada status final.
                     </div>
                 </div>
 
                 @if ($url = $this->getSubmissionFileUrl())
                     <div>
-                        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">File yang Dikumpulkan</p>
+                        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">File yang Terakhir Dikumpulkan</p>
                         <div
                             class="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-                            <iframe src="{{ $url }}" width="100%" height="500"
+                            <iframe src="{{ $url }}" width="100%" height="400"
                                 class="block border-0"></iframe>
                         </div>
                     </div>
@@ -96,6 +95,16 @@
                 @endif
             </x-filament::section>
         @else
+            @if ($this->isOverdue)
+                <div class="p-4 rounded-xl border border-warning-200 bg-warning-50 dark:bg-warning-900/10 dark:border-warning-900/20 flex gap-3">
+                    <x-filament::icon icon="heroicon-m-exclamation-triangle" class="h-5 w-5 text-warning-600 shrink-0" />
+                    <div>
+                        <p class="text-sm font-bold text-warning-800 dark:text-warning-400">Tenggat Waktu Sudah Terlewat</p>
+                        <p class="text-xs text-warning-700 dark:text-warning-500 mt-1">Anda masih diperbolehkan mengumpulkan tugas karena belum dikirim ke dosen oleh Kosma.</p>
+                    </div>
+                </div>
+            @endif
+
             <x-filament::section :icon="$this->submissionIcon" icon-color="primary">
                 <x-slot name="heading">{{ $this->submissionHeading }}</x-slot>
                 <x-slot name="description">{{ $this->submissionDescription }}</x-slot>

@@ -19,7 +19,7 @@
                         class="flex flex-1 items-start gap-4 p-5 text-left min-w-0 hover:bg-primary-500/5 transition-colors cursor-pointer">
 
                         <div class="{{ $card->icon_wrapper_classes }} h-12 w-12 mt-1 shrink-0">
-                            <x-filament::icon :icon="$card->status_icon" class="h-6 w-6" />
+                            <x-filament::icon :icon="$card->submission_status->icon" class="h-6 w-6" />
                         </div>
 
                         <div class="flex-1 min-w-0">
@@ -51,11 +51,16 @@
                                     </span>
                                 @endif
 
-                                <span class="{{ $card->status_badge_classes }} px-2.5 py-1 whitespace-nowrap">
-                                    @if ($card->status_icon)
-                                        <x-filament::icon :icon="$card->status_icon" class="h-4 w-4" />
-                                    @endif
-                                    {{ $card->status_label }}
+                                {{-- Status Pengumpulan (Submission Status) --}}
+                                <span class="{{ $card->submission_status->classes }} whitespace-nowrap">
+                                    <x-filament::icon :icon="$card->submission_status->icon" class="h-3.5 w-3.5" />
+                                    {{ $card->submission_status->label }}
+                                </span>
+
+                                {{-- Status Pengiriman ke Dosen (Delivery Status) --}}
+                                <span class="{{ $card->delivery_status->classes }} whitespace-nowrap">
+                                    <x-filament::icon :icon="$card->delivery_status->icon" class="h-3.5 w-3.5" />
+                                    {{ $card->delivery_status->label }}
                                 </span>
 
                                 @if ($card->is_urgent)
@@ -91,6 +96,7 @@
                         @endcan
 
                         @canAny(['Update:Assignment', 'Delete:Assignment'])
+                            {{ ($this->markAsSentAction)(['record' => $card->id]) }}
                             {{ ($this->editAssignmentAction)(['record' => $card->id]) }}
                             {{ ($this->deleteAssignmentAction)(['record' => $card->id]) }}
                         @endcanAny

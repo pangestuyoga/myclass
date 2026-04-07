@@ -56,6 +56,9 @@ class SubmitAssignmentPage extends Page implements HasForms
     #[Computed]
     public function statusCards(): array
     {
+        $isSent = $this->record->is_sent_to_lecturer;
+        $existing = $this->existingSubmission;
+
         return [
             [
                 'label' => 'Batas Waktu',
@@ -71,14 +74,28 @@ class SubmitAssignmentPage extends Page implements HasForms
             ],
             [
                 'label' => 'Status Pengumpulan',
-                'value' => $this->isOverdue ? 'Ditutup' : 'Terbuka',
-                'icon' => $this->isOverdue ? 'heroicon-o-lock-closed' : 'heroicon-o-check-circle',
-                'is_danger' => $this->isOverdue,
-                'is_success' => ! $this->isOverdue,
+                'value' => $existing ? 'Sudah Dikumpulkan' : ($isSent ? 'Terlambat & Terkunci' : ($this->isOverdue ? 'Belum (Masih Terbuka)' : 'Belum Dikumpulkan')),
+                'icon' => $existing ? 'heroicon-o-check-circle' : ($isSent ? 'heroicon-o-lock-closed' : 'heroicon-o-arrow-up-tray'),
+                'is_success' => (bool) $existing,
+                'is_danger' => ! $existing && $isSent,
+                'is_warning' => ! $existing && ! $isSent && $this->isOverdue,
                 'icon_classes' => Arr::toCssClasses([
                     'flex h-9 w-9 shrink-0 items-center justify-center rounded-lg',
-                    'bg-danger-50 dark:bg-danger-900/20 text-danger-600' => $this->isOverdue,
-                    'bg-success-50 dark:bg-success-900/20 text-success-600' => ! $this->isOverdue,
+                    'bg-success-50 dark:bg-success-900/20 text-success-600' => $existing,
+                    'bg-danger-50 dark:bg-danger-900/20 text-danger-600' => ! $existing && $isSent,
+                    'bg-warning-50 dark:bg-warning-900/20 text-warning-600' => ! $existing && ! $isSent && $this->isOverdue,
+                ]),
+            ],
+            [
+                'label' => 'Status ke Dosen',
+                'value' => $isSent ? 'Telah Dikirim' : 'Belum Dikirim',
+                'icon' => $isSent ? 'heroicon-o-paper-airplane' : 'heroicon-o-clock',
+                'is_success' => $isSent,
+                'badge' => $isSent ? '(Kunci Aktif)' : '(Masih Terbuka)',
+                'icon_classes' => Arr::toCssClasses([
+                    'flex h-9 w-9 shrink-0 items-center justify-center rounded-lg',
+                    'bg-success-50 dark:bg-success-900/20 text-success-600' => $isSent,
+                    'bg-gray-100 dark:bg-gray-800 text-gray-500' => ! $isSent,
                 ]),
             ],
         ];
@@ -243,6 +260,13 @@ class SubmitAssignmentPage extends Page implements HasForms
             return;
         }
 
+        if ($assignment->is_sent_to_lecturer) {
+            SystemNotification::send('submission_locked', type: 'danger')
+                ->send();
+
+            return;
+        }
+
         if (! $this->canSubmit) {
             SystemNotification::send('submission_not_leader', type: 'danger')
                 ->send();
@@ -313,7 +337,7 @@ class SubmitAssignmentPage extends Page implements HasForms
 
         return [
             BackAction::make()
-                ->url(url()->previous() ?? AssignmentResource::getUrl('index')),
+                ->url(url()->previous() !== AssignmentResource::getUrl('submit', ['record' => $this->record->id]) ? url()->previous() : AssignmentResource::getUrl('index')),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Learning\Attendances\Pages;
 
+use App\Enums\NotifStyle;
 use App\Filament\Resources\Learning\Attendances\AttendanceResource;
 use App\Filament\Support\SystemNotification;
 use App\Models\Attendance;
@@ -69,6 +70,22 @@ class ManageAttendances extends Page implements HasForms, HasTable
     public function emptyDescription(): string
     {
         return SystemNotification::getByKey('labels.empty_attendance.description');
+    }
+
+    #[Computed]
+    public function sectionIcon(): string
+    {
+        return SystemNotification::getNotifStyle() === NotifStyle::Cheerful
+            ? 'heroicon-o-hand-raised'
+            : 'heroicon-o-clipboard-document-check';
+    }
+
+    #[Computed]
+    public function historyIcon(): string
+    {
+        return SystemNotification::getNotifStyle() === NotifStyle::Cheerful
+            ? 'heroicon-o-clock'
+            : 'heroicon-o-archive-box';
     }
 
     public function getSchedules()
