@@ -141,6 +141,10 @@ return [
             'title' => 'Pengguna Dinonaktifkan ⛔👋',
             'body' => 'Status akun pengguna telah berhasil dinonaktifkan. Istirahat dulu ya... 😴',
         ],
+        'changelog_read' => [
+            'title' => 'Mantap! Sudah Dibaca ✅✨',
+            'body' => 'Pembaruan ":title" sudah ditandai. Makin update makin jago! 🚀🔥',
+        ],
 
         // UI Labels & Descriptions
         'labels' => [
@@ -428,6 +432,10 @@ return [
         'user_deactivated' => [
             'title' => 'Penonaktifan Akun Berhasil',
             'body' => 'Status akun pengguna terpilih telah diubah menjadi tidak aktif.',
+        ],
+        'changelog_read' => [
+            'title' => 'Pembaruan Berhasil Ditandai',
+            'body' => 'Catatan rilis ":title" telah berhasil ditandai sebagai sudah dibaca.',
         ],
 
         // UI Labels & Descriptions

@@ -27,7 +27,7 @@ class EditChangelogAction extends EditAction
             ->modalHeading('Ubah Data')
             ->modalSubmitActionLabel('Simpan')
             ->modalCancelActionLabel('Batal')
-            ->modalWidth(Width::ThreeExtraLarge)
+            ->modalWidth(Width::FourExtraLarge)
             ->schema(fn ($livewire) => $livewire->changelogFormSchema())
             ->fillForm(fn (Changelog $record): array => $record->toArray());
     }

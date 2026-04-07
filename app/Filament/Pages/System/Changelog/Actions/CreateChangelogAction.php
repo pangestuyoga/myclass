@@ -26,7 +26,7 @@ class CreateChangelogAction extends CreateAction
                 $action->makeModalSubmitAction('createAnother', arguments: ['another' => true])
                     ->label('Simpan dan Tambah Lagi'),
             ])
-            ->modalWidth(Width::ThreeExtraLarge)
+            ->modalWidth(Width::FourExtraLarge)
             ->schema(fn ($livewire) => $livewire->changelogFormSchema());
     }
 }

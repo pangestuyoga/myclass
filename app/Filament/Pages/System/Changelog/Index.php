@@ -6,6 +6,7 @@ use App\Enums\ChangelogType;
 use App\Filament\Pages\System\Changelog\Actions\CreateChangelogAction;
 use App\Filament\Pages\System\Changelog\Actions\DeleteChangelogAction;
 use App\Filament\Pages\System\Changelog\Actions\EditChangelogAction;
+use App\Filament\Pages\System\Changelog\Actions\MarkAsReadAction;
 use App\Filament\Support\SystemNotification;
 use App\Models\Changelog;
 use BackedEnum;
@@ -44,6 +45,13 @@ class Index extends Page implements HasActions, HasForms
 
     protected string $view = 'filament.pages.system.changelog.index';
 
+    public static function getNavigationBadge(): ?string
+    {
+        $unreadCount = Changelog::whereDoesntHave('users', fn ($query) => $query->where('user_id', auth()->id()))->count();
+
+        return $unreadCount > 0 ? (string) $unreadCount : null;
+    }
+
     public static function getPagePermission(): string
     {
         return 'View:Changelog';
@@ -69,7 +77,15 @@ class Index extends Page implements HasActions, HasForms
     #[Computed]
     public function changelogs(): Collection
     {
-        return Changelog::latest('release_date')->get();
+        return Changelog::with([
+            'users' => fn ($query) => $query->where('user_id', auth()->id()),
+        ])
+            ->get()
+            ->sortBy([
+                fn ($a, $b) => $a->is_read <=> $b->is_read,
+                ['release_date', 'desc'],
+            ])
+            ->values();
     }
 
     protected function getHeaderActions(): array
@@ -90,6 +106,11 @@ class Index extends Page implements HasActions, HasForms
     {
         return DeleteChangelogAction::make()
             ->visible(fn () => auth()->user()?->can('Delete:Changelog'));
+    }
+
+    public function markAsReadAction(): Action
+    {
+        return MarkAsReadAction::make();
     }
 
     #[Computed]

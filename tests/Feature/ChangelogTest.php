@@ -261,3 +261,50 @@ describe('ChangelogType Enum', function () {
         expect(ChangelogType::Security->getIcon())->toBe('heroicon-o-shield-check');
     });
 });
+
+describe('Changelog Read Status', function () {
+    beforeEach(function () {
+        $user = User::factory()->create();
+        $user->assignRole(RoleEnum::Developer);
+        $user->givePermissionTo('View:Changelog');
+        $this->actingAs($user);
+    });
+
+    it('can mark a changelog as read', function () {
+        $changelog = Changelog::factory()->create();
+
+        Livewire::test(ChangelogPage::class)
+            ->callAction('markAsReadAction', [], ['record' => $changelog->id])
+            ->assertDispatched('refresh-changelog')
+            ->assertDispatched('refresh-expansion', id: $changelog->id)
+            ->assertNotified();
+
+        $this->assertDatabaseHas('changelog_user', [
+            'changelog_id' => $changelog->id,
+            'user_id' => auth()->id(),
+        ]);
+
+        expect($changelog->refresh()->is_read)->toBeTrue();
+    });
+
+    it('sorts unread changelogs to the top', function () {
+        $read = Changelog::factory()->create(['release_date' => now()->subDays(1)]);
+        $unread = Changelog::factory()->create(['release_date' => now()->subDays(2)]);
+
+        // Mark one as read
+        $read->users()->attach(auth()->id(), ['read_at' => now()]);
+
+        $component = Livewire::test(ChangelogPage::class);
+        $changelogs = $component->get('changelogs');
+
+        // Unread should be first even if release_date is older
+        expect($changelogs->first()->id)->toBe($unread->id);
+        expect($changelogs->last()->id)->toBe($read->id);
+    });
+
+    it('shows a navigation badge for unread changelogs', function () {
+        Changelog::factory()->count(3)->create();
+
+        expect(ChangelogPage::getNavigationBadge())->toBe('3');
+    });
+});

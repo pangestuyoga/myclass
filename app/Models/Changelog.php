@@ -6,6 +6,7 @@ use App\Enums\ChangelogType;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Changelog extends Model
@@ -53,5 +54,17 @@ class Changelog extends Model
     protected function formattedUpdatedAt(): Attribute
     {
         return Attribute::get(fn () => $this->updated_at?->translatedFormat('l, d M Y H:i'));
+    }
+
+    protected function isRead(): Attribute
+    {
+        return Attribute::get(fn () => $this->users->isNotEmpty());
+    }
+
+    // --- Relations ---
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->withPivot('read_at')->withTimestamps();
     }
 }
