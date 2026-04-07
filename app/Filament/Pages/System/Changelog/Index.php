@@ -9,8 +9,10 @@ use App\Filament\Pages\System\Changelog\Actions\EditChangelogAction;
 use App\Filament\Pages\System\Changelog\Actions\MarkAsReadAction;
 use App\Filament\Support\SystemNotification;
 use App\Models\Changelog;
+use App\Models\Student;
 use BackedEnum;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
@@ -23,6 +25,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Grid;
+use Filament\Support\Enums\Width;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
 use UnitEnum;
@@ -80,10 +83,10 @@ class Index extends Page implements HasActions, HasForms
         return Changelog::with([
             'users' => fn ($query) => $query->where('user_id', auth()->id()),
         ])
+            ->orderBy('version', 'desc')
             ->get()
             ->sortBy([
                 fn ($a, $b) => $a->is_read <=> $b->is_read,
-                ['release_date', 'desc'],
             ])
             ->values();
     }
@@ -111,6 +114,44 @@ class Index extends Page implements HasActions, HasForms
     public function markAsReadAction(): Action
     {
         return MarkAsReadAction::make();
+    }
+
+    public function viewReadersAction(): Action
+    {
+        return Action::make('viewReaders')
+            ->label('Lihat')
+            ->icon('heroicon-o-eye')
+            ->color('info')
+            ->link()
+            ->tooltip('Daftar Mahasiswa')
+            ->modalHeading('Daftar Mahasiswa yang Melihat')
+            ->modalWidth(Width::TwoExtraLarge)
+            ->modalSubmitAction(false)
+            ->modalCancelActionLabel('Tutup')
+            ->visible(fn () => auth()->user()?->can('Update:Changelog'))
+            ->modalContent(function (array $arguments) {
+                $record = Changelog::find($arguments['record'] ?? null);
+
+                if (! $record) {
+                    return null;
+                }
+
+                $students = Student::with('user')->get();
+                $readUsersMap = $record->users()->withPivot('read_at')->get()->keyBy('id');
+
+                $records = $students->map(fn ($student) => (object) [
+                    'student' => $student,
+                    'is_read' => $readUsersMap->has($student->user_id),
+                    'read_at' => $readUsersMap->get($student->user_id)?->pivot?->read_at
+                        ? Carbon::parse($readUsersMap->get($student->user_id)->pivot->read_at)->translatedFormat('d F Y H:i')
+                        : null,
+                ]);
+
+                return view('filament.pages.system.changelog.view-readers', [
+                    'records' => $records,
+                    'readCount' => $readUsersMap->count(),
+                ]);
+            });
     }
 
     #[Computed]

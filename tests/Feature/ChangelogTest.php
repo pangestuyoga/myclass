@@ -4,6 +4,7 @@ use App\Enums\ChangelogType;
 use App\Enums\RoleEnum;
 use App\Filament\Pages\System\Changelog\Index as ChangelogPage;
 use App\Models\Changelog;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Carbon;
@@ -203,16 +204,16 @@ describe('Changelog Computed Properties', function () {
         $this->actingAs($user);
     });
 
-    it('returns changelogs sorted by latest release date', function () {
-        $oldest = Changelog::factory()->create(['release_date' => now()->subYear()]);
-        $newest = Changelog::factory()->create(['release_date' => now()]);
+    it('returns changelogs sorted by version descending', function () {
+        $oldVersion = Changelog::factory()->create(['version' => 'v1.0.0', 'release_date' => now()]);
+        $newVersion = Changelog::factory()->create(['version' => 'v2.0.0', 'release_date' => now()->subYear()]);
 
         $component = Livewire::test(ChangelogPage::class);
+        $changelogs = $component->get('changelogs');
 
-        // changelogs() computed prop returns latest first
-        $ids = Changelog::latest('release_date')->pluck('id')->toArray();
-        expect($ids[0])->toBe($newest->id);
-        expect($ids[1])->toBe($oldest->id);
+        // Newest version should be first even if release_date is older
+        expect($changelogs->first()->version)->toBe('v2.0.0');
+        expect($changelogs->last()->version)->toBe('v1.0.0');
     });
 
     it('reflects latest version in techStack', function () {
@@ -306,5 +307,45 @@ describe('Changelog Read Status', function () {
         Changelog::factory()->count(3)->create();
 
         expect(ChangelogPage::getNavigationBadge())->toBe('3');
+    });
+});
+
+describe('Changelog Action: View Readers', function () {
+    beforeEach(function () {
+        $user = User::factory()->create();
+        $user->assignRole(RoleEnum::Developer);
+        $user->givePermissionTo(['View:Changelog', 'Update:Changelog']);
+        $this->actingAs($user);
+    });
+
+    it('is visible to users with Update:Changelog permission', function () {
+        $changelog = Changelog::factory()->create();
+
+        Livewire::test(ChangelogPage::class)
+            ->assertActionVisible('viewReaders');
+    });
+
+    it('is hidden from users without Update:Changelog permission', function () {
+        $kosma = User::factory()->create();
+        $kosma->assignRole(RoleEnum::Kosma);
+        $kosma->givePermissionTo(['View:Changelog']);
+
+        $this->actingAs($kosma);
+        Livewire::test(ChangelogPage::class)
+            ->assertActionHidden('viewReaders');
+    });
+
+    it('shows all students and their read status in the modal', function () {
+        $changelog = Changelog::factory()->create();
+        $student = Student::factory()->create(['full_name' => 'Budi Sudarsono']);
+        $otherStudent = Student::factory()->create(['full_name' => 'Anomali Student']);
+
+        // Mark student as read
+        $changelog->users()->attach($student->user_id, ['read_at' => now()]);
+
+        Livewire::test(ChangelogPage::class)
+            ->mountAction('viewReaders', ['record' => $changelog->id])
+            ->assertActionMounted('viewReaders')
+            ->assertHasNoErrors();
     });
 });

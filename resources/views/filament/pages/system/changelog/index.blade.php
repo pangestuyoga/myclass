@@ -137,6 +137,7 @@
 
                                     @canAny(['Update:Changelog', 'Delete:Changelog'])
                                         <div class="flex items-center gap-2">
+                                            {{ ($this->viewReadersAction)(['record' => $log->id]) }}
                                             {{ ($this->editChangelogAction)(['record' => $log->id]) }}
                                             {{ ($this->deleteChangelogAction)(['record' => $log->id]) }}
                                         </div>
