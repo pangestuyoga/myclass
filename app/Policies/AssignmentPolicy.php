@@ -66,4 +66,9 @@ class AssignmentPolicy
     {
         return $authUser->can('Reorder:Assignment');
     }
+
+    public function share(AuthUser $authUser, Assignment $assignment): bool
+    {
+        return $authUser->can('Share:Assignment');
+    }
 }

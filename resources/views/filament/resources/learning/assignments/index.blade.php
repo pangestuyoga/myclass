@@ -86,7 +86,9 @@
                     <div
                         class="flex flex-wrap items-center gap-3 px-5 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/20">
                         {{ ($this->pinAction)(['record' => $card->id]) }}
-                        {{ ($this->shareAssignmentAction)(['record' => $card->id]) }}
+                        @can('Share:Assignment')
+                            {{ ($this->shareAssignmentAction)(['record' => $card->id]) }}
+                        @endcan
 
                         @canAny(['Update:Assignment', 'Delete:Assignment'])
                             {{ ($this->editAssignmentAction)(['record' => $card->id]) }}

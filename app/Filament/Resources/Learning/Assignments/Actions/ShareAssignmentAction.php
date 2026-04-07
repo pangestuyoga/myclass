@@ -19,6 +19,7 @@ class ShareAssignmentAction extends Action
         parent::setUp();
 
         $this->label('Bagikan Tugas')
+            ->visible(fn () => auth()->user()->can('Share:Assignment'))
             ->icon('heroicon-o-paper-airplane')
             ->color(Color::Fuchsia)
             ->link()
