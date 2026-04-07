@@ -61,6 +61,18 @@ class ManageAttendances extends Page implements HasForms, HasTable
     }
 
     #[Computed]
+    public function missedHeading(): string
+    {
+        return SystemNotification::getByKey('labels.missed_attendance.title');
+    }
+
+    #[Computed]
+    public function missedDescription(): string
+    {
+        return SystemNotification::getByKey('labels.missed_attendance.description');
+    }
+
+    #[Computed]
     public function emptyHeading(): string
     {
         return SystemNotification::getByKey('labels.empty_attendance.title');
@@ -110,7 +122,8 @@ class ManageAttendances extends Page implements HasForms, HasTable
             ->with(['course', 'attendances' => function ($q) use ($student) {
                 $q->where('student_id', $student->id);
             }])
-            ->orderBy('start_time')
+            ->orderBy('date', 'desc')
+            ->orderBy('start_time', 'asc')
             ->get();
     }
 
@@ -123,9 +136,14 @@ class ManageAttendances extends Page implements HasForms, HasTable
                 $isAttended = $attendance !== null;
                 $isSent = $schedule->is_sent_to_lecturer;
 
+                $sessionStart = $schedule->date->copy()->setTimeFrom($schedule->start_time);
                 $now = now();
-                $startTime = now()->setTimeFrom($schedule->start_time);
-                $canAttend = $now->greaterThanOrEqualTo($startTime) && ! $isSent;
+                $isPassed = $now->greaterThanOrEqualTo($sessionStart);
+                $isMissed = $schedule->date->isPast() && ! $schedule->date->isToday();
+
+                // If it's a missed session, we don't care about the time match anymore,
+                // as long as it's not sent yet.
+                $canAttend = ! $isSent && ($isMissed || $isPassed);
 
                 $statusLabel = 'Belum Presensi';
                 $statusColor = 'warning';
@@ -139,19 +157,24 @@ class ManageAttendances extends Page implements HasForms, HasTable
                     $statusLabel = 'Terkirim';
                     $statusColor = 'danger';
                     $statusIcon = 'heroicon-o-paper-airplane';
-                } elseif (! $canAttend) {
+                } elseif (! $isPassed && ! $isMissed) {
                     $statusLabel = 'Belum Dimulai';
                     $statusColor = 'gray';
                     $statusIcon = 'heroicon-o-lock-closed';
                 }
 
+                $isMissed = $schedule->date->isPast() && ! $schedule->date->isToday();
+
                 return (object) [
                     'id' => $schedule->id,
                     'course_name' => $schedule->course?->name,
                     'lecturer_name' => $schedule->course?->lecturer ?? 'Belum Ditentukan',
+                    'session_number' => $schedule->session_number,
+                    'date' => $schedule->date?->translatedFormat('l, d F Y'),
                     'time_range' => $schedule->start_time?->format('H:i').' - '.$schedule->end_time?->format('H:i'),
                     'is_attended' => $isAttended,
                     'is_sent_to_lecturer' => $isSent,
+                    'is_missed' => $isMissed,
                     'can_attend' => $canAttend && ! $isAttended,
                     'status_label' => $statusLabel,
                     'status_color' => $statusColor,
@@ -197,6 +220,18 @@ class ManageAttendances extends Page implements HasForms, HasTable
             });
     }
 
+    #[Computed]
+    public function todayScheduleCards()
+    {
+        return $this->scheduleCards()->filter(fn ($card) => ! $card->is_missed);
+    }
+
+    #[Computed]
+    public function missedScheduleCards()
+    {
+        return $this->scheduleCards()->filter(fn ($card) => $card->is_missed);
+    }
+
     public function attend(int $sessionId): void
     {
         /** @var User|null $user */
@@ -223,18 +258,25 @@ class ManageAttendances extends Page implements HasForms, HasTable
             return;
         }
 
-        // Check session status
-        if ($session->is_sent_to_lecturer) {
+        $isSent = $session->is_sent_to_lecturer;
+        $isMissed = $session->date->isPast() && ! $session->date->isToday();
+        $now = now();
+        $startTime = $session->date->copy()->setTimeFrom($session->start_time);
+
+        // Attendance is allowed if:
+        // 1. Not sent yet
+        // 2. Either it's a missed session (from previous days) OR it's today and already started
+        if (! $isSent) {
+            if ($isMissed || $now->greaterThanOrEqualTo($startTime)) {
+                // Proceed with attendance
+            } else {
+                SystemNotification::send('attendance_not_started', type: 'warning')
+                    ->send();
+
+                return;
+            }
+        } else {
             SystemNotification::send('attendance_closed', type: 'danger')
-                ->send();
-
-            return;
-        }
-
-        // Check time
-        $startTime = $session->start_time;
-        if (now()->lessThan($startTime)) {
-            SystemNotification::send('attendance_not_started', type: 'warning')
                 ->send();
 
             return;

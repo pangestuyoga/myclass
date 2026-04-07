@@ -219,14 +219,18 @@ return [
             ],
             'attendance_section' => [
                 'title' => 'Ayo Presensi Dulu! 🙋‍♂️✨',
-                'description' => 'Jangan lupa absen ya kalau kelasnya udah mulai! Biar tercatat hadir. 💪',
+                'description' => 'Jangan lupa presensi ya kalau kelasnya udah mulai! Biar tercatat hadir. 💪',
+            ],
+            'missed_attendance' => [
+                'title' => 'Presensi Terlewat! ⌛🏃‍♂️',
+                'description' => 'Ayo segera presensi buat kelas yang udah lewat ini sebelum sesi ditutup! Jangan sampai alpa ya. 💪✨',
             ],
             'attendance_history' => [
                 'title' => 'Jejak Presensimu 🕰️📜',
                 'description' => 'Di sini kamu bisa ngecek semua histori kehadiranmu sebelumnya. Rajin-rajin ya! 🎓',
             ],
             'empty_attendance' => [
-                'title' => 'Yah, Absensi Belum Muncul! 💁‍♂️🌀',
+                'title' => 'Yah, Presensi Belum Muncul! 💁‍♂️🌀',
                 'description' => 'Sabar ya, setelah jadwal perkuliahan kamu muncul baru bisa diabsen di sini. Pantau terus jam kuliahnya! 🕒💪',
             ],
             'assignment_list' => [
@@ -536,6 +540,10 @@ return [
             'attendance_section' => [
                 'title' => 'Sesi Kuliah',
                 'description' => 'Silakan melakukan presensi sesuai dengan waktu kelas.',
+            ],
+            'missed_attendance' => [
+                'title' => 'Presensi Terlewat',
+                'description' => 'Segera lakukan presensi untuk sesi perkuliahan yang telah berlalu berikut sebelum akses ditutup.',
             ],
             'attendance_history' => [
                 'title' => 'Riwayat Presensi',
