@@ -12,7 +12,7 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            @forelse ($this->assignmentCards as $card)
+            @forelse ($this->assignmentCards->take($this->perPage) as $card)
                 <div class="{{ $card->card_classes }} flex-col">
 
                     <a href="{{ $card->url }}"
@@ -105,5 +105,11 @@
                 </div>
             @endforelse
         </div>
+
+        @if ($this->assignmentCards->count() > $this->perPage)
+            <div x-intersect="$wire.loadMore()" class="h-10 mt-6 flex items-center justify-center text-primary-500">
+                <x-filament::loading-indicator class="h-8 w-8" />
+            </div>
+        @endif
     </x-filament::section>
 </x-filament-panels::page>

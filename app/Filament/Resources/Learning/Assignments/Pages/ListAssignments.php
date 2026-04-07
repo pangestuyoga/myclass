@@ -30,6 +30,13 @@ class ListAssignments extends Page
     #[Url]
     public ?string $search = '';
 
+    public int $perPage = 12;
+
+    public function loadMore(): void
+    {
+        $this->perPage += 12;
+    }
+
     #[Url]
     public ?int $course_id = null;
 
@@ -61,7 +68,10 @@ class ListAssignments extends Page
                     ->placeholder('Cari Judul Tugas...')
                     ->autocomplete(false)
                     ->live(debounce: 500)
-                    ->afterStateUpdated(fn ($state) => $this->search = $state),
+                    ->afterStateUpdated(function ($state) {
+                        $this->search = $state;
+                        $this->perPage = 12;
+                    }),
 
                 Select::make('course_id')
                     ->label('Mata Kuliah')
@@ -75,7 +85,10 @@ class ListAssignments extends Page
                     })
                     ->searchable()
                     ->live()
-                    ->afterStateUpdated(fn ($state) => $this->course_id = $state),
+                    ->afterStateUpdated(function ($state) {
+                        $this->course_id = $state;
+                        $this->perPage = 12;
+                    }),
             ])
             ->columns([
                 'sm' => 2,
