@@ -260,3 +260,80 @@ describe('Attendance Delivery Status', function () {
         expect($session->fresh()->is_sent_to_lecturer)->toBeFalse();
     });
 });
+
+describe('Missed Attendance Logic', function () {
+    beforeEach(function () {
+        $this->user = User::factory()->create();
+        $this->user->assignRole(RoleEnum::Student);
+        $this->user->givePermissionTo(['ViewAny:Attendance']);
+        $this->student = Student::factory()->create(['user_id' => $this->user->id]);
+        $this->actingAs($this->user);
+        $this->currentSemester = app(GeneralSettings::class)->current_semester;
+    });
+
+    it('correctly separates today and missed sessions', function () {
+        $course = Course::factory()->create(['semester' => $this->currentSemester]);
+
+        // Today session
+        ClassSession::factory()->create([
+            'course_id' => $course->id,
+            'date' => now()->toDateString(),
+        ]);
+
+        // Yesterday session (missed)
+        ClassSession::factory()->create([
+            'course_id' => $course->id,
+            'date' => now()->subDay()->toDateString(),
+        ]);
+
+        // Future session (should not be in either)
+        ClassSession::factory()->create([
+            'course_id' => $course->id,
+            'date' => now()->addDay()->toDateString(),
+        ]);
+
+        $livewire = Livewire::test(ManageAttendances::class);
+
+        expect($livewire->get('todayScheduleCards'))->toHaveCount(1);
+        expect($livewire->get('missedScheduleCards'))->toHaveCount(1);
+    });
+
+    it('includes session_number in card data', function () {
+        $course = Course::factory()->create(['semester' => $this->currentSemester]);
+        ClassSession::factory()->create([
+            'course_id' => $course->id,
+            'date' => now()->toDateString(),
+            'session_number' => 5,
+        ]);
+
+        $livewire = Livewire::test(ManageAttendances::class);
+        $card = $livewire->get('todayScheduleCards')[0];
+
+        expect($card->session_number)->toBe(5);
+    });
+
+    it('allows attending missed session regardless of the time match', function () {
+        $course = Course::factory()->create(['semester' => $this->currentSemester]);
+        $yesterday = now()->subDay();
+
+        // Create a session whose time is strictly after 'now' (if it were today)
+        // But since it's yesterday, it should still be attendable
+        $sessionTime = now()->addHour(); // e.g. 2 PM if now is 1 PM
+
+        $session = ClassSession::factory()->create([
+            'course_id' => $course->id,
+            'date' => $yesterday->toDateString(),
+            'start_time' => $sessionTime->toTimeString(),
+            'is_sent_to_lecturer' => false,
+        ]);
+
+        Livewire::test(ManageAttendances::class)
+            ->call('attend', $session->id)
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas('attendances', [
+            'student_id' => $this->student->id,
+            'class_session_id' => $session->id,
+        ]);
+    });
+});
