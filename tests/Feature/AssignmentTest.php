@@ -35,6 +35,7 @@ beforeEach(function () {
         'Update:Assignment',
         'Delete:Assignment',
         'View:CourseSchedule',
+        'Share:Assignment',
     ];
 
     foreach ($permissions as $permission) {
@@ -330,7 +331,7 @@ describe('Assignment Sharing', function () {
     beforeEach(function () {
         $user = User::factory()->create();
         $user->assignRole(RoleEnum::Student);
-        $user->givePermissionTo(['ViewAny:Assignment', 'View:CourseSchedule']);
+        $user->givePermissionTo(['ViewAny:Assignment', 'View:CourseSchedule', 'Share:Assignment']);
         $this->studentProfile = Student::factory()->create(['user_id' => $user->id]);
         $this->actingAs($user);
         $this->currentSemester = app(GeneralSettings::class)->current_semester;
