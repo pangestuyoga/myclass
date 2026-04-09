@@ -6,7 +6,7 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
+        "php": "^8.2",
         "achyutn/filament-log-viewer": "^2.1",
         "asmit/filament-upload": "^2.0",
         "bezhansalleh/filament-shield": "^4.1",
@@ -18,6 +18,8 @@
         "joaopaulolndev/filament-pdf-viewer": "^3.0",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "maatwebsite/excel": "^3.1",
+        "pxlrbt/filament-excel": "^3.6",
         "saade/filament-facehash": "^1.0"
     },
     "require-dev": {

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Learning\ClassSessions\Pages;
 use App\Filament\Actions\BackAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\DeleteSessionAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\EditSessionAction;
+use App\Filament\Resources\Learning\ClassSessions\Actions\ExportSessionAttendanceAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\GenerateSessionsAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\MarkAsSentAction;
 use App\Filament\Resources\Learning\ClassSessions\Actions\ShareAttendanceAction;
@@ -124,6 +125,11 @@ class ListCourseSessions extends Page implements HasActions, HasForms
     public function deleteSessionAction(): DeleteSessionAction
     {
         return DeleteSessionAction::make();
+    }
+
+    public function exportAttendanceAction(): ExportSessionAttendanceAction
+    {
+        return ExportSessionAttendanceAction::make();
     }
 
     #[Computed]
