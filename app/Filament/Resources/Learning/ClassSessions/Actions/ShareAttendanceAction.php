@@ -36,7 +36,7 @@ class ShareAttendanceAction extends Action
                 $session = ClassSession::find($arguments['session'] ?? null);
                 $date = $session ? $session->date?->toDateString() : null;
 
-                $url = URL::temporarySignedRoute('share.attendance', now()->addHour(), ['course' => $course->id, 'date' => $date]);
+                $url = URL::temporarySignedRoute('share.attendance', now()->addDays(7), ['course' => $course->id, 'date' => $date]);
 
                 $text = "*Info Kelas {$course->name}*\nSesi ke-".($session->session_number ?? '-').' ('.($session->date?->translatedFormat('d M Y') ?? '').")\n\nSilakan cek detail/rekap kehadiran melalui tautan ini:\n\n{$url}";
 

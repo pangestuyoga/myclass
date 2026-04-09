@@ -41,7 +41,7 @@ class ShareAssignmentAction extends Action
                     return;
                 }
 
-                $url = URL::temporarySignedRoute('share.assignment', now()->addHour(), [
+                $url = URL::temporarySignedRoute('share.assignment', now()->addDays(7), [
                     'course' => $course->id,
                     'assignment_id' => $assignment->id,
                 ]);

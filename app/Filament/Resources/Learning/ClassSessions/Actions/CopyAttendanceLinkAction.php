@@ -26,7 +26,7 @@ class CopyAttendanceLinkAction extends Action
                 $session = ClassSession::find($arguments['session'] ?? null);
                 $date = $session ? $session->date?->toDateString() : null;
 
-                $url = URL::temporarySignedRoute('share.attendance', now()->addHour(), ['course' => $course->id, 'date' => $date]);
+                $url = URL::temporarySignedRoute('share.attendance', now()->addDays(7), ['course' => $course->id, 'date' => $date]);
 
                 $livewire->js("if (navigator.clipboard) { navigator.clipboard.writeText('{$url}').catch(() => {}); }");
 
