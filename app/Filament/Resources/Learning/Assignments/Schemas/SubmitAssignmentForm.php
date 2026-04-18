@@ -13,7 +13,7 @@ class SubmitAssignmentForm
         return $schema
             ->components([
                 AdvancedFileUpload::make('file')
-                    ->label(fn ($get) => $get('is_resubmit') ? 'Ganti Berkas PDF (Opsional)' : 'Lampiran Berkas Tugas')
+                    ->label(fn ($get) => $get('is_resubmit') ? 'Ganti Berkas Tugas (Opsional)' : 'Lampiran Berkas Tugas')
                     ->pdfPreviewHeight(400)
                     ->pdfDisplayPage(1)
                     ->pdfToolbar(true)
@@ -21,12 +21,12 @@ class SubmitAssignmentForm
                     ->pdfFitType(PdfViewFit::FIT)
                     ->pdfNavPanes(true)
                     ->disk(config('filesystems.default'))
-                    ->acceptedFileTypes(['application/pdf'])
+                    ->acceptedFileTypes(['application/pdf', 'application/zip', 'application/x-zip-compressed', 'application/x-zip', 'application/octet-stream', 'multipart/x-zip', '.zip', '.7z'])
                     ->maxSize(1024 * 5)
                     ->directory('submissions/'.now()->toDateString())
                     ->required(fn ($get) => ! $get('is_resubmit'))
                     ->hiddenLabel()
-                    ->helperText('Hanya file PDF dengan ukuran maksimal 5MB.')
+                    ->helperText('File PDF atau ZIP dengan ukuran maksimal 5MB.')
                     ->columnSpanFull(),
             ]);
     }

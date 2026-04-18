@@ -11,6 +11,7 @@ use App\Filament\Support\SystemNotification;
 use App\Models\Assignment;
 use App\Models\AssignmentSubmission;
 use Filament\Actions\Action;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\Page;
 use Filament\Support\Enums\Width;
 use Illuminate\Support\Arr;
@@ -100,6 +101,8 @@ class SubmissionDetailPage extends Page
                     'submitted' => $isSubmitted,
                     'submitted_at_formatted' => $isSubmitted ? $submission?->submitted_at?->translatedFormat('l, d F Y H:i') : '-',
                     'has_file' => $isSubmitted && $submission->hasMedia('submission'),
+                    'is_pdf' => $isSubmitted && str_ends_with(strtolower($submission->getFirstMediaUrl('submission')), '.pdf'),
+                    'file_url' => $isSubmitted ? $submission->getFirstMediaUrl('submission') : null,
                     'status_classes' => Arr::toCssClasses([
                         'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium',
                         'bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-400' => $isSubmitted,
@@ -129,6 +132,8 @@ class SubmissionDetailPage extends Page
                     'submitted' => $isSubmitted,
                     'submitted_at_formatted' => $isSubmitted ? $submission->submitted_at?->translatedFormat('l, d F Y H:i') : '-',
                     'has_file' => $isSubmitted && $submission->hasMedia('submission'),
+                    'is_pdf' => $isSubmitted && str_ends_with(strtolower($submission->getFirstMediaUrl('submission')), '.pdf'),
+                    'file_url' => $isSubmitted ? $submission->getFirstMediaUrl('submission') : null,
                     'status_classes' => Arr::toCssClasses([
                         'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium',
                         'bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-400' => $isSubmitted,
@@ -195,12 +200,37 @@ class SubmissionDetailPage extends Page
             ->modalWidth(Width::SixExtraLarge)
             ->infolist([
                 PdfViewerEntry::make('submission')
+                    ->visible(fn (AssignmentSubmission $record) => str_ends_with(strtolower($record->getFirstMediaUrl('submission')), '.pdf'))
                     ->hiddenLabel()
                     ->fileUrl(fn (AssignmentSubmission $record) => $record->getFirstMediaUrl('submission'))
                     ->columnSpanFull(),
+
+                TextEntry::make('download_file')
+                    ->label('Berkas non-PDF')
+                    ->visible(fn (AssignmentSubmission $record) => ! str_ends_with(strtolower($record->getFirstMediaUrl('submission')), '.pdf'))
+                    ->hint('Klik ikon unduh untuk melihat isi berkas.')
+                    ->default(fn (AssignmentSubmission $record) => $record->getFirstMedia('submission')?->file_name ?? 'Unduh Berkas')
+                    ->suffixAction(
+                        Action::make('download')
+                            ->label('Unduh')
+                            ->icon('heroicon-o-arrow-down-tray')
+                            ->url(fn (AssignmentSubmission $record) => $record->getFirstMediaUrl('submission'), true)
+                    ),
             ])
             ->modalSubmitAction(false)
             ->modalCancelActionLabel('Tutup');
+    }
+
+    public function downloadMedia(int $submissionId)
+    {
+        $submission = AssignmentSubmission::findOrFail($submissionId);
+        $media = $submission->getFirstMedia('submission');
+
+        if (! $media) {
+            return;
+        }
+
+        return response()->download($media->getPath(), $media->file_name);
     }
 
     protected function getHeaderActions(): array

@@ -248,6 +248,26 @@ class SubmitAssignmentPage extends Page implements HasForms
         return $this->existingSubmission?->getFirstMediaUrl('submission');
     }
 
+    public function downloadAttachment()
+    {
+        $media = $this->record->getFirstMedia('assignments');
+        if (! $media) {
+            return;
+        }
+
+        return response()->download($media->getPath(), $media->file_name);
+    }
+
+    public function downloadSubmission()
+    {
+        $media = $this->existingSubmission?->getFirstMedia('submission');
+        if (! $media) {
+            return;
+        }
+
+        return response()->download($media->getPath(), $media->file_name);
+    }
+
     public function submit(): void
     {
         $student = $this->student;

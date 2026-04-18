@@ -35,11 +35,28 @@
             @if ($attachmentUrl = $this->record->getFirstMediaUrl('assignments'))
                 <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
                     <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Lampiran Tugas</p>
-                    <div
-                        class="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-                        <iframe src="{{ $attachmentUrl }}" width="100%" height="500"
-                            class="block border-0"></iframe>
-                    </div>
+                    @if (str_ends_with(strtolower($attachmentUrl), '.pdf'))
+                        <div
+                            class="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                            <iframe src="{{ $attachmentUrl }}" width="100%" height="500"
+                                class="block border-0"></iframe>
+                        </div>
+                    @else
+                        <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 group hover:border-primary-500 transition-colors">
+                            <div class="flex items-center gap-4">
+                                <div class="p-2.5 bg-primary-100 dark:bg-primary-900/30 rounded-lg text-primary-600">
+                                    <x-filament::icon icon="heroicon-o-document-arrow-down" class="w-6 h-6" />
+                                </div>
+                                <div>
+                                    <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $this->record->getFirstMedia('assignments')?->file_name ?? 'Berkas Lampiran' }}</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">Klik tombol di samping untuk mengunduh berkas.</p>
+                                </div>
+                            </div>
+                            <x-filament::button type="button" wire:click="downloadAttachment" color="gray" size="sm" icon="heroicon-o-arrow-down-tray">
+                                Unduh
+                            </x-filament::button>
+                        </div>
+                    @endif
                 </div>
             @endif
         </x-filament::section>
@@ -63,11 +80,28 @@
                 @if ($url = $this->getSubmissionFileUrl())
                     <div>
                         <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">File yang Terakhir Dikumpulkan</p>
-                        <div
-                            class="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-                            <iframe src="{{ $url }}" width="100%" height="400"
-                                class="block border-0"></iframe>
-                        </div>
+                        @if (str_ends_with(strtolower($url), '.pdf'))
+                            <div
+                                class="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                                <iframe src="{{ $url }}" width="100%" height="400"
+                                    class="block border-0"></iframe>
+                            </div>
+                        @else
+                            <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 group hover:border-primary-500 transition-colors">
+                                <div class="flex items-center gap-4">
+                                    <div class="p-2.5 bg-primary-100 dark:bg-primary-900/30 rounded-lg text-primary-600">
+                                        <x-filament::icon icon="heroicon-o-document-arrow-down" class="w-6 h-6" />
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $this->existingSubmission?->getFirstMedia('submission')?->file_name ?? 'Berkas Tugas' }}</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">Berkas non-PDF (ZIP)</p>
+                                    </div>
+                                </div>
+                                <x-filament::button type="button" wire:click="downloadSubmission" color="gray" size="sm" icon="heroicon-o-arrow-down-tray">
+                                    Unduh
+                                </x-filament::button>
+                            </div>
+                        @endif
                     </div>
                 @endif
             </x-filament::section>
@@ -86,11 +120,27 @@
                     <div class="mt-6">
                         <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 italic">File yang telah
                             dikumpulkan oleh kelompok Anda:</p>
-                        <div
-                            class="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-                            <iframe src="{{ $url }}" width="100%" height="400"
-                                class="block border-0"></iframe>
-                        </div>
+                        @if (str_ends_with(strtolower($url), '.pdf'))
+                            <div
+                                class="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                                <iframe src="{{ $url }}" width="100%" height="400"
+                                    class="block border-0"></iframe>
+                            </div>
+                        @else
+                            <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center gap-4">
+                                    <div class="p-2.5 bg-primary-100 dark:bg-primary-900/30 rounded-lg text-primary-600">
+                                        <x-filament::icon icon="heroicon-o-document-arrow-down" class="w-6 h-6" />
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $this->existingSubmission?->getFirstMedia('submission')?->file_name ?? 'Berkas Tugas' }}</p>
+                                    </div>
+                                </div>
+                                <x-filament::button type="button" wire:click="downloadSubmission" color="gray" size="sm" icon="heroicon-o-arrow-down-tray">
+                                    Unduh
+                                </x-filament::button>
+                            </div>
+                        @endif
                     </div>
                 @endif
             </x-filament::section>
@@ -112,11 +162,28 @@
                 @if ($this->isResubmit && ($url = $this->getSubmissionFileUrl()))
                     <div class="mb-4">
                         <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">File Terkumpul Saat Ini</p>
-                        <div
-                            class="rounded-lg overflow-hidden border border-success-200 dark:border-success-800 bg-gray-50 dark:bg-gray-900">
-                            <iframe src="{{ $url }}" width="100%" height="400"
-                                class="block border-0"></iframe>
-                        </div>
+                        @if (str_ends_with(strtolower($url), '.pdf'))
+                            <div
+                                class="rounded-lg overflow-hidden border border-success-200 dark:border-success-800 bg-gray-50 dark:bg-gray-900">
+                                <iframe src="{{ $url }}" width="100%" height="400"
+                                    class="block border-0"></iframe>
+                            </div>
+                        @else
+                            <div class="flex items-center justify-between p-4 bg-success-50/50 dark:bg-success-900/10 rounded-xl border border-success-200 dark:border-success-800">
+                                <div class="flex items-center gap-4">
+                                    <div class="p-2.5 bg-success-100 dark:bg-success-900/30 rounded-lg text-success-600">
+                                        <x-filament::icon icon="heroicon-o-check-badge" class="w-6 h-6" />
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $this->existingSubmission?->getFirstMedia('submission')?->file_name ?? 'Berkas Tugas' }}</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">Berkas Terkumpul (ZIP)</p>
+                                    </div>
+                                </div>
+                                <x-filament::button type="button" wire:click="downloadSubmission" color="success" size="sm" icon="heroicon-o-arrow-down-tray" variant="outline">
+                                    Unduh
+                                </x-filament::button>
+                            </div>
+                        @endif
                     </div>
                 @endif
 

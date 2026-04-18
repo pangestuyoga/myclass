@@ -111,7 +111,7 @@ class AssignmentForm
                             ->columnSpanFull(),
 
                         AdvancedFileUpload::make('pdf')
-                            ->label('Lampiran PDF')
+                            ->label('Lampiran Berkas')
                             ->pdfPreviewHeight(400)
                             ->pdfDisplayPage(1)
                             ->pdfToolbar(true)
@@ -119,7 +119,7 @@ class AssignmentForm
                             ->pdfFitType(PdfViewFit::FIT)
                             ->pdfNavPanes(true)
                             ->disk(config('filesystems.default'))
-                            ->acceptedFileTypes(['application/pdf'])
+                            ->acceptedFileTypes(['application/pdf', 'application/zip', 'application/x-zip-compressed', 'application/x-zip', 'application/octet-stream', 'multipart/x-zip', '.zip', '.7z'])
                             ->maxSize(1024 * 5)
                             ->directory('assignments-tmp/'.now()->toDateString())
                             ->nullable()

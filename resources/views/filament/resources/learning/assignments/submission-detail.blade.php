@@ -101,12 +101,21 @@
 
                                 <td class="px-4 py-3">
                                     @if ($item->has_file)
-                                        <button type="button"
-                                            wire:click="mountAction('previewSubmission', { submissionId: {{ $item->submission_id }} })"
-                                            class="inline-flex items-center gap-1 text-xs text-primary-600 dark:text-primary-400 hover:underline">
-                                            <x-filament::icon icon="heroicon-o-eye" class="h-3.5 w-3.5" />
-                                            Lihat Tugas
-                                        </button>
+                                        @if ($item->is_pdf)
+                                            <button type="button"
+                                                wire:click="mountAction('previewSubmission', { submissionId: {{ $item->submission_id }} })"
+                                                class="inline-flex items-center gap-1 text-xs text-primary-600 dark:text-primary-400 hover:underline">
+                                                <x-filament::icon icon="heroicon-o-eye" class="h-3.5 w-3.5" />
+                                                Lihat Tugas
+                                            </button>
+                                        @else
+                                            <button type="button"
+                                                wire:click="downloadMedia({{ $item->submission_id }})"
+                                                class="inline-flex items-center gap-1 text-xs text-success-600 dark:text-success-400 hover:underline">
+                                                <x-filament::icon icon="heroicon-o-arrow-down-tray" class="h-3.5 w-3.5" />
+                                                Unduh ZIP
+                                            </button>
+                                        @endif
                                     @else
                                         <span class="text-xs text-gray-400">-</span>
                                     @endif
