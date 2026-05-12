@@ -20,11 +20,10 @@ use Filament\Schemas\Schema;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
-use Livewire\WithFileUploads;
 
 class SubmitAssignmentPage extends Page implements HasForms
 {
-    use InteractsWithForms, WithFileUploads;
+    use InteractsWithForms;
 
     protected static string $resource = AssignmentResource::class;
 
