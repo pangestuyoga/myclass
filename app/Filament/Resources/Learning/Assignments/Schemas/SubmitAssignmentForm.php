@@ -22,11 +22,11 @@ class SubmitAssignmentForm
                     ->pdfNavPanes(true)
                     ->disk(config('filesystems.default'))
                     ->acceptedFileTypes(['application/pdf', 'application/zip', 'application/x-zip-compressed', 'application/x-zip', 'application/octet-stream', 'multipart/x-zip', '.zip', '.7z'])
-                    ->maxSize(1024 * 25)
+                    ->maxSize(1024 * 40)
                     ->directory('submissions/'.now()->toDateString())
                     ->required(fn ($get) => ! $get('is_resubmit'))
                     ->hiddenLabel()
-                    ->helperText('File PDF atau ZIP dengan ukuran maksimal 25MB.')
+                    ->helperText('File PDF atau ZIP dengan ukuran maksimal 40MB.')
                     ->columnSpanFull(),
             ]);
     }
